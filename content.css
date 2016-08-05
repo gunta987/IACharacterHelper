@@ -1,0 +1,60 @@
+﻿body {
+    background-image: url('Background_tile.png');
+    color: #EFFFC6;
+    margin: 0;
+    font-family: 'Oswald', sans-serif;
+}
+
+.column {
+    width: 32.5%;
+    margin-right: 0.5%;
+    height: 100vh;
+    float: left;
+}
+
+.token-tray {
+    position: absolute;
+    margin-left: 1%;
+    width: 60%;
+    height: 10%;
+}
+
+.card-tray {
+    margin: 1%;
+    padding: 1%;
+    width: 100%;
+    height: 24%;
+    border: #EFFFC6 1px;
+    border-style: solid none;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.card-tray > div {
+    height: 100%;
+    white-space: nowrap;
+}
+
+.card-tray > div > div {
+    height: 100%;
+    display: inline-block;
+    overflow: hidden;
+    /*float: left;*/
+}
+
+.card-tray > div > div img {
+    height: 100%;
+}
+
+/*.card-tray div:first-child:nth-last-child(5) ~ div {
+	margin-left: -6%;
+}
+
+.card-tray div:first-child:nth-last-child(5) img,
+.card-tray div:first-child:nth-last-child(5) ~ div img {
+	margin-left: -10%;
+}*/
+
+.token-tray img {
+    max-height: 100%;
+}
