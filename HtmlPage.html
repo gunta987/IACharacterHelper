@@ -10,16 +10,40 @@
 <body>
     <div class="column">
         <div style="position: relative">
-            <img src="Cards/Heroes/Dialasis.png" style="width: 100%" />
+            <img data-bind="attr: {src: 'Cards/Heroes/' + hero.imageName() + '.png'}" style="width: 100%" />
             <!--<div style="border: solid 1px black; border-radius: 10px; position: absolute; left: 68.3%; width: 26.67%; top: 5.87%;">
                 <button style="padding: 0; background: transparent; opacity: 0.5; width: 100%">
                     <img src="Cards/Diala/Precise Strike.png" style="width: 100%" />
                 </button>
             </div>-->
+            <div class="modifier" style="left: 52.5%" data-bind="visible: hero.extraHealth() > 0">
+                <img data-bind="attr: {src: 'Other/' + hero.extraHealth() + '.png'}" />
+            </div>
+            <div class="modifier" style="left: 62.5%" data-bind="visible: hero.extraEndurance() > 0">
+                <img data-bind="attr: {src: 'Other/' + hero.extraEndurance() + '.png'}" />
+            </div>
+            <div class="modifier" style="left: 76%" data-bind="visible: hero.extraSpeed() > 0">
+                <img data-bind="attr: {src: 'Other/' + hero.extraSpeed() + '.png'}" />
+            </div>
             <div class="token-tray" style="top: 10%;">
-                <img src="Tokens/focus.png" data-bind="visible: hero.focused" />
-                <img src="Tokens/bleed.png" data-bind="visible: hero.bleeding" />
-                <img src="Tokens/stun.png" data-bind="visible: hero.stunned" />
+                <div style="float: left; height: 100%">
+                    <img src="Tokens/focus.png" data-bind="visible: hero.focused" />
+                    <img src="Tokens/bleed.png" data-bind="visible: hero.bleeding" />
+                    <img src="Tokens/stun.png" data-bind="visible: hero.stunned" />
+                </div>
+                <div style="float:right; height: 100%" >
+                    <!-- ko foreach: new Array(hero.actions()) -->
+                    <div class="well">
+                        <div ></div>
+                        <img src="Other/Action.png" />
+                    </div>
+                    <!-- /ko -->
+                    <div class="well" data-bind="visible: hero.movement() > 0, click: function() { hero.movement(hero.movement() - 1); }">
+                        <div></div>
+                        <!-- TODO: handle more than 9 movement -->
+                        <img data-bind="attr: {src: 'Other/' + hero.movement() + '.png'}" />
+                    </div>
+                </div>
             </div>
             <div class="token-tray" style="bottom: 30%;" data-bind="foreach: hero.damageTokens">
                 <img data-bind="attr: {src: image}, style: { height: height }" />
@@ -28,11 +52,10 @@
                 <img src="Tokens/strain.png" style="height: 92%" />
             </div>
         </div>
-        The name is <span data-bind="text: hero.name"></span>
         <div>
-            Damage: <span data-bind="text: hero.damage"></span> Strain: <span data-bind="text: hero.strain"></span> Actions: <span data-bind="text: hero.actions"></span>
-            <button data-bind="click: function() { hero.damage(hero.damage() + 1); }">Increase Damage</button>
-            <button data-bind="click: function() { hero.strain(hero.strain() + 1); }">Increase Strain</button>
+            <button data-bind="click: function() { hero.gainDamage(1); }">Increase Damage</button>
+            <button data-bind="click: function() { hero.gainStrain(1); }">Increase Strain</button>
+            <button data-bind="click: function() { hero.gainMovement(1); }">Increase Movement</button>
             <button data-bind="click: function() { hero.focused(true); }">Focus</button>
             <button data-bind="click: function() { hero.stunned(true); }">Stun</button>
             <button data-bind="click: function() { hero.bleeding(true); }">Bleed</button>
@@ -43,12 +66,8 @@
     <div class="column" style="position:relative">
         <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 0;"/>
         <div class="card-tray">
-            <div>
-                <div><img src="Cards/Diala/Pic2444785.jpg" /></div>
-                <div><img src="Cards/Diala/Pic2444788.jpg" /></div>
-                <div><img src="Cards/Diala/Pic2444789.jpg" /></div>
-                <div><img src="Cards/Diala/Pic2444790.jpg" /></div>
-                <div><img src="Cards/Diala/Pic2444791.jpg" /></div>
+            <div data-bind="foreach: hero.purchasedAbilities">
+                <div><img data-bind="attr: {src: image}" /></div>
             </div>
         </div>
         <div class="card-tray">
@@ -56,6 +75,31 @@
         </div>
         <div class="card-tray">
 
+        </div>
+    </div>
+    <div class="column">
+        <div id="fixed-card-container" style="text-align: justify">
+            <div>
+                <div class="fixed-card-slot" data-bind="with: hero.armour()">
+                    <img data-bind="attr: { src: image }" />
+                </div>
+            </div>
+            <div>
+                <div class="fixed-card-slot" style="position: relative" data-bind="with: hero.weapons()[0]">
+                    <img data-bind="attr: { src: image }" />
+                    <div>
+                        <img src="Cards/WeaponAttachments/High-Impact_Guard.jpg" />
+                    </div>
+                    <div>
+                        <img src="Cards/WeaponAttachments/Shock-emitter.png" />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="fixed-card-slot" data-bind="with: hero.weapons()[1]">
+                    <img data-bind="attr: { src: image }" />
+                </div>
+            </div>
         </div>
     </div>
 </body>

@@ -5,12 +5,16 @@
     }
 });
 
-require(['jquery', 'ko', 'heroes'], function ($, ko, heroes) {
+require(['jquery', 'ko', 'lodash', 'heroes', 'cards'], function ($, ko, _, heroes, cards) {
     $(document).ready(function () {
 
         var myViewModel = {
             hero: heroes[0]
         };
+        //TODO: populate via user
+        _.forEach(cards.Diala, myViewModel.hero.AddCard);
+        _.forEach(cards.Wearables, myViewModel.hero.AddCard);
+        _.forEach(cards.Weapons, myViewModel.hero.AddCard);
 
         ko.applyBindings(myViewModel);
     });
