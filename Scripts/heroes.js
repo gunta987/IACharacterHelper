@@ -1,4 +1,4 @@
-﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards'], function ($, ko, _, hf, cards) {
+﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations'], function ($, ko, _, hf, cards, inherentOperations) {
     function Die() {
 
     }
@@ -11,10 +11,9 @@
 
 
 
-    var strain = new hf.Action();
-    strain.performAction = function (hero) {
-        hero.increaseStrain();
-    };
+    var strain = new hf.Operation('Strain', function (hero) {
+        hero.gainStrain(1);
+    });
 
     var action, activation, attack, melee, range, resolveAttack, resolveDefence, damage, defence, defend, surge, round;
 
@@ -45,10 +44,12 @@
         self.damage = ko.observable(0);
         self.suffered = ko.observable(0);
         self.strain = ko.observable(0);
+        self.strainMoves = ko.observable(0);
         self.focused = ko.observable(false);
         self.stunned = ko.observable(false);
         self.bleeding = ko.observable(false);
         self.actions = ko.observable(0);
+        self.activated = ko.observable(false);
         self.interrupt = ko.observable(false);
         self.movement = ko.observable(0);
 
@@ -67,6 +68,9 @@
         self.cards = ko.observableArray([]);
         self.exhausted = ko.pureComputed(function () {
             return _.filter(self.cards(), 'exhausted');
+        });
+        self.equipment = ko.pureComputed(function () {
+            return _.filter(self.cards(), function (card) { return card instanceof hf.Equipment; });
         });
         self.armour = ko.pureComputed(function () {
             return _.first(_.filter(self.cards(), function (card) { return card instanceof hf.Armour; }));
@@ -88,6 +92,26 @@
         };
         _.forEach(coreAbilities, self.AddCard);
 
+        self.event = ko.observable('');
+        self.cardEvents = ko.pureComputed(function () {
+            return _.flatMap(self.cards(), 'events');
+        });
+        self.event.subscribe(function (eventName) {
+            if (eventName != '') {
+                _(self.cardEvents()).forEach(function (event) {
+                    if (event != null) {
+                        event.Execute(self, eventName);
+                    }
+                });
+                self.event('');
+            }
+        });
+
+        self.operations = ko.observableArray(inherentOperations);
+        self.availableOperations = ko.pureComputed(function () {
+            return _.filter(self.operations(), function (action) { return action.canPerformOperation(self); })
+        });
+
         self.damage.subscribe(function () {
             var health = fullHealth.call(self);
             if (self.damage() >= health) {
@@ -101,37 +125,16 @@
             }
         });
 
-        self.activate = function () {
-            self.actions(2);
-            self.interrupt(false);
-            self.movement(0);
-            self.suffered(0);
-            _(self.exhausted()).forEach(function (card) {
-                card.exhausted(false);
-            });
-        };
-
-        self.endActivation = function () {
-            self.movement(0);
-        }
-
-        self.rest = function () {
-            if (self.actions() === 0 || self.interrupt()) return;
-
-            var endurance = fullEndurance.call(self);
-            _.times(endurance, function () {
-                if (self.strain() > 0) {
-                    self.strain(self.strain() - 1);
-                }
-                else if (self.damage() > 0) {
-                    self.damage(self.damage() - 1);
-                };
-            });
-            self.actions(self.actions() - 1);
-        };
-
         self.gainStrain = function (gain) {
-            self.strain(self.strain() + gain);
+            var endurance = fullEndurance.call(self);
+            var damage = 0;
+            var strain = self.strain() + gain;
+            if (strain > endurance) {
+                damage = strain - endurance;
+                strain = endurance;
+            }
+            self.strain(strain);
+            self.gainDamage(damage);
         };
         self.gainMovement = function (gain) {
             self.movement(self.movement() + gain);
@@ -176,7 +179,7 @@
 
                 hero.endurance--;
                 hero.speed--;
-                hero.abilities(_.without(hero.abilities(), hero.coreAbilities['Precise Strike']));
+                hero.cards(_.without(hero.cards(), hero.coreAbilities['Precise Strike']));
             }
         }),
         new Hero({

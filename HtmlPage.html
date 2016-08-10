@@ -5,12 +5,12 @@
 	<meta charset="utf-8" />
     <script src="Scripts/require.js" data-main="Scripts/main"></script>
     <link rel="stylesheet" type="text/css" href="content.css" />
-    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <div class="column">
-        <div style="position: relative">
-            <img data-bind="attr: {src: 'Cards/Heroes/' + hero.imageName() + '.png'}" style="width: 100%" />
+    <div class="column" data-bind="click: function(hero, e) { e.stopImmediatePropagation(); }">
+        <div style="position: absolute; top:0; left: 0; height: 100%; width: 100%" ></div>
+        <div id="characterContainer" style="position: relative">
+            <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + hero.imageName() + '.png'}" style="width: 100%" />
             <!--<div style="border: solid 1px black; border-radius: 10px; position: absolute; left: 68.3%; width: 26.67%; top: 5.87%;">
                 <button style="padding: 0; background: transparent; opacity: 0.5; width: 100%">
                     <img src="Cards/Diala/Precise Strike.png" style="width: 100%" />
@@ -25,47 +25,49 @@
             <div class="modifier" style="left: 76%" data-bind="visible: hero.extraSpeed() > 0">
                 <img data-bind="attr: {src: 'Other/' + hero.extraSpeed() + '.png'}" />
             </div>
-            <div class="token-tray" style="top: 10%;">
-                <div style="float: left; height: 100%">
-                    <img src="Tokens/focus.png" data-bind="visible: hero.focused" />
-                    <img src="Tokens/bleed.png" data-bind="visible: hero.bleeding" />
-                    <img src="Tokens/stun.png" data-bind="visible: hero.stunned" />
-                </div>
-                <div style="float:right; height: 100%" >
+            <div class="token-tray" style="top: 22%;">
+                    <img src="Tokens/focus.png" data-bind="style: {opacity: hero.focused() ? 1 : 0.4}, click: function() { hero.focused(!hero.focused()); }" />
+                    <img src="Tokens/bleed.png" data-bind="style: {opacity: hero.bleeding() ? 1 : 0.4}, click: function() { hero.bleeding(!hero.bleeding()); }" />
+                    <img src="Tokens/stun.png" data-bind="style: {opacity: hero.stunned() ? 1 : 0.4}, click: function() { hero.stunned(!hero.stunned()); }" />
+            </div>
+            <div class="token-tray" style="top: 9%;">
+                <div style="float:right; height: 100%">
                     <!-- ko foreach: new Array(hero.actions()) -->
                     <div class="well">
-                        <div ></div>
+                        <div></div>
                         <img src="Other/Action.png" />
                     </div>
                     <!-- /ko -->
-                    <div class="well" data-bind="visible: hero.movement() > 0, click: function() { hero.movement(hero.movement() - 1); }">
+                    <div class="well movement-well" data-bind="visible: hero.movement() > 0, click: function() { hero.movement(hero.movement() - 1); }">
                         <div></div>
-                        <!-- TODO: handle more than 9 movement -->
-                        <img data-bind="attr: {src: 'Other/' + hero.movement() + '.png'}" />
+                        <img src='Other/5.png' /> <!-- just to get the width's all the same -->
+                        <span data-bind="text: hero.movement"></span>
                     </div>
                 </div>
             </div>
-            <div class="token-tray" style="bottom: 30%;" data-bind="foreach: hero.damageTokens">
-                <img data-bind="attr: {src: image}, style: { height: height }" />
+            <div class="token-tray" style="bottom: 30%;" >
+                <!-- ko foreach: hero.damageTokens -->
+                <img data-bind="attr: {src: image}, style: { height: height }, click: function() { $parent.hero.gainDamage(-1); }" />
+                <!-- /ko -->
+                <img src="Tokens/1damage.png" style="height: 80%; opacity: 0.4" data-bind="click: function() { hero.gainDamage(1); }" />
             </div>
-            <div class="token-tray" style="bottom: 40%;" data-bind="foreach: new Array(hero.strain())">
-                <img src="Tokens/strain.png" style="height: 92%" />
+            <div class="token-tray" style="bottom: 45%;" >
+                <!-- ko foreach: new Array(hero.strain()) -->
+                <img src="Tokens/strain.png" style="height: 92%" data-bind="click: function() { $parent.hero.gainStrain(-1); }"/>
+                <!-- /ko -->
+                <img src="Tokens/strain.png" style="height: 92%; opacity: 0.4" data-bind="click: function() { hero.gainStrain(1); }" />
             </div>
         </div>
-        <div>
-            <button data-bind="click: function() { hero.gainDamage(1); }">Increase Damage</button>
-            <button data-bind="click: function() { hero.gainStrain(1); }">Increase Strain</button>
-            <button data-bind="click: function() { hero.gainMovement(1); }">Increase Movement</button>
-            <button data-bind="click: function() { hero.focused(true); }">Focus</button>
-            <button data-bind="click: function() { hero.stunned(true); }">Stun</button>
-            <button data-bind="click: function() { hero.bleeding(true); }">Bleed</button>
+        <div id="operationsContainer" data-bind="foreach: hero.availableOperations">
+            <div class="well" data-bind="click: function() { performOperation($parent.hero); }">
+                <div></div>
+                <span data-bind="text: name"></span>
+            </div>
         </div>
-        <button data-bind="click: hero.activate">Activate</button>
-        <button data-bind="click: hero.rest">Rest</button>
     </div>
     <div class="column" style="position:relative">
         <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 0;"/>
-        <div class="card-tray">
+        <!--<div class="card-tray">
             <div data-bind="foreach: hero.purchasedAbilities">
                 <div><img data-bind="attr: {src: image}" /></div>
             </div>
@@ -75,17 +77,34 @@
         </div>
         <div class="card-tray">
 
+        </div>-->
+        <div class="fixed-card-container" style="max-height: 75%" data-bind="foreach: hero.purchasedAbilities">
+            <div>
+                <div class="fixed-card-slot" style="position: relative; z-index: 1">
+                    <img data-bind="attr: {src: image}" style="position: absolute;"/>
+                    <img src="Cards/Wearables/Equipment_Placeholder.png" /> <!-- just to get the heights all the same -->
+                </div>
+            </div>
         </div>
     </div>
     <div class="column">
-        <div id="fixed-card-container" style="text-align: justify">
+        <div class="fixed-card-container blue" >
+            <!-- ko foreach: new Array(3) -->
             <div>
-                <div class="fixed-card-slot" data-bind="with: hero.armour()">
-                    <img data-bind="attr: { src: image }" />
+                <div class="fixed-card-slot" data-bind="with: $parent.hero.equipment()">
+                    <img data-bind="attr: { src: $data[$index()] != null ? $data[$index()].image : '' }, visible: $data[$index()] != null, style: {opacity: $data[$index()] != null && $data[$index()].exhausted() ? 0.4 : 1 }" />
+                    <img src="Cards/Wearables/Equipment_Placeholder.png", data-bind="visible: $data[$index()] == null" />
+                </div>
+            </div>
+            <!-- /ko -->
+            <div>
+                <div class="fixed-card-slot" >
+                    <img data-bind="attr: { src: hero.armour().image }, visible: hero.armour() != null" />
+                    <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
                 </div>
             </div>
             <div>
-                <div class="fixed-card-slot" style="position: relative" data-bind="with: hero.weapons()[0]">
+                <div class="fixed-card-slot" data-bind="with: hero.weapons()[0]">
                     <img data-bind="attr: { src: image }" />
                     <div>
                         <img src="Cards/WeaponAttachments/High-Impact_Guard.jpg" />
@@ -96,8 +115,9 @@
                 </div>
             </div>
             <div>
-                <div class="fixed-card-slot" data-bind="with: hero.weapons()[1]">
-                    <img data-bind="attr: { src: image }" />
+                <div class="fixed-card-slot" data-bind="with: hero.weapons()">
+                    <img data-bind="attr: { src: $data[1] != null ? $data[1].image : '' }, visible: $data[1] != null" />
+                    <img src="Cards/Weapons/Weapon_Placeholder.png" data-bind="visible: $data[1] == null"/>
                 </div>
             </div>
         </div>

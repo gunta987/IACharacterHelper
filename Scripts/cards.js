@@ -37,6 +37,21 @@
                 type: ['staff'],
                 slots: 1
             }, 'Cards/Weapons/Pic2444795.jpg')
+        ],
+        Equipment: [
+            new hf.Equipment({
+                name: 'Adrenal Implant',
+                events: [
+                    new hf.Event('rest', function (hero, card) {
+                        if (!card.exhausted()) {
+                            hf.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain focus?", function () {
+                                hero.focused(true);
+                                card.exhausted(true);
+                            });
+                        }
+                    })
+                ]
+            }, 'Cards/Wearables/Adrenal_Implant.png')
         ]
     }
 });
