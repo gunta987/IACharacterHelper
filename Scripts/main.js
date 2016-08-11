@@ -5,11 +5,12 @@
     }
 });
 
-require(['jquery', 'ko', 'lodash', 'heroes', 'cards'], function ($, ko, _, heroes, cards) {
+require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal'], function ($, ko, _, heroes, cards, modal) {
     $(document).ready(function () {
 
         var myViewModel = {
-            hero: heroes[0]
+            hero: heroes[0],
+            modal: modal
         };
         //TODO: populate via user
         _.forEach(cards.Diala, myViewModel.hero.AddCard);

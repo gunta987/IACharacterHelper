@@ -1,4 +1,4 @@
-﻿define(['ko', 'lodash'], function (ko, _) {
+﻿define(['ko', 'lodash', 'jquery'], function (ko, _, $) {
     var card = function (properties, image) {
         var self = this;
         self.name = properties.name || '';
@@ -51,11 +51,6 @@
                     self.action(hero, self.card);
                 }
             };
-        },
-        ConfirmOperation: function(text, action) {
-            if (confirm(text)) {
-                action();
-            }
         },
         Card: card,
         Ability: ability,

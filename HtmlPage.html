@@ -7,8 +7,7 @@
     <link rel="stylesheet" type="text/css" href="content.css" />
 </head>
 <body>
-    <div class="column" data-bind="click: function(hero, e) { e.stopImmediatePropagation(); }">
-        <div style="position: absolute; top:0; left: 0; height: 100%; width: 100%" ></div>
+    <div class="column noclick-when-disabled">
         <div id="characterContainer" style="position: relative">
             <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + hero.imageName() + '.png'}" style="width: 100%" />
             <!--<div style="border: solid 1px black; border-radius: 10px; position: absolute; left: 68.3%; width: 26.67%; top: 5.87%;">
@@ -66,7 +65,7 @@
         </div>
     </div>
     <div class="column" style="position:relative">
-        <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 0;"/>
+        <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 2%;"/>
         <!--<div class="card-tray">
             <div data-bind="foreach: hero.purchasedAbilities">
                 <div><img data-bind="attr: {src: image}" /></div>
@@ -78,11 +77,25 @@
         <div class="card-tray">
 
         </div>-->
-        <div class="fixed-card-container" style="max-height: 75%" data-bind="foreach: hero.purchasedAbilities">
+        <div class="fixed-card-container above-modal" data-bind="foreach: hero.purchasedAbilities">
             <div>
                 <div class="fixed-card-slot" style="position: relative; z-index: 1">
                     <img data-bind="attr: {src: image}" style="position: absolute;"/>
                     <img src="Cards/Wearables/Equipment_Placeholder.png" /> <!-- just to get the heights all the same -->
+                </div>
+            </div>
+        </div>
+        <div class="modal well" style="width: 100%" >
+            <div></div>
+            <div class="modal-text"><span class="black-text" data-bind="text: modal.text"></span></div>
+            <div class="modal-buttons">
+                <div class="well button" >
+                    <div></div>
+                    <span class="black-text" data-bind="text: modal.cancelButtonText, click: modal.cancelButton"></span>
+                </div>
+                <div class="well button" >
+                    <div></div>
+                    <span class="black-text" data-bind="text: modal.okButtonText, click: modal.okButton"></span>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-﻿define(['herofunctions'], function(hf) {
+﻿define(['herofunctions', 'modal'], function(hf, modal) {
     return {
         Diala: [
             new hf.Ability({ name: 'Force Adept' }, false, 'Cards/Diala/Pic2444785.jpg'),
@@ -43,8 +43,8 @@
                 name: 'Adrenal Implant',
                 events: [
                     new hf.Event('rest', function (hero, card) {
-                        if (!card.exhausted()) {
-                            hf.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain focus?", function () {
+                        if (!card.exhausted() && !hero.focused()) {
+                            modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain focus?", function () {
                                 hero.focused(true);
                                 card.exhausted(true);
                             });
