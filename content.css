@@ -265,6 +265,19 @@ only screen and (        min-device-pixel-ratio: 2) {
     line-height: 1.5;
 }
 
+#surgesContainer {
+    font-size: 3em;
+    margin: 1%;
+    overflow-y: auto;
+}
+
+#surgesContainer .well {
+    display: block;
+    width: 98%;
+    padding: 1%;
+    margin-bottom: 1%;
+}
+
 #operationsContainer .well:not(:last-child) {
     border-bottom: 2px solid grey;
 }
@@ -347,7 +360,8 @@ only screen and (        min-device-pixel-ratio: 2) {
 }
 
 .cost > img:not(.die) {
-    -webkit-filter: grayscale() invert(100%);
+    -webkit-filter: grayscale(100%) invert(100%);
+    filter: grayscale(100%) invert(100%);
 }
 
 .conflict #conflictSection {

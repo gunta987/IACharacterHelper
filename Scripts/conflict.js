@@ -1,7 +1,8 @@
-﻿define(['ko', 'jquery', 'dice', 'lodash'], function (ko, $, d, _) {
+﻿define(['ko', 'jquery', 'dice', 'lodash', 'constants'], function (ko, $, d, _, C$) {
     return function () {
         var self = this;
         var myDice = ko.observableArray([]);
+        var weapon = ko.observable({});
         var opponentDice = ko.observableArray([]);
         var extraBlock = ko.observable(0);
         var extraPierce = ko.observable(0);
@@ -29,18 +30,18 @@
             return accuracy() < requiredAccuracy() ? 0 : Math.max(damage - block(), 0);
         });
         var extraSurges = ko.observable(0);
+        var selectedSurges = ko.observableArray([]);
         var surges = ko.pureComputed(function () {
             if (_.some(opponentDice(), function(die) { return (die.selectedFace() || {}).dodge; })) {
                 return 0;
             }
-            var surge = _.reduce(myDice(), function (sum, die) { return sum + ((die.selectedFace() || {}).surge || 0); }, 0) + extraSurges();
+            var surge = _.reduce(myDice(), function (sum, die) { return sum + ((die.selectedFace() || {}).surge || 0); }, 0) + extraSurges() - selectedSurges().length;
             var evade = _.reduce(opponentDice(), function (sum, die) { return sum + ((die.selectedFace() || {}).evade || 0); }, 0);
             return Math.max(surge - evade - extraEvade(), 0);
         });
 
         var caption = ko.observable('');
-        var RANGE = 0, DICE = 1, ROLL = 2;
-        var conflictStage = ko.observable(RANGE);
+        var conflictStage = ko.observable(C$.RANGE);
 
         var button1Text = ko.observable('');
         var button1 = function () { };
@@ -70,12 +71,12 @@
         ];
 
         self.rollDice = function () {
-            conflictStage(ROLL);
+            conflictStage(C$.ROLL);
             caption('Roll all dice and record the results below')
         };
 
         var selectOpponentDice = function () {
-            conflictStage(DICE);
+            conflictStage(C$.DICE);
             caption("Select target's dice (click to add to pool, click on die in pool to remove)");
             button1Text('Continue');
             button1 = function () {
@@ -86,17 +87,18 @@
             }
         };
 
-        var attackStart = function (hero, ranged, dice, additional) {
+        var attackStart = function (hero, ranged, dice, additional, wpn) {
             showModal();
             hero.inConflict(true);
             myDice(dice);
+            weapon(wpn);
             extraPierce(additional.pierce);
             extraDamage(additional.damage);
             extraAccuracy(additional.accuracy);
 
             requiredAccuracy(0);
             if (ranged) {
-                conflictStage(RANGE);
+                conflictStage(C$.RANGE);
                 caption("Select target's range");
                 button1Text('Continue');
                 button1 = function () {
@@ -126,10 +128,12 @@
                 opponentDice.push(die.copy());
             },
             MyDice: myDice,
+            AttackWeapon: weapon,
             ExtraPierce: extraPierce,
             ExtraDamage: extraDamage,
             ExtraAccuracy: extraAccuracy,
-            MyAttack: {damage: damage, surges: surges, accuracy: accuracy, requiredAccuracy: requiredAccuracy},
+            MyAttack: { damage: damage, surges: surges, accuracy: accuracy, requiredAccuracy: requiredAccuracy },
+            SelectedSurges: selectedSurges,
             OpponentDice: opponentDice,
             ExtraBlock: extraBlock,
             ExtraEvade: extraEvade,

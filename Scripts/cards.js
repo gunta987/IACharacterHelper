@@ -1,4 +1,4 @@
-﻿define(['herofunctions', 'modal', 'cost', 'dice'], function (hf, modal, $, d) {
+﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge'], function (hf, modal, $, d, s) {
     return {
         Diala: [
             new hf.Ability({ name: 'Force Adept' }, false, 'Cards/Diala/Pic2444785.jpg'),
@@ -42,7 +42,8 @@
                 ranged: false,
                 type: ['blade', 'staff'],
                 slots: 2,
-                dice: [d.RED, d.GREEN]
+                dice: [d.RED, d.GREEN],
+                surges: [[s.damage(), s.bleed()], [s.cleave(2)]]
             }, 'Cards/Weapons/BD-1_Vibro-Ax.jpg'),
             new hf.Weapon({
                 name: 'Plasteel Staff',
@@ -50,17 +51,18 @@
                 type: ['staff'],
                 slots: 1,
                 dice: [d.GREEN, d.YELLOW],
-                reach: true
+                reach: true,
+                surges: [[s.stun()], [s.damage()]]
             }, 'Cards/Weapons/Pic2444795.jpg')
         ],
         Attachments: [
             new hf.Attachment({
                 name: 'High-Impact Guard',
-
+                surges: [[s.damage(2)]]
             }, 'Cards/WeaponAttachments/High-Impact_Guard.jpg'),
             new hf.Attachment({
                 name: 'Shock Emitter',
-
+                surges: [[s.stun()]]
             }, 'Cards/WeaponAttachments/Shock-emitter.png'),
             new hf.Attachment({
                 name: 'Extended Haft',

@@ -1,4 +1,4 @@
-﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict'], function ($, ko, _, hf, cards, inherentOperations, d, conflict) {
+﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants'], function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, $C) {
     function Die() {
 
     }
@@ -73,8 +73,13 @@
             if (!_.isEmpty(self.specialOperations())) {
                 return self.specialOperations();
             }
-            else if (!self.inConflict()) {
-                return _.filter(self.operations(), function (action) { return action.canPerformOperation(self); });
+            else {
+                var weaponOperations = (conflict.AttackWeapon().surgeOperations || function () { return []; })();
+                return _.filter(_.concat(self.operations(), weaponOperations), function (operation) {
+                    return ((!self.inConflict() && operation.conflictStage == null) ||
+                            (operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
+                        operation.canPerformOperation(self);
+                });
             }
         });
 
@@ -170,15 +175,14 @@
                 var operation = new hf.Operation(weapon.name,
                     function () {
                         self.specialOperations.removeAll();
-                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional);
+                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon);
                     },
                     function () { return true; });
                 var images = [];
                 images.push(_.map(dice, function (die) { return { src: die.blank, css: 'die' }; }));
                 images.push(_.times(additional.pierce, function () { return 'Other/Pierce.png' }));
                 images.push(_.times(additional.damage, function () { return 'Other/Damage.png' }));
-                if (weapon.accuracy() > 0)
-                {
+                if (weapon.accuracy() > 0) {
                     images.push(['Other/' + additional.accuracy + '.png', ])
                 }
                 operation.operationImages(_.flatten(images));
@@ -210,6 +214,17 @@
                     scope: [activation],
                     cost: [strain, strain],
                     effect: function () { remove(defence); },
+                    operations: [
+                        new hf.Operation('Precise Strike',
+                        function (hero, card) {
+                            //TODO: this can also be used during interrupt
+                            card.exhausted(true);
+                        },
+                        function (hero, card) {
+                            return !card.exhausted() && !conflict.AttackWeapon().ranged && !hero.wounded();
+                        },
+                        [cost.strain(2)], $C.DICE)
+                    ]
                 }, true),
                 'Foresight': new hf.Ability({
                     on: [defend],

@@ -61,6 +61,17 @@
                 </div>
             </div>
         </div>
+        <!--<div id="surgesContainer" data-bind="with: conflict.AttackWeapon">-->
+            <!-- ko foreach: $data != null ? $data.surges : [] -->
+            <!--<div class="well" data-bind="">
+                <div></div>
+                <span>bla</span>
+                <div class="cost" data-bind="foreach: _.flatMap($data, 'images')">
+                    <img data-bind="attr: {src: $data.src || $data }, css: $data.css" />
+                </div>
+            </div>-->
+            <!-- /ko -->
+        <!--</div>-->
     </div>
     <div class="column" style="position:relative">
         <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 2%;"/>
@@ -102,14 +113,14 @@
             <div class="conflict-content">
                 <span class="black-text" data-bind="html: conflict.caption"></span>
                 <div></div>
-                <div id="rangeSelect" data-bind="foreach: new Array(15), visible: conflict.Stage() == 0">
+                <div id="rangeSelect" data-bind="foreach: new Array(15), visible: conflict.Stage() == C$.RANGE">
                     <div class="well movement-well" data-bind="style: {opacity: $index() >= $parent.conflict.requiredAccuracy() ? 0.5 : 1}, click: function() { $parent.conflict.requiredAccuracy($index() + 1) }">
                         <div></div>
                         <img src='Other/5.png' /> <!-- just to get the width's all the same -->
                         <span data-bind="text: $index() + 1"></span>
                     </div>
                 </div>
-                <div id="dieSelect" data-bind="visible: conflict.Stage() == 1">
+                <div id="dieSelect" data-bind="visible: conflict.Stage() == C$.DICE">
                     <div data-bind="foreach: conflict.DefenceSelection">
                         <div class="well" data-bind="click: function() { $parent.conflict.addOpponentDie($data); }">
                             <img data-bind="attr: {src: blank}" />
@@ -123,7 +134,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="rollDice" data-bind="visible: conflict.Stage() == 2">
+                <div id="rollDice" data-bind="visible: conflict.Stage() == C$.ROLL">
                     <div data-bind="with: conflict">
                         <!-- ko foreach: MyDice -->
                         <div class="well" data-bind="click: function() { showSelection(!showSelection()); }">
