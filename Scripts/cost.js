@@ -7,7 +7,8 @@
             },
             incur: function (hero) {
                 hero.actions(hero.actions() - count);
-            }
+            },
+            images: _.fill(Array(count), 'Other/Action.png')
         }
     },
     strain: function (count) {
@@ -18,7 +19,8 @@
             },
             incur: function (hero) {
                 hero.gainStrain(count);
-            }
+            },
+            images: _.fill(Array(count), 'Tokens/Strain.png')
         }
     }
 })

@@ -1,4 +1,4 @@
-﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations'], function ($, ko, _, hf, cards, inherentOperations) {
+﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict'], function ($, ko, _, hf, cards, inherentOperations, d, conflict) {
     function Die() {
 
     }
@@ -53,6 +53,8 @@
         self.interrupt = ko.observable(false);
         self.movement = ko.observable(0);
 
+        self.inConflict = ko.observable(false);
+
         self.damageTokens = ko.pureComputed(function () {
             var tokens = [];
             _.times(self.damage() / 5, function () {
@@ -63,6 +65,17 @@
             });
 
             return tokens;
+        });
+
+        self.operations = ko.observableArray(inherentOperations);
+        self.specialOperations = ko.observableArray([]);
+        self.availableOperations = ko.pureComputed(function () {
+            if (!_.isEmpty(self.specialOperations())) {
+                return self.specialOperations();
+            }
+            else if (!self.inConflict()) {
+                return _.filter(self.operations(), function (action) { return action.canPerformOperation(self); });
+            }
         });
 
         self.cards = ko.observableArray([]);
@@ -89,6 +102,7 @@
             if (card.onAdd != null) {
                 card.onAdd.call(self);
             }
+            _(card.operations || []).forEach(function (op) { self.operations.push(op); });
         };
         _.forEach(coreAbilities, self.AddCard);
 
@@ -105,11 +119,6 @@
                 });
                 self.event('');
             }
-        });
-
-        self.operations = ko.observableArray(inherentOperations);
-        self.availableOperations = ko.pureComputed(function () {
-            return _.filter(self.operations(), function (action) { return action.canPerformOperation(self); })
         });
 
         self.damage.subscribe(function () {
@@ -147,6 +156,42 @@
         self.hit = function () { };
         self.suffered = function () { };
         self.reroll = function () { };
+
+        self.attack = function (additionalDice, ranged) {
+            //step 1: choose your weapon
+            var additionalDice = additionalDice || [];
+            if (self.focused()) {
+                additionalDice.push(d.GREEN());
+                self.focused(false);
+            }
+            _(self.weapons()).forEach(function (weapon) {
+                var dice = _.concat(weapon.dice(), additionalDice);
+                var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
+                var operation = new hf.Operation(weapon.name,
+                    function () {
+                        self.specialOperations.removeAll();
+                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional);
+                    },
+                    function () { return true; });
+                var images = [];
+                images.push(_.map(dice, function (die) { return { src: die.blank, css: 'die' }; }));
+                images.push(_.times(additional.pierce, function () { return 'Other/Pierce.png' }));
+                images.push(_.times(additional.damage, function () { return 'Other/Damage.png' }));
+                if (weapon.accuracy() > 0)
+                {
+                    images.push(['Other/' + additional.accuracy + '.png', ])
+                }
+                operation.operationImages(_.flatten(images));
+                self.specialOperations.push(operation);
+            });
+            //cancelling attack requires reversing any special attack cost, not just the action
+            //self.specialOperations.push(new hf.Operation('Cancel Attack',
+            //    function () {
+            //        self.specialOperations.removeAll();
+            //        self.actions(self.actions() + 1);
+            //    },
+            //    function () { return true; }));
+        }
     }
 
     return [

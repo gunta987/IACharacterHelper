@@ -1,6 +1,5 @@
 ﻿define(['jquery', 'ko'], function ($, ko) {
     return function () {
-        var self = this;
         var text = ko.observable('');
         var okButtonText = ko.observable('Yes');
         var closeModal = function () { $('.disabled').removeClass('disabled'); $('.modal').hide(); };

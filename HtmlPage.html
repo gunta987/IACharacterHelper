@@ -10,11 +10,6 @@
     <div class="column noclick-when-disabled">
         <div id="characterContainer" style="position: relative">
             <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + hero.imageName() + '.png'}" style="width: 100%" />
-            <!--<div style="border: solid 1px black; border-radius: 10px; position: absolute; left: 68.3%; width: 26.67%; top: 5.87%;">
-                <button style="padding: 0; background: transparent; opacity: 0.5; width: 100%">
-                    <img src="Cards/Diala/Precise Strike.png" style="width: 100%" />
-                </button>
-            </div>-->
             <div class="modifier" style="left: 52.5%" data-bind="visible: hero.extraHealth() > 0">
                 <img data-bind="attr: {src: 'Other/' + hero.extraHealth() + '.png'}" />
             </div>
@@ -59,8 +54,11 @@
         </div>
         <div id="operationsContainer" data-bind="foreach: hero.availableOperations">
             <div class="well" data-bind="click: function() { performOperation($parent.hero); }">
-                <div></div>
+                <!--<div></div>-->
                 <span data-bind="text: name"></span>
+                <div class="cost" data-bind="foreach: operationImages">
+                    <img data-bind="attr: {src: $data.src || $data }, css: $data.css" />
+                </div>
             </div>
         </div>
     </div>
@@ -80,14 +78,14 @@
         <div class="fixed-card-container above-modal" data-bind="foreach: hero.purchasedAbilities">
             <div>
                 <div class="fixed-card-slot" style="position: relative; z-index: 1">
-                    <img data-bind="attr: {src: image}" style="position: absolute;"/>
+                    <img data-bind="attr: {src: image}, style: { opacity: exhausted() ? 0.4 : 1 }" style="position: absolute;"/>
                     <img src="Cards/Wearables/Equipment_Placeholder.png" /> <!-- just to get the heights all the same -->
                 </div>
             </div>
         </div>
         <div class="modal well" style="width: 100%" >
             <div></div>
-            <div class="modal-text"><span class="black-text" data-bind="text: modal.text"></span></div>
+            <div class="modal-text"><span class="black-text" data-bind="html: modal.text"></span></div>
             <div class="modal-buttons">
                 <div class="well button" >
                     <div></div>
@@ -96,6 +94,100 @@
                 <div class="well button" >
                     <div></div>
                     <span class="black-text" data-bind="text: modal.okButtonText, click: modal.okButton"></span>
+                </div>
+            </div>
+        </div>
+        <div id="conflictSection" class="well" style="width: 100%">
+            <div></div>
+            <div class="conflict-content">
+                <span class="black-text" data-bind="html: conflict.caption"></span>
+                <div></div>
+                <div id="rangeSelect" data-bind="foreach: new Array(15), visible: conflict.Stage() == 0">
+                    <div class="well movement-well" data-bind="style: {opacity: $index() >= $parent.conflict.requiredAccuracy() ? 0.5 : 1}, click: function() { $parent.conflict.requiredAccuracy($index() + 1) }">
+                        <div></div>
+                        <img src='Other/5.png' /> <!-- just to get the width's all the same -->
+                        <span data-bind="text: $index() + 1"></span>
+                    </div>
+                </div>
+                <div id="dieSelect" data-bind="visible: conflict.Stage() == 1">
+                    <div data-bind="foreach: conflict.DefenceSelection">
+                        <div class="well" data-bind="click: function() { $parent.conflict.addOpponentDie($data); }">
+                            <img data-bind="attr: {src: blank}" />
+                            <img data-bind="attr: {src: faceImage }, style: {'-webkit-filter': invert ? 'invert(100%)' : 'invert(0%)'}" style="position: absolute; left: 0; top: 0;" />
+                        </div>
+                    </div>
+                    <div data-bind="foreach: conflict.OpponentDice">
+                        <div class="well" data-bind="click: function() { $parent.conflict.OpponentDice.remove($data); }">
+                            <img data-bind="attr: {src: blank}" />
+                            <img data-bind="attr: {src: faceImage }, style: {'-webkit-filter': invert ? 'invert(100%)' : 'invert(0%)'}" style="position: absolute; left: 0; top: 0;" />
+                        </div>
+                    </div>
+                </div>
+                <div id="rollDice" data-bind="visible: conflict.Stage() == 2">
+                    <div data-bind="with: conflict">
+                        <!-- ko foreach: MyDice -->
+                        <div class="well" data-bind="click: function() { showSelection(!showSelection()); }">
+                            <img data-bind="attr: {src: blank}" />
+                            <img data-bind="attr: {src: faceImage }, style: {'-webkit-filter': invert ? 'invert(100%)' : 'invert(0%)'}" style="position: absolute; left: 0; top: 0;" />
+                        </div>
+                        <!-- /ko -->
+                        <div class="conflict-details" style="display: inline-block">
+                            <span class="black-text" data-bind="text: ExtraPierce, visible: ExtraPierce() > 0"></span>
+                            <img src="Other/Pierce.png" data-bind="visible: ExtraPierce() > 0" />
+                            <span class="black-text" data-bind="text: ExtraDamage, visible: ExtraDamage() > 0"></span>
+                            <img src="Other/Damage.png" data-bind="visible: ExtraDamage() > 0" />
+                            <span class="black-text" data-bind="text: ExtraAccuracy() + ' accuracy', visible: ExtraAccuracy() > 0"></span>
+                        </div>
+                    </div>
+                    <div data-bind="foreach: conflict.MyDice">
+                        <div class="die-select" data-bind="foreach: faces, visible: showSelection()">
+                            <div class="well" data-bind="click: function() { $parent.selectedFace($data); $parent.showSelection(false); }">
+                                <img data-bind="attr: {src: $parent.blank}" />
+                                <img data-bind="attr: {src: $parent.getFace($data) }, style: {'-webkit-filter': $parent.invert ? 'invert(100%)' : 'invert(0%)'}" style="position: absolute; left: 0; top: 0;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <!-- ko foreach: conflict.OpponentDice -->
+                        <div class="well" data-bind="click: function() { showSelection(!showSelection()); }">
+                            <img data-bind="attr: {src: blank}" />
+                            <img data-bind="attr: {src: faceImage }, style: {'-webkit-filter': invert ? 'invert(100%)' : 'invert(0%)'}" style="position: absolute; left: 0; top: 0;" />
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko foreach: new Array(conflict.ExtraBlock()) -->
+                        <img src="Other/Block.png" style="height: 2em;"  data-bind="click: function() { $parent.conflict.ExtraBlock($parent.conflict.ExtraBlock() - 1); }"/>
+                        <!-- /ko -->
+                        <!-- ko foreach: new Array(conflict.ExtraEvade()) -->
+                        <img src="Other/Evade.png" style="height: 2em;"  data-bind="click: function() { $parent.conflict.ExtraEvade($parent.conflict.ExtraEvade() - 1); }"/>
+                        <!-- /ko -->
+                        <img src="Other/Block.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraBlock(conflict.ExtraBlock() + 1); }"/>
+                        <img src="Other/Evade.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraEvade(conflict.ExtraEvade() + 1); }" />
+                    </div>
+                    <div data-bind="foreach: conflict.OpponentDice">
+                        <div class="die-select" data-bind="foreach: faces, visible: showSelection()">
+                            <div class="well" data-bind="click: function() { $parent.selectedFace($data); $parent.showSelection(false); }">
+                                <img data-bind="attr: {src: $parent.blank}" />
+                                <img data-bind="attr: {src: $parent.getFace($data) }, style: {'-webkit-filter': $parent.invert ? 'invert(100%)' : 'invert(0%)'}" style="position: absolute; left: 0; top: 0;" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="conflict-summary" data-bind="with: conflict.MyAttack">
+                        <span class="black-text" data-bind="text: damage"></span>
+                        <img src="Other/Damage.png" />
+                        <span class="black-text" data-bind="text: surges"></span>
+                        <img src="Other/Surge.png" />
+                        <span class="black-text" data-bind="text: accuracy() + '/' + requiredAccuracy() + ' accuracy', visible: requiredAccuracy() > 0"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <div class="well button" data-bind="visible: conflict.showButton2, click: conflict.button2">
+                    <div></div>
+                    <span class="black-text" data-bind="text: conflict.button2Text"></span>
+                </div>
+                <div class="well button" data-bind="visible: conflict.showButton1, click: conflict.button1">
+                    <div></div>
+                    <span class="black-text" data-bind="text: conflict.button1Text"></span>
                 </div>
             </div>
         </div>
@@ -116,23 +208,30 @@
                     <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
                 </div>
             </div>
-            <div>
-                <div class="fixed-card-slot" data-bind="with: hero.weapons()[0]">
-                    <img data-bind="attr: { src: image }" />
+            <!-- ko with: hero.weapons() -->
+            <div >
+                <div class="fixed-card-slot">
+                    <img data-bind="attr: { src: $data[0] != null ? $data[0].image : '' }, visible: $data[0] != null" />
+                    <img src="Cards/Weapons/Weapon_Placeholder.png" data-bind="visible: $data[0] == null" />
+                    <!-- ko foreach: $data[0] != null ? $data[0].attachments : new Array(0) -->
                     <div>
-                        <img src="Cards/WeaponAttachments/High-Impact_Guard.jpg" />
+                        <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }" />
                     </div>
-                    <div>
-                        <img src="Cards/WeaponAttachments/Shock-emitter.png" />
-                    </div>
+                    <!-- /ko -->
                 </div>
             </div>
             <div>
-                <div class="fixed-card-slot" data-bind="with: hero.weapons()">
+                <div class="fixed-card-slot">
                     <img data-bind="attr: { src: $data[1] != null ? $data[1].image : '' }, visible: $data[1] != null" />
                     <img src="Cards/Weapons/Weapon_Placeholder.png" data-bind="visible: $data[1] == null"/>
+                    <!-- ko foreach: $data[1] != null ? $data[1].attachments : new Array(0) -->
+                    <div>
+                        <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }" />
+                    </div>
+                    <!-- /ko -->
                 </div>
             </div>
+            <!-- /ko -->
         </div>
     </div>
 </body>

@@ -5,17 +5,21 @@
     }
 });
 
-require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal'], function ($, ko, _, heroes, cards, modal) {
+require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict'], function ($, ko, _, heroes, cards, modal, conflict) {
     $(document).ready(function () {
 
         var myViewModel = {
             hero: heroes[0],
-            modal: modal
+            modal: modal,
+            conflict: conflict
         };
         //TODO: populate via user
         _.forEach(cards.Diala, myViewModel.hero.AddCard);
         _.forEach(cards.Wearables, myViewModel.hero.AddCard);
         _.forEach(cards.Weapons, myViewModel.hero.AddCard);
+        myViewModel.hero.weapons()[0].attachments().push(cards.Attachments[0]);
+        myViewModel.hero.weapons()[0].attachments().push(cards.Attachments[1]);
+        myViewModel.hero.weapons()[1].attachments().push(cards.Attachments[2]);
         _.forEach(cards.Equipment, myViewModel.hero.AddCard);
 
         //set max height on operations container so that window scrollbar doesn't show

@@ -1,6 +1,12 @@
-﻿body {
+﻿@font-face {
+    font-family: Agency FB;
+    src: url(ufonts.com_agency-fb.ttf);
+}
+
+body {
     background-image: url('Background_tile.png');
     margin: 0;
+    font-size: 16px;
     font-family: 'Agency FB', sans-serif;
     font-weight: bold;
     color: #7E7FB0;
@@ -29,6 +35,18 @@
     -1px 1px 0 white,
     1px -1px 0 white,
     -1px -1px 0 white;
+}
+
+@media
+only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (   min--moz-device-pixel-ratio: 2),
+only screen and (     -o-min-device-pixel-ratio: 2/1),
+only screen and (        min-device-pixel-ratio: 2) { 
+  
+  body {
+      font-size: 8px;
+  }
+
 }
 
 .column {
@@ -84,7 +102,7 @@
 
 .fixed-card-slot {
     border: #EFFFC6 solid 1px;
-    box-shadow: inset 1px 1px 10px #EFFFC6;
+    box-shadow: inset 0px 0px 10px #EFFFC6;
     border-radius: 1vw;
     overflow: hidden;
     margin: 1%;
@@ -95,7 +113,7 @@
 
 .blue .fixed-card-slot {
     border-color: #7E7FB0;
-    box-shadow: inset 1px 1px 10px #7E7FB0;
+    box-shadow: inset 0px 0px 10px #7E7FB0;
 }
 
 .fixed-card-slot img {
@@ -165,7 +183,7 @@
 
 .well > div:first-child {
     background-color: #1A1D4A;
-    box-shadow: inset 1px 1px 10px #EFFFC6;
+    box-shadow: inset 0px 0px 10px #EFFFC6;
     border-radius: 5px;
     opacity: 0.7;
     left: 0;
@@ -230,18 +248,30 @@
     font-size: 3em;
     margin: 1%;
     overflow-y: auto;
+    border: 11px solid transparent;
+    padding: 0 2%;
+    border-radius: 11px;
+    border-image: url(Other/OperationsBorder.png) 11 stretch;
+    background-color: #E6E6E8;
+    box-shadow: inset 0px 0px 20px black;
+    color: black;
+    text-shadow: none;
 }
 
 #operationsContainer .well {
     display: block;
-    width: 98%;
-    padding: 1%;
+    padding: 1% 0;
     margin-bottom: 1%;
+    line-height: 1.5;
 }
 
-#characterContainer .well div, .button.well div {
+#operationsContainer .well:not(:last-child) {
+    border-bottom: 2px solid grey;
+}
+
+#characterContainer .well div, .button.well div, #rangeSelect .well div {
     background-color: #939294;
-    box-shadow: inset 1px 1px 10px black;
+    box-shadow: inset 0px 0px 10px black;
 }
 
 #operationsContainer .well span {
@@ -250,32 +280,36 @@
 
 .above-modal {
     height: 75%;
-    transition: height 0.75s;
+    transition: height 0.25s;
 }
 
 .disabled .above-modal {
     /*height: 50%;*/
 }
 
-.modal {
+.modal, #conflictSection {
     height: 0%;
     display: none;
     font-size: 2em;
     transition: height 0.25s;
     position: absolute;
-    bottom: 0;
+    bottom: 0.5%;
 }
 
 .disabled .modal {
     /*height: 50%;*/
-    height: 25%;
+    height: 24%;
     display: block;
 }
 
-.modal-text {
+.modal-text, .conflict-content {
     padding: 1% 2%;
     height: calc(100% - 2em - 2%);
     overflow-y: auto;
+}
+
+.modal-text img {
+    height: 1em;
 }
 
 .modal-buttons {
@@ -302,4 +336,60 @@
 .button span {
     font-size: 1.5em;
     display: inline-block;
+}
+
+.cost {
+    height: 1em;
+    position: absolute;
+    right: 2%;
+    top: calc(50% - 0.5em);
+    line-height: 0;
+}
+
+.cost > img:not(.die) {
+    -webkit-filter: grayscale() invert(100%);
+}
+
+.conflict #conflictSection {
+    height: 49%;
+    /*display: block;*/
+}
+
+.conflict .above-modal {
+    height: 50%;
+}
+
+.conflict-content span + div {
+    margin-top: 0.5em;
+}
+
+.conflict-content span img {
+    height: 1em;
+}
+
+.conflict-content .well {
+    height: 2em;
+}
+
+#rangeSelect, .die-select, #rollDice > div {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+#rangeSelect span {
+    font-size: 1.7em;
+}
+
+.conflict-summary, .conflict-details {
+    font-size: 2em;
+    line-height: 1em;
+}
+
+.conflict-summary span, .conflict-details span {
+    line-height: 1em;
+    vertical-align: top;
+}
+
+.conflict-summary img, .conflict-details img {
+    height: 1em;
 }

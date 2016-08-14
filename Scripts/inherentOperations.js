@@ -31,7 +31,7 @@
 
             },
             function (hero) {
-                return !hero.activated() && !hero.interrupt();
+                return !hero.activated() && !hero.interrupt() && !hero.stunned();
             }),
         new hf.Operation('Rest',
             function (hero) {
@@ -69,10 +69,19 @@
             [$.strain()]),
         new hf.Operation('Attack',
             function (hero) {
-
+                hero.attack();
             },
             function (hero) {
-                return hero.actions() > 0 && !hero.stunned();
-            })
+                return !hero.stunned();
+            },
+            [$.action()]),
+        new hf.Operation('Remove Stun',
+            function (hero) {
+                hero.stunned(false);
+            },
+            function (hero) {
+                return hero.stunned();
+            },
+            [$.action()])
     ];
 });

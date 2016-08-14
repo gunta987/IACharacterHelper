@@ -1,4 +1,4 @@
-﻿define(['herofunctions', 'modal'], function(hf, modal) {
+﻿define(['herofunctions', 'modal', 'cost', 'dice'], function (hf, modal, $, d) {
     return {
         Diala: [
             new hf.Ability({ name: 'Force Adept' }, false, 'Cards/Diala/Pic2444785.jpg'),
@@ -12,7 +12,19 @@
                 }
             }, false, 'Cards/Diala/Pic2444789.jpg'),
             new hf.Ability({ name: 'Snap Kick' }, false, 'Cards/Diala/Pic2444790.jpg'),
-            new hf.Ability({ name: 'Dancing Weapon' }, false, 'Cards/Diala/Pic2444791.jpg'),
+            new hf.Ability({
+                name: 'Dancing Weapon',
+                operations: [
+                    new hf.Operation('Dancing Weapon',
+                    function (hero) {
+                        hero.attack([d.BLUE()], true);
+                    },
+                    function (hero) {
+                        return !hero.stunned();
+                    },
+                    [$.action(), $.strain()])
+                ]
+            }, false, 'Cards/Diala/Pic2444791.jpg'),
             new hf.Ability({ name: 'Way of the Sarlacc' }, false, 'Cards/Diala/Pic2444792.jpg'),
         ],
         Wearables: [
@@ -27,16 +39,33 @@
         Weapons: [
             new hf.Weapon({
                 name: 'BD-1 Vibro-Ax',
-                category: 'melee',
+                ranged: false,
                 type: ['blade', 'staff'],
-                slots: 2
+                slots: 2,
+                dice: [d.RED, d.GREEN]
             }, 'Cards/Weapons/BD-1_Vibro-Ax.jpg'),
             new hf.Weapon({
                 name: 'Plasteel Staff',
-                category: 'melee',
+                ranged: false,
                 type: ['staff'],
-                slots: 1
+                slots: 1,
+                dice: [d.GREEN, d.YELLOW],
+                reach: true
             }, 'Cards/Weapons/Pic2444795.jpg')
+        ],
+        Attachments: [
+            new hf.Attachment({
+                name: 'High-Impact Guard',
+
+            }, 'Cards/WeaponAttachments/High-Impact_Guard.jpg'),
+            new hf.Attachment({
+                name: 'Shock Emitter',
+
+            }, 'Cards/WeaponAttachments/Shock-emitter.png'),
+            new hf.Attachment({
+                name: 'Extended Haft',
+                pierce: function (weapon) { return weapon.reach ? 1 : 0; }
+            }, 'Cards/WeaponAttachments/Extended_Haft.jpg')
         ],
         Equipment: [
             new hf.Equipment({
@@ -44,7 +73,7 @@
                 events: [
                     new hf.Event('rest', function (hero, card) {
                         if (!card.exhausted() && !hero.focused()) {
-                            modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain focus?", function () {
+                            modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain <img src='Tokens/Focus.png' />?", function () {
                                 hero.focused(true);
                                 card.exhausted(true);
                             });
