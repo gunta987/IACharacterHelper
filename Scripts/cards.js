@@ -1,4 +1,4 @@
-﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge'], function (hf, modal, $, d, s) {
+﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge', 'constants'], function (hf, modal, $, d, s, $C) {
     return {
         Diala: [
             new hf.Ability({ name: 'Force Adept' }, false, 'Cards/Diala/Pic2444785.jpg'),
@@ -62,7 +62,20 @@
             }, 'Cards/WeaponAttachments/High-Impact_Guard.jpg'),
             new hf.Attachment({
                 name: 'Shock Emitter',
-                surges: [[s.stun()]]
+                surges: [[s.stun()]],
+                operations: function () {
+                    var op = new hf.Operation('Shock Emitter',
+                        function (hero, conflict, card) {
+                            conflict.ExtraDamage(conflict.ExtraDamage() + 1);
+                            card.exhausted(true);
+                        },
+                        function (hero, conflict, card) {
+                            return !card.exhausted();
+                        },
+                        [], $C.ROLL, '(exhaust)');
+                    op.operationImages(['Other/Damage.png']);
+                    return [op];
+                }()
             }, 'Cards/WeaponAttachments/Shock-emitter.png'),
             new hf.Attachment({
                 name: 'Extended Haft',

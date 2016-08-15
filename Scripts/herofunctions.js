@@ -1,17 +1,18 @@
-﻿define(['ko', 'lodash', 'jquery', 'conflict', 'constants'], function (ko, _, $, conflict, $C) {
-    var operation = function (name, performOperation, canPerformOperation, cost, conflictStage) {
+﻿define(['ko', 'lodash', 'jquery', 'constants', 'surge'], function (ko, _, $, $C, s) {
+    var operation = function (name, performOperation, canPerformOperation, cost, conflictStage, text) {
         var self = this;
         self.name = name;
         self.conflictStage = conflictStage;
-        self.canPerformOperation = function (hero) {
+        self.canPerformOperation = function (hero, conflict) {
             var otherRequirements = canPerformOperation || function () { return true; };
-            return _.every(cost || [], function (c) { return c.required(hero); }) && otherRequirements(hero, self.card);
+            return _.every(cost || [], function (c) { return c.required(hero); }) && otherRequirements(hero, conflict, self.card);
         }
-        self.performOperation = function (hero) {
-            performOperation(hero, self.card);
+        self.performOperation = function (hero, conflict) {
+            performOperation(hero, conflict, self.card);
             _(cost || []).forEach(function (c) { c.incur(hero); });
         }
-        self.operationImages = ko.observable(_.flatMap(cost || [], 'images'))
+        self.operationImages = ko.observable(_.flatMap(cost || [], 'images'));
+        self.text = text;
     };
 
     var card = function (properties, image) {
@@ -64,32 +65,38 @@
             }, 0);
         });
         self.surges = ko.pureComputed(function () {
-            return _.concat((properties.surges || []), _.flatMap(self.attachments(), 'surges'));
+            return _.concat([[s.regainStrain()]], (properties.surges || []), _.flatMap(self.attachments(), 'surges'));
         });
         self.surgeOperations = ko.pureComputed(function () {
             return _.flatMap(self.surges(), function (arr) {
                 var selectSurge = new operation('Select Surge',
-                        function (hero) {
+                        function (hero, conflict) {
                             selectSurge.selected(true);
                             conflict.SelectedSurges.push(selectSurge);
+                            _(arr).forEach(function (surge) {
+                                surge.Apply(conflict);
+                            });
                         },
-                        function (hero) {
+                        function (hero, conflict) {
                             return !selectSurge.selected() && conflict.MyAttack.surges() > 0;
                         },
                         [],
-                        $C.ROLL);
+                        $C.ROLL, _.compact(_.map(arr, 'text')).join(' '));
                 selectSurge.operationImages(_.flatMap(arr, 'images'));
                 selectSurge.selected = ko.observable(false);
                 var deselectSurge = new operation('Deselect Surge',
-                        function (hero) {
+                        function (hero, conflict) {
                             selectSurge.selected(false);
                             conflict.SelectedSurges.remove(selectSurge);
+                            _(arr).forEach(function (surge) {
+                                surge.Remove(conflict);
+                            });
                         },
                         function (hero) {
                             return selectSurge.selected();
                         },
                         [],
-                        $C.ROLL);
+                        $C.ROLL, _.compact(_.map(arr, 'text')).join(' '));
                 deselectSurge.operationImages(_.flatMap(arr, 'images'));
                 return [selectSurge, deselectSurge];
             });

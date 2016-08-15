@@ -53,25 +53,17 @@
             </div>
         </div>
         <div id="operationsContainer" data-bind="foreach: hero.availableOperations">
-            <div class="well" data-bind="click: function() { performOperation($parent.hero); }">
-                <!--<div></div>-->
+            <div class="well" data-bind="click: function() { performOperation($parent.hero, $parent.conflict); }">
+                why isn't shock emitter showing?
                 <span data-bind="text: name"></span>
-                <div class="cost" data-bind="foreach: operationImages">
+                <div class="cost" >
+                    <span data-bind="text: text" ></span>
+                    <!-- ko foreach: operationImages -->
                     <img data-bind="attr: {src: $data.src || $data }, css: $data.css" />
+                    <!-- /ko -->
                 </div>
             </div>
         </div>
-        <!--<div id="surgesContainer" data-bind="with: conflict.AttackWeapon">-->
-            <!-- ko foreach: $data != null ? $data.surges : [] -->
-            <!--<div class="well" data-bind="">
-                <div></div>
-                <span>bla</span>
-                <div class="cost" data-bind="foreach: _.flatMap($data, 'images')">
-                    <img data-bind="attr: {src: $data.src || $data }, css: $data.css" />
-                </div>
-            </div>-->
-            <!-- /ko -->
-        <!--</div>-->
     </div>
     <div class="column" style="position:relative">
         <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 2%;"/>
@@ -183,11 +175,16 @@
                         </div>
                     </div>
                     <div class="conflict-summary" data-bind="with: conflict.MyAttack">
-                        <span class="black-text" data-bind="text: damage"></span>
-                        <img src="Other/Damage.png" />
-                        <span class="black-text" data-bind="text: surges"></span>
-                        <img src="Other/Surge.png" />
-                        <span class="black-text" data-bind="text: accuracy() + '/' + requiredAccuracy() + ' accuracy', visible: requiredAccuracy() > 0"></span>
+                        <span class="black-text" data-bind="text: damage, visible: damage() > 0"></span>
+                        <img src="Other/Damage.png" data-bind="visible: damage() > 0"/>
+                        <span class="black-text" data-bind="text: surges, visible: surges() > 0"></span>
+                        <img src="Other/Surge.png" data-bind="visible: surges() > 0"/>
+                        <img src="Tokens/bleed.png" data-bind="visible: bleed"/>
+                        <img src="Tokens/stun.png" data-bind="visible: stun" />
+                        <img src="Tokens/strain.png" data-bind="visible: strain" />
+                        <div>
+                            <span class="black-text" data-bind="text: accuracy() + '/' + requiredAccuracy() + ' accuracy', visible: requiredAccuracy() > 0"></span>
+                        </div>
                     </div>
                 </div>
             </div>

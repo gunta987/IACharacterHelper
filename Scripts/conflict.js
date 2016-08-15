@@ -26,7 +26,7 @@
             if (_.some(opponentDice(), function(die) { return (die.selectedFace() || {}).dodge; })) {
                 return 0;
             }
-            var damage = _.reduce(myDice(), function (sum, die) { return sum + ((die.selectedFace() || {}).damage || 0); }, 0);
+            var damage = _.reduce(myDice(), function (sum, die) { return sum + ((die.selectedFace() || {}).damage || 0); }, 0) + extraDamage();
             return accuracy() < requiredAccuracy() ? 0 : Math.max(damage - block(), 0);
         });
         var extraSurges = ko.observable(0);
@@ -39,6 +39,9 @@
             var evade = _.reduce(opponentDice(), function (sum, die) { return sum + ((die.selectedFace() || {}).evade || 0); }, 0);
             return Math.max(surge - evade - extraEvade(), 0);
         });
+        var bleed = ko.observable(0);
+        var stun = ko.observable(0);
+        var regainStrain = ko.observable(false);
 
         var caption = ko.observable('');
         var conflictStage = ko.observable(C$.RANGE);
@@ -132,8 +135,19 @@
             ExtraPierce: extraPierce,
             ExtraDamage: extraDamage,
             ExtraAccuracy: extraAccuracy,
-            MyAttack: { damage: damage, surges: surges, accuracy: accuracy, requiredAccuracy: requiredAccuracy },
+            MyAttack: {
+                damage: damage,
+                surges: surges,
+                accuracy: accuracy,
+                requiredAccuracy: requiredAccuracy,
+                bleed: ko.pureComputed(function() { return bleed() > 0;}),
+                stun: ko.pureComputed(function() { return stun() > 0;}),
+                strain: regainStrain
+            },
             SelectedSurges: selectedSurges,
+            Bleed: bleed,
+            Stun: stun,
+            RegainStrain: regainStrain,
             OpponentDice: opponentDice,
             ExtraBlock: extraBlock,
             ExtraEvade: extraEvade,

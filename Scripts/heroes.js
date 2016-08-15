@@ -78,7 +78,7 @@
                 return _.filter(_.concat(self.operations(), weaponOperations), function (operation) {
                     return ((!self.inConflict() && operation.conflictStage == null) ||
                             (operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
-                        operation.canPerformOperation(self);
+                        operation.canPerformOperation(self, conflict);
                 });
             }
         });
@@ -220,7 +220,7 @@
                             //TODO: this can also be used during interrupt
                             card.exhausted(true);
                         },
-                        function (hero, card) {
+                        function (hero, conflict, card) {
                             return !card.exhausted() && !conflict.AttackWeapon().ranged && !hero.wounded();
                         },
                         [cost.strain(2)], $C.DICE)
