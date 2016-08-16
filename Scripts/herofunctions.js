@@ -47,7 +47,7 @@
         self.reach = properties.reach || false;
         self.type = properties.type || [];
         self.dice = function () { return _.map(properties.dice, function (die) { return die(); }); };
-        self.attachments = ko.observable([]);
+        self.attachments = ko.observableArray([]);
         var zeroFunction = function () { return 0; };
         self.pierce = ko.pureComputed(function () {
             return (properties.pierce || 0) + _.reduce(self.attachments(), function (sum, attachment) {
@@ -83,7 +83,6 @@
                         [],
                         $C.ROLL, _.compact(_.map(arr, 'text')).join(' '));
                 selectSurge.operationImages(_.flatMap(arr, 'images'));
-                selectSurge.selected = ko.observable(false);
                 var deselectSurge = new operation('Deselect Surge',
                         function (hero, conflict) {
                             selectSurge.selected(false);
@@ -98,6 +97,8 @@
                         [],
                         $C.ROLL, _.compact(_.map(arr, 'text')).join(' '));
                 deselectSurge.operationImages(_.flatMap(arr, 'images'));
+                selectSurge.selected = ko.observable(false);
+                selectSurge.deselect = deselectSurge;
                 return [selectSurge, deselectSurge];
             });
         });

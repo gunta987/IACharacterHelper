@@ -18,9 +18,9 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
         _.forEach(cards.Diala, myViewModel.hero.AddCard);
         _.forEach(cards.Wearables, myViewModel.hero.AddCard);
         _.forEach(cards.Weapons, myViewModel.hero.AddCard);
-        myViewModel.hero.weapons()[0].attachments().push(cards.Attachments[0]);
-        myViewModel.hero.weapons()[0].attachments().push(cards.Attachments[1]);
-        myViewModel.hero.weapons()[1].attachments().push(cards.Attachments[2]);
+        myViewModel.hero.weapons()[0].attachments.push(cards.Attachments[0]);
+        myViewModel.hero.weapons()[0].attachments.push(cards.Attachments[1]);
+        myViewModel.hero.weapons()[1].attachments.push(cards.Attachments[2]);
         _.forEach(cards.Equipment, myViewModel.hero.AddCard);
 
         //set max height on operations container so that window scrollbar doesn't show

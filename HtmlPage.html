@@ -54,7 +54,6 @@
         </div>
         <div id="operationsContainer" data-bind="foreach: hero.availableOperations">
             <div class="well" data-bind="click: function() { performOperation($parent.hero, $parent.conflict); }">
-                why isn't shock emitter showing?
                 <span data-bind="text: name"></span>
                 <div class="cost" >
                     <span data-bind="text: text" ></span>
@@ -222,7 +221,7 @@
                     <img data-bind="attr: { src: $data[0] != null ? $data[0].image : '' }, visible: $data[0] != null" />
                     <img src="Cards/Weapons/Weapon_Placeholder.png" data-bind="visible: $data[0] == null" />
                     <!-- ko foreach: $data[0] != null ? $data[0].attachments : new Array(0) -->
-                    <div>
+                    <div data-bind="visible: image != null">
                         <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }" />
                     </div>
                     <!-- /ko -->

@@ -74,7 +74,9 @@
                 return self.specialOperations();
             }
             else {
-                var weaponOperations = (conflict.AttackWeapon().surgeOperations || function () { return []; })();
+                var emptyArrayFunction = function () { return []; };
+                var weaponOperations = _.concat((conflict.AttackWeapon().surgeOperations || emptyArrayFunction)(),
+                    _.flatMap((conflict.AttackWeapon().attachments || emptyArrayFunction)(), 'operations'));
                 return _.filter(_.concat(self.operations(), weaponOperations), function (operation) {
                     return ((!self.inConflict() && operation.conflictStage == null) ||
                             (operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
@@ -162,20 +164,22 @@
         self.suffered = function () { };
         self.reroll = function () { };
 
-        self.attack = function (additionalDice, ranged) {
+        self.attack = function (additionalDice, abilitySurges, ranged) {
             //step 1: choose your weapon
             var additionalDice = additionalDice || [];
+            var abilitySurges = abilitySurges || [];
             if (self.focused()) {
                 additionalDice.push(d.GREEN());
                 self.focused(false);
             }
+
             _(self.weapons()).forEach(function (weapon) {
                 var dice = _.concat(weapon.dice(), additionalDice);
                 var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
                 var operation = new hf.Operation(weapon.name,
                     function () {
                         self.specialOperations.removeAll();
-                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon);
+                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
                     },
                     function () { return true; });
                 var images = [];
@@ -188,13 +192,6 @@
                 operation.operationImages(_.flatten(images));
                 self.specialOperations.push(operation);
             });
-            //cancelling attack requires reversing any special attack cost, not just the action
-            //self.specialOperations.push(new hf.Operation('Cancel Attack',
-            //    function () {
-            //        self.specialOperations.removeAll();
-            //        self.actions(self.actions() + 1);
-            //    },
-            //    function () { return true; }));
         }
     }
 

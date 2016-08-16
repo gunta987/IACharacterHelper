@@ -17,7 +17,7 @@
                 operations: [
                     new hf.Operation('Dancing Weapon',
                     function (hero) {
-                        hero.attack([d.BLUE()], true);
+                        hero.attack([d.BLUE()], [[s.accuracy(2), s.damage()]], true);
                     },
                     function (hero) {
                         return !hero.stunned();
