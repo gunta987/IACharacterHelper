@@ -84,6 +84,11 @@
             conflictComplete = function () {
                 //remove attachment added for ability surged
                 weapon().attachments.pop();
+                if (regainStrain()) {
+                    hero.gainStrain(-1);
+                }
+                hero.inConflict(false);
+                closeModal();
             },
 
             rollFinished = ko.pureComputed(function () {
@@ -93,6 +98,13 @@
             rollDice = function () {
                 conflictStage(C$.ROLL);
                 caption('Roll all dice and record the results below')
+                button1Text('Finish');
+                button1 = function () {
+                    conflictComplete();
+                };
+                canButton1 = function () {
+                    return rollFinished();
+                }
             },
 
             selectOpponentDice = function () {
@@ -101,15 +113,15 @@
                 button1Text('Continue');
                 button1 = function () {
                     rollDice();
-                }
+                };
                 canButton1 = function () {
                     return true;
-                }
+                };
             },
 
-            attackStart = function (hero, ranged, dice, additional, wpn, abilitySurges) {
+            attackStart = function (h, ranged, dice, additional, wpn, abilitySurges) {
                 self = this;
-                hero = hero;
+                hero = h;
                 showModal();
                 hero.inConflict(true);
                 myDice(dice);

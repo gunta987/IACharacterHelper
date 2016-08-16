@@ -205,7 +205,7 @@
             <div>
                 <div class="fixed-card-slot" data-bind="with: $parent.hero.equipment()">
                     <img data-bind="attr: { src: $data[$index()] != null ? $data[$index()].image : '' }, visible: $data[$index()] != null, style: {opacity: $data[$index()] != null && $data[$index()].exhausted() ? 0.4 : 1 }" />
-                    <img src="Cards/Wearables/Equipment_Placeholder.png", data-bind="visible: $data[$index()] == null" />
+                    <img src="Cards/Wearables/Equipment_Placeholder.png" data-bind="visible: $data[$index()] == null" />
                 </div>
             </div>
             <!-- /ko -->
@@ -213,6 +213,10 @@
                 <div class="fixed-card-slot" >
                     <img data-bind="attr: { src: hero.armour().image }, visible: hero.armour() != null" />
                     <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
+                </div>
+                <div class="fixed-card-slot">
+                    <span>external cards/crates, although on second thoughts i think this will look better as a scrollable with the equipment row, or with the class cards</span>
+                    <img src="Cards/Wearables/Equipment_Placeholder.png" />
                 </div>
             </div>
             <!-- ko with: hero.weapons() -->

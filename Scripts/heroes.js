@@ -76,7 +76,7 @@
             else {
                 var emptyArrayFunction = function () { return []; };
                 var weaponOperations = _.concat((conflict.AttackWeapon().surgeOperations || emptyArrayFunction)(),
-                    _.flatMap((conflict.AttackWeapon().attachments || emptyArrayFunction)(), 'operations'));
+                    _.flatMap((self.inConflict() ? (conflict.AttackWeapon().attachments || emptyArrayFunction) : emptyArrayFunction)(), 'operations'));
                 return _.filter(_.concat(self.operations(), weaponOperations), function (operation) {
                     return ((!self.inConflict() && operation.conflictStage == null) ||
                             (operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
@@ -142,12 +142,17 @@
         });
 
         self.gainStrain = function (gain) {
-            var endurance = fullEndurance.call(self);
             var damage = 0;
             var strain = self.strain() + gain;
-            if (strain > endurance) {
-                damage = strain - endurance;
-                strain = endurance;
+            if (strain < 0) {
+                damage = strain;
+                strain = 0;
+            } else {
+                var endurance = fullEndurance.call(self);
+                if (strain > endurance) {
+                    damage = strain - endurance;
+                    strain = endurance;
+                }
             }
             self.strain(strain);
             self.gainDamage(damage);
@@ -156,7 +161,7 @@
             self.movement(self.movement() + gain);
         };
         self.gainDamage = function (gain) {
-            self.damage(self.damage() + gain);
+            self.damage(Math.max(self.damage() + gain, 0));
             self.suffered(self.suffered() + gain);
         };
 
