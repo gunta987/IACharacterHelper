@@ -9,26 +9,33 @@
             onOk();
         };
         var cancelButtonText = ko.observable('No');
-        var cancelButton = function () { closeModal(); };
+        var onCancel = function() {};
+        var cancelButton = function() {
+            closeModal();
+            onCancel();
+        };
 
         var showModal = function () { $('.modal').show(0, function () { $('.column').addClass('disabled'); }); };
-        var ConfirmOperation = function (confirmText, action) {
+        var askQuestion = function (confirmText, yesAction, noAction, yesText, noText) {
             text(confirmText);
-            okButtonText('Yes');
-            cancelButtonText('No');
-            onOk = action;
+            okButtonText(yesText || 'Yes');
+            cancelButtonText(noText || 'No');
+            onOk = yesAction;
+            onCancel = noAction;
             showModal();
+        };
+        var confirmOperation = function (confirmText, action, yesText, noText) {
+            askQuestion(confirmText, action, function() {}, yesText, noText);
         };
 
         return {
             text: text,
             okButtonText: okButtonText,
             okButton: okButton,
-            onOk: function (action) { onOk = action; },
             cancelButtonText: cancelButtonText,
             cancelButton: cancelButton,
-            setCancelFunction: function (action) { onCancel = action; },
-            ConfirmOperation: ConfirmOperation
+            ConfirmOperation: confirmOperation,
+            AskQuestion: askQuestion
         }
     }();
 })

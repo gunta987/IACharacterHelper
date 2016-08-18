@@ -1,21 +1,22 @@
-﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants'], function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, $C) {
-    function Die() {
+﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants', 'modal'],
+    function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, $C, modal) {
+    //function Die() {
 
-    }
+    //}
 
-    var WHITE = new Die();
-    var BLACK = new Die();
-    var BLUE = new Die();
-    var GREEN = new Die();
-    var YELLOW = new Die();
+    //var WHITE = new Die();
+    //var BLACK = new Die();
+    //var BLUE = new Die();
+    //var GREEN = new Die();
+    //var YELLOW = new Die();
 
 
 
-    var strain = new hf.Operation('Strain', function (hero) {
-        hero.gainStrain(1);
-    });
+    //var strain = new hf.Operation('Strain', function (hero) {
+    //    hero.gainStrain(1);
+    //});
 
-    var action, activation, attack, melee, range, resolveAttack, resolveDefence, damage, defence, defend, surge, round;
+    //var action, activation, attack, melee, range, resolveAttack, resolveDefence, damage, defence, defend, surge, round;
 
     function Hero(initial) {
         var self = this;
@@ -30,7 +31,7 @@
         self.speed = initial.speed;
         self.extraSpeed = ko.observable(0);
         var fullSpeed = function () { return this.speed + this.extraSpeed(); };
-        self.defence = ko.observableArray(initial.defence);
+        self.defence = function () { return _.map(initial.defence, function (die) { return die(); }); };
         self.fisting = ko.observableArray(initial.fisting);
         self.eye = ko.observableArray(initial.eye);
         self.spanner = ko.observableArray(initial.spanner);
@@ -79,7 +80,7 @@
                     _.flatMap((self.inConflict() ? (conflict.AttackWeapon().attachments || emptyArrayFunction) : emptyArrayFunction)(), 'operations'));
                 return _.filter(_.concat(self.operations(), weaponOperations), function (operation) {
                     return ((!self.inConflict() && operation.conflictStage == null) ||
-                            (operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
+                            (self.inConflict() && operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
                         operation.canPerformOperation(self, conflict);
                 });
             }
@@ -136,7 +137,7 @@
                 initial.onWounded.call(self);
                 var endurance = fullEndurance.call(self);
                 if (self.strain() > endurance) {
-                    self.strain(endurance)
+                    self.strain(endurance);
                 }
             }
         });
@@ -171,8 +172,8 @@
 
         self.attack = function (additionalDice, abilitySurges, ranged) {
             //step 1: choose your weapon
-            var additionalDice = additionalDice || [];
-            var abilitySurges = abilitySurges || [];
+            additionalDice = additionalDice || [];
+            abilitySurges = abilitySurges || [];
             if (self.focused()) {
                 additionalDice.push(d.GREEN());
                 self.focused(false);
@@ -192,12 +193,17 @@
                 images.push(_.times(additional.pierce, function () { return 'Other/Pierce.png' }));
                 images.push(_.times(additional.damage, function () { return 'Other/Damage.png' }));
                 if (weapon.accuracy() > 0) {
-                    images.push(['Other/' + additional.accuracy + '.png', ])
+                    images.push(['Other/' + additional.accuracy + '.png']);
                 }
                 operation.operationImages(_.flatten(images));
                 self.specialOperations.push(operation);
             });
-        }
+        };
+
+        self.defend = function () {
+            modal.AskQuestion('Is the attack melee or ranged?',
+                function () { conflict.Defend(self, true); }, function () { conflict.Defend(self, false); }, 'Ranged', 'Melee');
+        };
     }
 
     return [
@@ -206,42 +212,49 @@
             health: 12,
             endurance: 5,
             speed: 4,
-            defence: [WHITE],
-            fisting: [BLUE, GREEN],
-            eye: [BLUE, GREEN, YELLOW],
-            spanner: [BLUE],
+            defence: [d.WHITE],
+            fisting: [d.BLUE, d.GREEN],
+            eye: [d.BLUE, d.GREEN, d.YELLOW],
+            spanner: [d.BLUE],
             coreAbilities: {
                 'Precise Strike': new hf.Ability({
-                    on: [attack, melee, function () { return !this.wounded; }],
-                    scope: [activation],
-                    cost: [strain, strain],
-                    effect: function () { remove(defence); },
-                    operations: [
-                        new hf.Operation('Precise Strike',
-                        function (hero, card) {
-                            //TODO: this can also be used during interrupt
-                            card.exhausted(true);
-                        },
-                        function (hero, conflict, card) {
-                            return !card.exhausted() && !conflict.AttackWeapon().ranged && !hero.wounded();
-                        },
-                        [cost.strain(2)], $C.DICE)
-                    ]
-                }, true),
+                        operations: [
+                            new hf.Operation('Precise Strike',
+                                function(hero, conflict, card) {
+                                    //TODO: this can also be used during interrupt
+                                    card.exhausted(true);
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted() && !conflict.AttackWeapon().ranged && !hero.wounded();
+                                },
+                                [cost.strain(2)],
+                                $C.ATTACKDICE)
+                        ]
+                    },
+                    true),
                 'Foresight': new hf.Ability({
-                    on: [defend],
-                    scope: [],
-                    cost: [strain],
-                    effect: function () { reroll(defence); }
-                }, true)
+                        operations: [
+                            new hf.Operation('Foresight',
+                                function(hero, conflict, card) {
+                                    //reroll die
+                                    conflict.UsedAbilities.push('Foresight');
+                                },
+                                function(hero, conflict, card) {
+                                    return conflict.RollFinished() && _.indexOf(conflict.UsedAbilities(), 'Foresight') === -1;
+                                },
+                                [cost.strain()],
+                                $C.DEFENCEROLL)
+                        ]
+                    },
+                    true)
             },
-            onWounded: function () {
+            onWounded: function() {
                 var hero = this;
                 if (!(hero instanceof Hero)) return;
 
                 hero.endurance--;
                 hero.speed--;
-                hero.cards(_.without(hero.cards(), hero.coreAbilities['Precise Strike']));
+                hero.cards.remove(hero.coreAbilities['Precise Strike']);
             }
         }),
         new Hero({
@@ -249,23 +262,19 @@
             health: 10,
             endurance: 5,
             speed: 4,
-            defence: [BLACK],
-            fisting: [BLUE, GREEN],
-            eye: [BLUE, GREEN, YELLOW],
-            spanner: [BLUE, GREEN],
+            defence: [d.BLACK],
+            fisting: [d.BLUE, d.GREEN],
+            eye: [d.BLUE, d.GREEN, d.YELLOW],
+            spanner: [d.BLUE, d.GREEN],
             coreAbilities: {
                 'Command': new hf.Ability({
-                    on: [],
-                    scope: [],
-                    cost: [action, strain, strain],
-                    effect: function () { }
-                }, true),
+                
+                    },
+                    true),
                 'Disabling Shot': new hf.Ability({
-                    on: [attack, range, function () { return !this.wounded; }],
-                    scope: [],
-                    cost: [surge],
-                    effect: function () { effect([stun]); }
-                }, true)
+                
+                    },
+                    true)
             }
         }),
         new Hero({
@@ -273,23 +282,19 @@
             health: 10,
             endurance: 4,
             speed: 5,
-            defence: [WHITE],
-            fisting: [BLUE],
-            eye: [BLUE, GREEN],
-            spanner: [BLUE, GREEN, YELLOW],
+            defence: [d.WHITE],
+            fisting: [d.BLUE],
+            eye: [d.BLUE, d.GREEN],
+            spanner: [d.BLUE, d.GREEN, d.YELLOW],
             coreAbilities: {
                 'Quick Draw': new hf.Ability({
-                    on: [function () { hasWeaponType(pistol); }],
-                    scope: [round],
-                    cost: [strain, strain],
-                    effect: function () { startAttack(pistol); }
-                }, true),
+                
+                    },
+                    true),
                 'Opportunist': new hf.Ability({
-                    on: [resolveAttack, function () { return hit([damage]); }, function () { return !this.wounded; }],
-                    scope: [],
-                    cost: [],
-                    effect: function () { gainMovement(1); }
-                }, true)
+                
+                    },
+                    true)
             }
         }),
         new Hero({
@@ -297,24 +302,20 @@
             health: 14,
             endurance: 4,
             speed: 4,
-            defence: [BLACK],
-            fisting: [BLUE, GREEN, YELLOW],
-            eye: [BLUE],
-            spanner: [BLUE, GREEN],
+            defence: [d.BLACK],
+            fisting: [d.BLUE, d.GREEN, d.YELLOW],
+            eye: [d.BLUE],
+            spanner: [d.BLUE, d.GREEN],
             coreAbilities: {
                 'Charge': new hf.Ability({
-                    on: [attack, melee],
-                    scope: [],
-                    cost: [strain, strain],
-                    effect: function () { gainMovement(this.speed); },
-                }, true),
+                
+                    },
+                    true),
                 'Rage': new hf.Ability({
-                    on: [resolveDefence, function () { return hasSuffered([damage, damage, damage]) }, function () { return !this.wounded; }],
-                    scope: [],
-                    cost: [],
-                    effect: function () { reroll(defence); }
-                }, true)
+                
+                    },
+                    true)
             }
         })
-    ]
+    ];
 });

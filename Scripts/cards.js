@@ -72,7 +72,7 @@
                         function (hero, conflict, card) {
                             return !card.exhausted();
                         },
-                        [], $C.ROLL, '(exhaust)');
+                        [], $C.ATTACKROLL, '(exhaust)');
                     op.operationImages(['Other/Damage.png']);
                     return [op];
                 }()

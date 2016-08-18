@@ -1,5 +1,5 @@
 ﻿define(['ko', 'lodash', 'jquery', 'constants', 'surge'], function (ko, _, $, $C, s) {
-    var operation = function (name, performOperation, canPerformOperation, cost, conflictStage, text) {
+    var Operation = function (name, performOperation, canPerformOperation, cost, conflictStage, text) {
         var self = this;
         self.name = name;
         self.conflictStage = conflictStage;
@@ -10,6 +10,7 @@
         self.performOperation = function (hero, conflict) {
             performOperation(hero, conflict, self.card);
             _(cost || []).forEach(function (c) { c.incur(hero); });
+            hero.event(self.name);
         }
         self.operationImages = ko.observable(_.flatMap(cost || [], 'images'));
         self.text = text;
@@ -69,7 +70,7 @@
         });
         self.surgeOperations = ko.pureComputed(function () {
             return _.flatMap(self.surges(), function (arr) {
-                var selectSurge = new operation('Select Surge',
+                var selectSurge = new Operation('Select Surge',
                         function (hero, conflict) {
                             selectSurge.selected(true);
                             conflict.SelectedSurges.push(selectSurge);
@@ -81,9 +82,9 @@
                             return !selectSurge.selected() && conflict.MyAttack.surges() > 0;
                         },
                         [],
-                        $C.ROLL, _.compact(_.map(arr, 'text')).join(' '));
+                        $C.ATTACKROLL, _.compact(_.map(arr, 'text')).join(' '));
                 selectSurge.operationImages(_.flatMap(arr, 'images'));
-                var deselectSurge = new operation('Deselect Surge',
+                var deselectSurge = new Operation('Deselect Surge',
                         function (hero, conflict) {
                             selectSurge.selected(false);
                             conflict.SelectedSurges.remove(selectSurge);
@@ -95,7 +96,7 @@
                             return selectSurge.selected();
                         },
                         [],
-                        $C.ROLL, _.compact(_.map(arr, 'text')).join(' '));
+                        $C.ATTACKROLL, _.compact(_.map(arr, 'text')).join(' '));
                 deselectSurge.operationImages(_.flatMap(arr, 'images'));
                 selectSurge.selected = ko.observable(false);
                 selectSurge.deselect = deselectSurge;
@@ -118,7 +119,7 @@
     equipment.prototype = Object.create(card.prototype);
 
     return {
-        Operation: operation,
+        Operation: Operation,
         Event: function (name, action) {
             var self = this;
             self.name = name;

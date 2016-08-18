@@ -400,3 +400,7 @@ only screen and (        min-device-pixel-ratio: 2) {
 .conflict-summary img, .conflict-details img {
     height: 1em;
 }
+
+.inline {
+    display: inline;
+}

@@ -82,6 +82,13 @@
             function (hero) {
                 return hero.stunned();
             },
-            [$.action()])
+            [$.action()]),
+        new hf.Operation('Defend',
+            function (hero) {
+                hero.defend();
+            },
+            function (hero) {
+                return !hero.activated() && !hero.interrupt();
+            })
     ];
 });
