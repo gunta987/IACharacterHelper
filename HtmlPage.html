@@ -241,7 +241,7 @@
             <!-- /ko -->
             <div>
                 <div class="fixed-card-slot" >
-                    <img data-bind="attr: { src: hero.armour().image }, visible: hero.armour() != null" />
+                    <img data-bind="attr: { src: hero.armour().image }, visible: hero.armour() != null, style: { opacity: hero.armour().exhausted() ? 0.4 : 1 }" />
                     <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
                 </div>
                 <div class="fixed-card-slot">

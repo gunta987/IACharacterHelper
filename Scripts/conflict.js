@@ -101,12 +101,14 @@
                     if (regainStrain()) {
                         hero.gainStrain(-1);
                     }
+                    hero.event(C$.ATTACK_RESOLVED);
                 } else {
                     var finalDamage = damage();
                     hero.gainDamage(finalDamage);
                     hero.gainStrain(strain());
                     if (finalDamage > 0 && bleed() > 0) hero.bleeding(true);
                     if (finalDamage > 0 && stun() > 0) hero.stunned(true);
+                    hero.event(C$.DEFENCE_RESOLVED);
                 }
                 hero.inConflict(false);
                 closeModal();
@@ -157,6 +159,8 @@
                 regainStrain(false);
                 opponentDice([]);
                 requiredAccuracy(0);
+
+                hero.suffered(0);
             },
 
             attackStart = function(h, ranged, dice, additional, wpn, abilitySurges) {

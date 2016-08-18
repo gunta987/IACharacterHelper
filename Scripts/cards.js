@@ -4,7 +4,19 @@
             new hf.Ability({ name: 'Force Adept' }, false, 'Cards/Diala/Pic2444785.jpg'),
             new hf.Ability({ name: 'Force Throw' }, false, 'Cards/Diala/Pic2444786.jpg'),
             new hf.Ability({ name: 'Battle Meditation' }, false, 'Cards/Diala/Pic2444787.jpg'),
-            new hf.Ability({ name: 'Defensive Stance' }, false, 'Cards/Diala/Pic2444788.jpg'),
+            new hf.Ability({
+                name: 'Defensive Stance',
+                events: [
+                    new hf.Event('Foresight', function (hero, conflict, card) {
+                        conflict.ExtraBlock(conflict.ExtraBlock() + 1);
+                    }),
+                    new hf.Event($C.DEFENCE_RESOLVED, function (hero, conflict, card) {
+                        if (hero.suffered() === 0) {
+                            hero.focused(true);
+                        }
+                    })
+                ]
+            }, false, 'Cards/Diala/Pic2444788.jpg'),
             new hf.Ability({
                 name: 'Art of Movement',
                 onAdd: function () {
@@ -32,7 +44,20 @@
                 name: 'Laminate Armour',
                 onAdd: function () {
                     this.extraHealth(this.extraHealth() + 3);
-                }
+                },
+                operations: function () {
+                    var op = new hf.Operation('Laminate Armour',
+                        function (hero, conflict, card) {
+                            conflict.ExtraBlock(conflict.ExtraBlock() + 1);
+                            card.exhausted(true);
+                        },
+                        function (hero, conflict, card) {
+                            return !card.exhausted();
+                        },
+                        [], $C.DEFENCEROLL, '(exhaust)');
+                    op.operationImages(['Other/Block.png']);
+                    return [op];
+                }()
             }, 'Cards/Wearables/Laminate_Armor.jpg'),
             new hf.Card({ name: 'Adrenal Implant' }, 'Cards/Wearables/Adrenal_Implant.png')
         ],
@@ -58,10 +83,25 @@
         Attachments: [
             new hf.Attachment({
                 name: 'High-Impact Guard',
-                surges: [[s.damage(2)]]
+                trait: ['Impact'],
+                surges: [[s.damage(2)]],
+                operations: function () {
+                    var op = new hf.Operation('High-Impact Guard',
+                        function (hero, conflict, card) {
+                            conflict.ExtraBlock(conflict.ExtraBlock() + 1);
+                            card.exhausted(true);
+                        },
+                        function (hero, conflict, card) {
+                            return !card.exhausted();
+                        },
+                        [], $C.DEFENCEROLL, '(exhaust)');
+                    op.operationImages(['Other/Block.png']);
+                    return [op];
+                }()
             }, 'Cards/WeaponAttachments/High-Impact_Guard.jpg'),
             new hf.Attachment({
                 name: 'Shock Emitter',
+                trait: ['Impact'],
                 surges: [[s.stun()]],
                 operations: function () {
                     var op = new hf.Operation('Shock Emitter',
@@ -70,7 +110,7 @@
                             card.exhausted(true);
                         },
                         function (hero, conflict, card) {
-                            return !card.exhausted();
+                            return !card.exhausted() && _.includes(conflict.AttackWeapon().attachments(), card);
                         },
                         [], $C.ATTACKROLL, '(exhaust)');
                     op.operationImages(['Other/Damage.png']);
@@ -79,6 +119,7 @@
             }, 'Cards/WeaponAttachments/Shock-emitter.png'),
             new hf.Attachment({
                 name: 'Extended Haft',
+                trait: ['Balance'],
                 pierce: function (weapon) { return weapon.reach ? 1 : 0; }
             }, 'Cards/WeaponAttachments/Extended_Haft.jpg')
         ],
@@ -86,7 +127,7 @@
             new hf.Equipment({
                 name: 'Adrenal Implant',
                 events: [
-                    new hf.Event('rest', function (hero, card) {
+                    new hf.Event($C.REST, function (hero, conflict, card) {
                         if (!card.exhausted() && !hero.focused()) {
                             modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain <img src='Tokens/Focus.png' />?", function () {
                                 hero.focused(true);

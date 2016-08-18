@@ -76,8 +76,9 @@
             }
             else {
                 var emptyArrayFunction = function () { return []; };
+                //TODO: ummm... rethink how this is extracted - there has to be a neater method.
                 var weaponOperations = _.concat((conflict.AttackWeapon().surgeOperations || emptyArrayFunction)(),
-                    _.flatMap((self.inConflict() ? (conflict.AttackWeapon().attachments || emptyArrayFunction) : emptyArrayFunction)(), 'operations'));
+                    _.flatMap((self.inConflict() ? (_.flatMap(_.map(self.weapons(), function (weapon) { return weapon.attachments || emptyArrayFunction; }), function (fn) { return fn(); })) : emptyArrayFunction()), 'operations'));
                 return _.filter(_.concat(self.operations(), weaponOperations), function (operation) {
                     return ((!self.inConflict() && operation.conflictStage == null) ||
                             (self.inConflict() && operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
@@ -122,7 +123,7 @@
             if (eventName != '') {
                 _(self.cardEvents()).forEach(function (event) {
                     if (event != null) {
-                        event.Execute(self, eventName);
+                        event.Execute(self, conflict, eventName);
                     }
                 });
                 self.event('');
@@ -165,10 +166,6 @@
             self.damage(Math.max(self.damage() + gain, 0));
             self.suffered(self.suffered() + gain);
         };
-
-        self.hit = function () { };
-        self.suffered = function () { };
-        self.reroll = function () { };
 
         self.attack = function (additionalDice, abilitySurges, ranged) {
             //step 1: choose your weapon

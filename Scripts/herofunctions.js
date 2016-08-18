@@ -125,9 +125,9 @@
             self.name = name;
             self.action = action;
 
-            this.Execute = function (hero, event) {
+            this.Execute = function (hero, conflict, event) {
                 if (event === self.name) {
-                    self.action(hero, self.card);
+                    self.action(hero, conflict, self.card);
                 }
             };
         },
