@@ -21,7 +21,11 @@
                 <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraSpeed', '0') + '.png'}"/>
             </div>
         </div>
-        <button data-bind="click: Finished">Finished</button>
+        <div class="well button" style="margin: 1em" data-bind="visible: hero() != null && hero().weapons().length > 0">
+            <div></div>
+            <span class="black-text" style="font-size: 3vw" data-bind="click: Finished">Finished</span>
+        </div>
+        <div></div>
     </div>
     <div class="column" style="position:relative" >
         <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 2%;" />

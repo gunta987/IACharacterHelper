@@ -18,8 +18,8 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                     possibleWeapons = _.concat(cards.Weapons, _(hero.classCards).filter(c => c instanceof hf.Weapon).value()),
                     possibleAttachments = cards.Attachments;
 
-                _(args.Abilities.split(',')).forEach(index => hero.AddCard(possibleAbilities[index]));
-                _(args.Equipment.split(',')).forEach(index => hero.AddCard(possibleEquipment[index]));
+                _(args.Abilities.split(',')).compact().forEach(index => hero.AddCard(possibleAbilities[index]));
+                _(args.Equipment.split(',')).compact().forEach(index => hero.AddCard(possibleEquipment[index]));
                 if (args.Armour && args.Armour !== '') {
                     hero.AddCard(possibleArmour[args.Armour]);
                 }
@@ -35,7 +35,7 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                     .forEach(wepappobj => {
                         var weapon = possibleWeapons[wepappobj.WeaponIndex];
                         hero.AddCard(weapon);
-                        _(wepappobj.AttachmentIndices).forEach(index => weapon.attachments.push(possibleAttachments[index]));
+                        _(wepappobj.AttachmentIndices).compact().forEach(index => weapon.attachments.push(possibleAttachments[index]));
                     });
 
                 var myViewModel = {
