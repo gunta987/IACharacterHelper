@@ -15,6 +15,16 @@
                 conflict.ExtraDamage(conflict.ExtraDamage() - count);
             }, _.fill(Array(count), 'Other/Damage.png'));
         },
+        pierce: function (count) {
+            count = count || 1;
+            return new Surge(function(conflict) {
+                    conflict.ExtraPierce(conflict.ExtraPierce() + count);
+                },
+                function(conflict) {
+                    conflict.ExtraPierce(conflict.ExtraPierce() - count);
+                },
+                _.fill(Array(count), 'Other/Pierce.png'));
+        },
         cleave: function (count) {
             count = count || 1;
             return new Surge(function (conflict) {

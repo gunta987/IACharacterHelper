@@ -149,6 +149,7 @@
                 extraPierce(0);
                 extraDamage(0);
                 extraAccuracy(0);
+                selectedSurges([]);
                 extraSurges(0);
                 extraEvade(0);
                 extraBlock(0);
@@ -175,6 +176,7 @@
                 extraPierce(additional.pierce);
                 extraDamage(additional.damage);
                 extraAccuracy(additional.accuracy);
+                hero.event(C$.ATTACK_START);
 
                 if (ranged) {
                     conflictStage(C$.ATTACKRANGE);
@@ -198,6 +200,7 @@
                 init();
                 myDice(hero.defence());
                 weapon({});
+                hero.event(C$.DEFENCE_START);
                 
                 if (ranged) {
                     conflictStage(C$.DEFENCERANGE);

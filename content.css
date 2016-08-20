@@ -310,6 +310,7 @@ only screen and (        min-device-pixel-ratio: 2) {
 
 .modal-text img {
     height: 1em;
+    vertical-align: text-bottom;
 }
 
 .modal-buttons {

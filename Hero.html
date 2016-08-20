@@ -91,7 +91,7 @@
             <div class="modal-buttons">
                 <div class="well button" >
                     <div></div>
-                    <span class="black-text" data-bind="text: modal.cancelButtonText, click: modal.cancelButton"></span>
+                    <span class="black-text" data-bind="text: modal.cancelButtonText, click: modal.cancelButton, visible: modal.cancelButtonText() != ''"></span>
                 </div>
                 <div class="well button" >
                     <div></div>

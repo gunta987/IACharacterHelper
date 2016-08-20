@@ -18,14 +18,17 @@
         var showModal = function () { $('.modal').show(0, function () { $('.column').addClass('disabled'); }); };
         var askQuestion = function (confirmText, yesAction, noAction, yesText, noText) {
             text(confirmText);
-            okButtonText(yesText || 'Yes');
-            cancelButtonText(noText || 'No');
+            okButtonText(yesText == null ? 'Yes' : yesText);
+            cancelButtonText(noText == null ? 'No' : noText);
             onOk = yesAction;
             onCancel = noAction;
             showModal();
         };
         var confirmOperation = function (confirmText, action, yesText, noText) {
             askQuestion(confirmText, action, function() {}, yesText, noText);
+        };
+        var showInformation = function(infoText) {
+            askQuestion(infoText, function() {}, function() {}, 'OK', '');
         };
 
         return {
@@ -35,7 +38,8 @@
             cancelButtonText: cancelButtonText,
             cancelButton: cancelButton,
             ConfirmOperation: confirmOperation,
-            AskQuestion: askQuestion
+            AskQuestion: askQuestion,
+            ShowInformation: showInformation
         }
     }();
 })
