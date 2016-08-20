@@ -234,14 +234,14 @@
             <!-- ko foreach: new Array(3) -->
             <div>
                 <div class="fixed-card-slot" data-bind="with: $parent.hero.equipment()">
-                    <img data-bind="attr: { src: $data[$index()] != null ? $data[$index()].image : '' }, visible: $data[$index()] != null, style: {opacity: $data[$index()] != null && $data[$index()].exhausted() ? 0.4 : 1 }" />
+                    <img data-bind="attr: { src: _.get($data[$index()], 'image', '') }, visible: $data[$index()] != null, style: {opacity: $data[$index()] != null && $data[$index()].exhausted() ? 0.4 : 1 }" />
                     <img src="Cards/Wearables/Equipment_Placeholder.png" data-bind="visible: $data[$index()] == null" />
                 </div>
             </div>
             <!-- /ko -->
             <div>
                 <div class="fixed-card-slot" >
-                    <img data-bind="attr: { src: hero.armour().image }, visible: hero.armour() != null, style: { opacity: hero.armour().exhausted() ? 0.4 : 1 }" />
+                    <img data-bind="attr: { src: _.get(hero.armour(), 'image', '') }, visible: hero.armour() != null, style: { opacity: _.invoke(_.invoke(hero, 'armour'), 'exhausted') ? 0.4 : 1 }" />
                     <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
                 </div>
                 <div class="fixed-card-slot">

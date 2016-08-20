@@ -404,3 +404,21 @@ only screen and (        min-device-pixel-ratio: 2) {
 .inline {
     display: inline;
 }
+
+.plus-text {
+    color: black;
+    text-shadow: 1px 1px 10px rgba(239, 255, 198, 0.25), -1px 1px 10px rgba(239, 255, 198, 0.25), 1px -1px 10px rgba(239, 255, 198, 0.25), -1px -1px 10px rgba(239, 255, 198, 0.25), 0px 1px 10px rgba(239, 255, 198, 0.25), 0px -1px 10px rgba(239, 255, 198, 0.25), -1px 0px 10px rgba(239, 255, 198, 0.25), 1px 0px 10px rgba(239, 255, 198, 0.25), 1px 1px 10px rgba(239, 255, 198, 0.25), -1px 1px 10px rgba(239, 255, 198, 0.25), 1px -1px 10px rgba(239, 255, 198, 0.25), -1px -1px 10px rgba(239, 255, 198, 0.25), 0px 1px 10px rgba(239, 255, 198, 0.25), 0px -1px 10px rgba(239, 255, 198, 0.25), -1px 0px 10px rgba(239, 255, 198, 0.25), 1px 0px 10px rgba(239, 255, 198, 0.25), 1px 1px 10px rgba(239, 255, 198, 0.25), -1px 1px 10px rgba(239, 255, 198, 0.25), 1px -1px 10px rgba(239, 255, 198, 0.25), -1px -1px 10px rgba(239, 255, 198, 0.25), 1px 1px 10px rgba(239, 255, 198, 0.25), -1px 1px 10px rgba(239, 255, 198, 0.25), 1px -1px 10px rgba(239, 255, 198, 0.25), -1px -1px 10px rgba(239, 255, 198, 0.25);
+    font-size: 4vw;
+    /* line-height: 100%; */
+}
+
+.fixed-card-slot > .plus-text:first-child {
+    position: absolute;
+    height: 96%;
+    width: 92%;
+    vertical-align: middle;
+}
+
+.plus-text.blue {
+    text-shadow: 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25), 0px 1px 10px rgba(126, 127, 176, 0.25), 0px -1px 10px rgba(126, 127, 176, 0.25), -1px 0px 10px rgba(126, 127, 176, 0.25), 1px 0px 10px rgba(126, 127, 176, 0.25), 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25), 0px 1px 10px rgba(126, 127, 176, 0.25), 0px -1px 10px rgba(126, 127, 176, 0.25), -1px 0px 10px rgba(126, 127, 176, 0.25), 1px 0px 10px rgba(126, 127, 176, 0.25), 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25), 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25);
+}

@@ -1,23 +1,5 @@
 ﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants', 'modal'],
     function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, $C, modal) {
-    //function Die() {
-
-    //}
-
-    //var WHITE = new Die();
-    //var BLACK = new Die();
-    //var BLUE = new Die();
-    //var GREEN = new Die();
-    //var YELLOW = new Die();
-
-
-
-    //var strain = new hf.Operation('Strain', function (hero) {
-    //    hero.gainStrain(1);
-    //});
-
-    //var action, activation, attack, melee, range, resolveAttack, resolveDefence, damage, defence, defend, surge, round;
-
     function Hero(initial) {
         var self = this;
 
@@ -101,11 +83,12 @@
             return _.filter(self.cards(), function (card) { return card instanceof hf.Weapon; });
         });
         self.abilities = ko.pureComputed(function () {
-            return _.filter(self.cards(), function (card) { return card instanceof hf.Ability; })
+            return _.filter(self.cards(), function(card) { return card instanceof hf.Ability; });
         });
         self.purchasedAbilities = ko.pureComputed(function () {
             return _.filter(self.abilities(), function (ability) { return !ability.isCoreAbility; });
         });
+        self.classCards = initial.classCards;
         self.AddCard = function (card) {
             self.cards.push(card);
             if (card.onAdd != null) {
@@ -252,6 +235,27 @@
                 hero.endurance--;
                 hero.speed--;
                 hero.cards.remove(hero.coreAbilities['Precise Strike']);
+            },
+            classCards: cards.Diala
+        }),
+        new Hero({
+            name: 'Wookie',
+            health: 14,
+            endurance: 4,
+            speed: 4,
+            defence: [d.BLACK],
+            fisting: [d.BLUE, d.GREEN, d.YELLOW],
+            eye: [d.BLUE],
+            spanner: [d.BLUE, d.GREEN],
+            coreAbilities: {
+                'Charge': new hf.Ability({
+
+                },
+                    true),
+                'Rage': new hf.Ability({
+
+                },
+                    true)
             }
         }),
         new Hero({
@@ -289,26 +293,6 @@
                     },
                     true),
                 'Opportunist': new hf.Ability({
-                
-                    },
-                    true)
-            }
-        }),
-        new Hero({
-            name: 'Wookie',
-            health: 14,
-            endurance: 4,
-            speed: 4,
-            defence: [d.BLACK],
-            fisting: [d.BLUE, d.GREEN, d.YELLOW],
-            eye: [d.BLUE],
-            spanner: [d.BLUE, d.GREEN],
-            coreAbilities: {
-                'Charge': new hf.Ability({
-                
-                    },
-                    true),
-                'Rage': new hf.Ability({
                 
                     },
                     true)

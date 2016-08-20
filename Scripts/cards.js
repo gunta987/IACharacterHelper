@@ -1,6 +1,15 @@
 ﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge', 'constants'], function (hf, modal, $, d, s, $C) {
     return {
         Diala: [
+            new hf.Weapon({
+                name: 'Plasteel Staff',
+                ranged: false,
+                type: ['staff'],
+                slots: 1,
+                dice: [d.GREEN, d.YELLOW],
+                reach: true,
+                surges: [[s.stun()], [s.damage()]]
+            }, 'Cards/Weapons/Pic2444795.jpg'),
             new hf.Ability({ name: 'Force Adept' }, false, 'Cards/Diala/Pic2444785.jpg'),
             new hf.Ability({ name: 'Force Throw' }, false, 'Cards/Diala/Pic2444786.jpg'),
             new hf.Ability({ name: 'Battle Meditation' }, false, 'Cards/Diala/Pic2444787.jpg'),
@@ -39,7 +48,7 @@
             }, false, 'Cards/Diala/Pic2444791.jpg'),
             new hf.Ability({ name: 'Way of the Sarlacc' }, false, 'Cards/Diala/Pic2444792.jpg'),
         ],
-        Wearables: [
+        Armour: [
             new hf.Armour({
                 name: 'Laminate Armour',
                 onAdd: function () {
@@ -59,7 +68,6 @@
                     return [op];
                 }()
             }, 'Cards/Wearables/Laminate_Armor.jpg'),
-            new hf.Card({ name: 'Adrenal Implant' }, 'Cards/Wearables/Adrenal_Implant.png')
         ],
         Weapons: [
             new hf.Weapon({
@@ -68,21 +76,14 @@
                 type: ['blade', 'staff'],
                 slots: 2,
                 dice: [d.RED, d.GREEN],
-                surges: [[s.damage(), s.bleed()], [s.cleave(2)]]
-            }, 'Cards/Weapons/BD-1_Vibro-Ax.jpg'),
-            new hf.Weapon({
-                name: 'Plasteel Staff',
-                ranged: false,
-                type: ['staff'],
-                slots: 1,
-                dice: [d.GREEN, d.YELLOW],
                 reach: true,
-                surges: [[s.stun()], [s.damage()]]
-            }, 'Cards/Weapons/Pic2444795.jpg')
+                surges: [[s.damage(), s.bleed()], [s.cleave(2)]]
+            }, 'Cards/Weapons/BD-1_Vibro-Ax.jpg')
         ],
         Attachments: [
             new hf.Attachment({
                 name: 'High-Impact Guard',
+                ranged: false,
                 trait: ['Impact'],
                 surges: [[s.damage(2)]],
                 operations: function () {
@@ -101,6 +102,7 @@
             }, 'Cards/WeaponAttachments/High-Impact_Guard.jpg'),
             new hf.Attachment({
                 name: 'Shock Emitter',
+                ranged: false,
                 trait: ['Impact'],
                 surges: [[s.stun()]],
                 operations: function () {

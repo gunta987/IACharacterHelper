@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <script src="Scripts/require.js" data-main="Scripts/setup"></script>
+    <link rel="stylesheet" type="text/css" href="content.css" />
+    <link rel="stylesheet" type="text/css" href="modal.css" />
+</head>
+<body>
+    <div class="column noclick-when-disabled">
+        <div id="characterContainer" style="position: relative", data-bind="click: ShowHeroes">
+            <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + _.result(hero(), 'imageName', 'Unknown') + '.png'}" style="width: 100%"/>
+            <div class="modifier" style="left: 52.5%" data-bind="visible: hero() != null && hero().extraHealth() > 0">
+                <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraHealth', '0') + '.png'}"/>
+            </div>
+            <div class="modifier" style="left: 62.5%" data-bind="visible: hero() != null && hero().extraEndurance() > 0">
+                <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraEndurance', '0') + '.png'}"/>
+            </div>
+            <div class="modifier" style="left: 76%" data-bind="visible: hero() != null && hero().extraSpeed() > 0">
+                <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraSpeed', '0') + '.png'}"/>
+            </div>
+        </div>
+        <button data-bind="click: Finished">Finished</button>
+    </div>
+    <div class="column" style="position:relative" >
+        <img src="Banner.png" style="position: absolute; max-height: 20%; margin: 0 auto; left: 0; right: 0; bottom: 2%;" />
+        <div class="fixed-card-container above-modal" data-bind="visible: hero() != null">
+            <!-- ko foreach: _.get(hero(), 'purchasedAbilities', []) -->
+            <div>
+                <div class="fixed-card-slot" style="position: relative; z-index: 1" data-bind="click: $parent.RemoveCard">
+                    <img data-bind="attr: {src: image}, style: { opacity: exhausted() ? 0.4 : 1 }" style="position: absolute;"/>
+                    <img src="Cards/Wearables/Equipment_Placeholder.png"/> <!-- just to get the heights all the same -->
+                </div>
+            </div>
+            <!-- /ko -->
+            <div>
+                <div class="fixed-card-slot" style="position: relative; z-index: 1" data-bind="click: ShowAbilities">
+                    <span class="plus-text" >Add Class Card</span>
+                    <img src="Cards/Wearables/Equipment_Placeholder.png" style="opacity: 0" /> <!-- just to get the heights all the same -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="fixed-card-container blue" data-bind="visible: hero() != null">
+            <!-- ko foreach: new Array(3) -->
+            <div>
+                <div class="fixed-card-slot" data-bind="with: _.result($parent.hero(), 'equipment', [])">
+                    <img data-bind="attr: { src: _.get($data[$index()], 'image', '') }, visible: $data[$index()] != null, click: function(card) { $root.RemoveCard($data[$index()]); }" />
+                    <img src="Cards/Wearables/Equipment_Placeholder.png" data-bind="visible: $data[$index()] == null, click: $root.ShowEquipment"/>
+                </div>
+            </div>
+            <!-- /ko -->
+            <div>
+                <div class="fixed-card-slot">
+                    <img data-bind="attr: { src: _.get(_.result(hero(), 'armour', null), 'image', '') }, visible: _.result(hero(), 'armour', null) != null, click: function() { RemoveCard(hero().armour()); }"/>
+                    <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: _.result(hero(), 'armour', null) == null, click: ShowArmour"/>
+                </div>
+            </div>
+            <!-- ko with: _.result(hero(), 'weapons', []) -->
+            <div>
+                <div class="fixed-card-slot">
+                    <img data-bind="attr: { src: $data[0] != null ? $data[0].image : '' }, visible: $data[0] != null, click: function() { $parent.RemoveCard($data[0]); }"/>
+                    <img src="Cards/Weapons/Weapon_Placeholder.png" data-bind="visible: $data[0] == null, click: $parent.ShowWeapons"/>
+                    <!-- ko foreach: $data[0] != null ? $data[0].attachments : new Array(0) -->
+                    <div data-bind="visible: image != null">
+                        <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }"/>
+                    </div>
+                    <!-- /ko -->
+                    <div class="plus-text blue" data-bind="visible: $data[0] != null && $data[0].SlotsAvailable(), click: function() { $root.ShowAttachments($data[0]); }">
+                        +
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="fixed-card-slot">
+                    <img data-bind="attr: { src: $data[1] != null ? $data[1].image : '' }, visible: $data[1] != null, click: function() { $parent.RemoveCard($data[1]); }"/>
+                    <img src="Cards/Weapons/Weapon_Placeholder.png" data-bind="visible: $data[1] == null, click: $parent.ShowWeapons"/>
+                    <!-- ko foreach: $data[1] != null ? $data[1].attachments : new Array(0) -->
+                    <div>
+                        <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }"/>
+                    </div>
+                    <!-- /ko -->
+                    <div class="plus-text blue" data-bind="visible: $data[1] != null && $data[1].SlotsAvailable(), click: function() { $root.ShowAttachments($data[1]); }">
+                        +
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+
+    <div class="modal-over">
+        <span class="close" data-bind="click: Close">×</span>
+        <div class="modal-content">
+            <div data-bind="foreach: heroes, visible: Mode() === C$.HERO">
+                <div data-bind="click: $parent.SetHero">
+                    <img style="width: 50vw" data-bind="attr: {src: 'Cards/Heroes/' + imageName() + '.png'}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableAbilities, visible: Mode() === C$.ABILITY">
+                <div data-bind="click: $parent.AddCard">
+                    <img style="width: 15vw" data-bind="attr: {src: image}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableEquipment, visible: Mode() === C$.EQUIPMENT">
+                <div data-bind="click: $parent.AddCard">
+                    <img style="width: 15vw" data-bind="attr: {src: image}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableArmour, visible: Mode() === C$.ARMOUR">
+                <div data-bind="click: $parent.AddCard">
+                    <img style="width: 15vw" data-bind="attr: {src: image}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableMelee, visible: Mode() === C$.WEAPON">
+                <div data-bind="click: $parent.AddCard">
+                    <img style="width: 15vw" data-bind="attr: {src: image}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableRanged, visible: Mode() === C$.WEAPON">
+                <div data-bind="click: $parent.AddCard">
+                    <img style="width: 15vw" data-bind="attr: {src: image}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableAttachments, visible: Mode() === C$.ATTACHMENT">
+                <div data-bind="click: function(card) { $parent.AddAttachment(card); }">
+                    <img style="width: 15vw" data-bind="attr: {src: image}" />
+                </div>
+            </div>
+        </div>
+        <div id="caption"></div>
+    </div>
+</body>
+</html>
