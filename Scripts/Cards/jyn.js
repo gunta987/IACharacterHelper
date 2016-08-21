@@ -109,8 +109,8 @@
                                 }
                             })
                     ],
-                    operations: [
-                        new hf.Operation('Gunslinger',
+                    operations: function() {
+                        var op = new hf.Operation('Gunslinger',
                             function(hero, conflict, card) {
                                 card.exhausted(true);
                                 conflict.ExtraSurges(conflict.ExtraSurges() + 1);
@@ -120,8 +120,10 @@
                             },
                             [$.strain()],
                             C$.ATTACKROLL,
-                            '(exhaust)')
-                    ]
+                            '(exhaust)');
+                        op.operationImages.push('Other/surge.png');
+                        return [op];
+                    }()
                 },
                 false,
                 'Cards/Jyn/Gunslinger.png'),

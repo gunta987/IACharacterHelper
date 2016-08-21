@@ -70,7 +70,7 @@
                     type: ['blaster', 'pistol'],
                     slots: 2,
                     dice: [d.BLUE, d.YELLOW],
-                    surges: [[s.damage(2)], [s.damage(), s.accuracy(2)]]
+                    surges: [[s.damage(2)], [s.accuracy(2), s.damage()]]
                 },
                 'Cards/Weapons/Dl-44.png'),
             new hf.Weapon({

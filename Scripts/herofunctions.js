@@ -12,7 +12,7 @@
             _(cost || []).forEach(function (c) { c.incur(hero); });
             hero.event(self.name);
         }
-        self.operationImages = ko.observable(_.flatMap(cost || [], 'images'));
+        self.operationImages = ko.observableArray(_.flatMap(cost || [], 'images'));
         self.text = text;
     };
 
@@ -60,12 +60,12 @@
         });
         self.accuracy = ko.pureComputed(function () {
             return (properties.accuracy || 0) + _.reduce(self.attachments(), function (sum, attachment) {
-                return sum + (attachment.accuracy || zeroFunction)();
+                return sum + (attachment.accuracy || zeroFunction)(self);
             }, 0);
         });
         self.damage = ko.pureComputed(function () {
             return (properties.damage || 0) + _.reduce(self.attachments(), function (sum, attachment) {
-                return sum + (attachment.damage || zeroFunction)();
+                return sum + (attachment.damage || zeroFunction)(self);
             }, 0);
         });
         self.surges = ko.pureComputed(function () {

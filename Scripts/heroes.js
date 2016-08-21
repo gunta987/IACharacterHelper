@@ -95,10 +95,8 @@
                     var emptyArrayFunction = function () { return []; };
                     //TODO: ummm... rethink how this is extracted - there has to be a neater method.
                     var weaponOperations = _.concat((conflict.AttackWeapon().surgeOperations || emptyArrayFunction)(),
-                        _.flatMap((self.inConflict()
-                                ? (_.flatMap(_.map(self.weapons(), function (weapon) { return weapon.attachments || emptyArrayFunction; }),
-                                    function (fn) { return fn(); }))
-                                : emptyArrayFunction()),
+                        _.flatMap(_.flatMap(_.map(self.weapons(), function (weapon) { return weapon.attachments || emptyArrayFunction; }),
+                                    function (fn) { return fn(); }),
                             'operations'));
                     return _.filter(_.concat(self.operations(), weaponOperations),
                         function (operation) {
