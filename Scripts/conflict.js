@@ -96,7 +96,7 @@
 
             conflictComplete = function () {
                 if (attacking()) {
-                    //remove attachment added for ability surged
+                    //remove attachment added for ability surges
                     weapon().attachments.pop();
                     if (regainStrain()) {
                         hero.gainStrain(-1);
@@ -231,6 +231,7 @@
             ExtraPierce: extraPierce,
             ExtraDamage: extraDamage,
             ExtraAccuracy: extraAccuracy,
+            ExtraSurges: extraSurges,
             MyAttack: {
                 damage: damage,
                 surges: surges,

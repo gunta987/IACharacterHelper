@@ -26,13 +26,6 @@
             function(hero){
                 return hero.activated() && hero.actions() == 0;
             }),
-        new hf.Operation('Interrupt',
-            function (hero) {
-
-            },
-            function (hero) {
-                return !hero.activated() && !hero.interrupt() && !hero.stunned();
-            }),
         new hf.Operation('Rest',
             function (hero) {
                 var endurance = hero.endurance + hero.extraEndurance();
@@ -81,6 +74,14 @@
             },
             function (hero) {
                 return hero.stunned();
+            },
+            [$.action()]),
+        new hf.Operation('Remove Bleed',
+            function (hero) {
+                hero.bleeding(false);
+            },
+            function (hero) {
+                return hero.activated() && !hero.stunned() && hero.bleeding();
             },
             [$.action()]),
         new hf.Operation('Defend',

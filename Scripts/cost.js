@@ -7,6 +7,9 @@
             },
             incur: function (hero) {
                 hero.actions(hero.actions() - count);
+                if (hero.bleeding()) {
+                    hero.gainStrain(1);
+                }
             },
             images: _.fill(Array(count), 'Other/Action.png')
         }
