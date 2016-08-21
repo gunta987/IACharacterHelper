@@ -172,24 +172,27 @@
                 }
 
                 _(availableWeapons)
-                    .forEach(function(weapon) {
-                        var dice = _.concat(weapon.dice(), additionalDice);
-                        var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
-                        var operation = new hf.Operation(weapon.name,
-                            function() {
-                                self.specialOperations.removeAll();
-                                conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
-                            },
-                            function() { return true; });
-                        var images = [];
-                        images.push(_.map(dice, function(die) { return { src: die.blank, css: 'die' }; }));
-                        images.push(_.times(additional.pierce, function() { return 'Other/Pierce.png' }));
-                        images.push(_.times(additional.damage, function() { return 'Other/Damage.png' }));
-                        if (weapon.accuracy() > 0) {
-                            images.push(['Other/' + additional.accuracy + '.png']);
-                        }
-                        operation.operationImages(_.flatten(images));
-                        self.specialOperations.push(operation);
+                    .forEach(weapon => {
+                        var originalPool = _.concat(weapon.dice(), additionalDice);
+                        _(weapon.modifyDicePool(originalPool))
+                            .forEach(dice => {
+                                var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
+                                var operation = new hf.Operation(weapon.name,
+                                    function() {
+                                        self.specialOperations.removeAll();
+                                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
+                                    },
+                                    function() { return true; });
+                                var images = [];
+                                images.push(_.map(dice, function(die) { return { src: die.blank, css: 'die' }; }));
+                                images.push(_.times(additional.pierce, function() { return 'Other/Pierce.png' }));
+                                images.push(_.times(additional.damage, function() { return 'Other/Damage.png' }));
+                                if (weapon.accuracy() > 0) {
+                                    images.push(['Other/' + additional.accuracy + '.png']);
+                                }
+                                operation.operationImages(_.flatten(images));
+                                self.specialOperations.push(operation);
+                            });
                     });
             };
 

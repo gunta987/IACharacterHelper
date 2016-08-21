@@ -106,6 +106,11 @@
                 return [selectSurge, deselectSurge];
             });
         });
+        self.modifyDicePool = function(dice) {
+            var result = [dice];
+            _(self.attachments()).forEach(a => { result = a.modifyDicePool(result) });
+            return result;
+        };
     };
     weapon.prototype = Object.create(card.prototype);
     var attachment = function (properties, image) {
@@ -116,6 +121,7 @@
         this.surges = properties.surges || [];
         this.ranged = properties.ranged || false;
         this.trait = properties.trait || [];
+        this.modifyDicePool = properties.modifyDicePool || function (dicePool) { return dicePool; }
     };
     attachment.prototype = Object.create(card.prototype);
     var equipment = function (properties, image) {
