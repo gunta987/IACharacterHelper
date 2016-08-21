@@ -157,7 +157,7 @@
                             function(hero, conflict, card) {
                                 if (!card.exhausted() && hero.strain() < (hero.endurance + hero.extraEndurance())) {
                                     modal.ConfirmOperation(
-                                        "Do you want to exhaust 'Gunslinger' for 1<img src='Tokens/strain.png' /> to attack your attacker?",
+                                        "Do you want to exhaust 'Peacemaker' for 1<img src='Tokens/strain.png' /> to attack your attacker?",
                                         function() {
                                             card.exhausted(true);
                                             hero.gainStrain(1);
