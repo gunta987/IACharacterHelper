@@ -51,10 +51,11 @@
                         new hf.Operation('Roll With It',
                             function(hero, conflict, card) {
                                 conflict.ExtraBlock(conflict.ExtraBlock() + 1);
+                                conflict.UsedAbilities.push('Roll With It');
                                 //TODO: handle block to evade
                             },
                             function(hero, conflict, card) {
-                                return true;
+                                return _.indexOf(conflict.UsedAbilities(), 'Roll With It') === -1;
                             },
                             [$.strain()],
                             C$.DEFENCEDICE)
