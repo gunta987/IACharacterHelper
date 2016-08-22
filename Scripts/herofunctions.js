@@ -5,11 +5,11 @@
         self.conflictStage = conflictStage;
         self.canPerformOperation = function (hero, conflict) {
             var otherRequirements = canPerformOperation || function () { return true; };
-            return _.every(cost || [], function (c) { return c.required(hero); }) && otherRequirements(hero, conflict, self.card);
+            return _.every(cost || [], function (c) { return c.required(hero, conflict); }) && otherRequirements(hero, conflict, self.card);
         }
         self.performOperation = function (hero, conflict) {
             performOperation(hero, conflict, self.card);
-            _(cost || []).forEach(function (c) { c.incur(hero); });
+            _(cost || []).forEach(function (c) { c.incur(hero, conflict); });
             hero.event(self.name);
         }
         self.operationImages = ko.observableArray(_.flatMap(cost || [], 'images'));

@@ -163,7 +163,7 @@
                         </div>
                         <!-- /ko -->
                         <div class="inline" data-bind="visible: conflict.Stage() == C$.ATTACKROLL">
-                            <!-- ko foreach: new Array(conflict.ExtraBlock()) -->
+                            <!-- ko foreach: new Array(Math.max(conflict.ExtraBlock(), 0)) -->
                             <img src="Other/Block.png" style="height: 2em;" data-bind="click: function() { $parent.conflict.ExtraBlock($parent.conflict.ExtraBlock() - 1); }"/>
                             <!-- /ko -->
                             <!-- ko foreach: new Array(conflict.ExtraEvade()) -->

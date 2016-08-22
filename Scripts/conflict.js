@@ -247,6 +247,7 @@
             Strain: strain,
             RegainStrain: regainStrain,
             OpponentDice: opponentDice,
+            Block: block,
             ExtraBlock: extraBlock,
             ExtraEvade: extraEvade,
             caption: caption,

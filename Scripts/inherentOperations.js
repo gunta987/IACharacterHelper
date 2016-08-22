@@ -1,4 +1,4 @@
-﻿define(['herofunctions', 'cost'], function (hf, $) {
+﻿define(['herofunctions', 'cost', 'dice'], function (hf, $, d) {
     return [
         new hf.Operation('Activate',
             function (hero) {
@@ -90,6 +90,42 @@
             },
             function (hero) {
                 return !hero.activated() && !hero.interrupt();
-            })
+            }),
+        new hf.Operation('Interact',
+            function (hero) {
+                var createOp = function (name, attribute) {
+                    var dice = _(attribute()).map(f => f()).value();
+                    if (hero.focused()) {
+                        dice.push(d.GREEN());
+                    }
+
+                    var op = new hf.Operation(name,
+                        function(hero) {
+                            hero.specialOperations.removeAll();
+                            hero.testAttribute(attribute);
+                        },
+                        function() { return true; });
+                    op.operationImages(_(dice).map(function (die) { return { src: die.blank, css: 'die' } }).value());
+                    hero.specialOperations.push(op);
+                }
+                createOp('Fisting', hero.fisting);
+                createOp('Eye', hero.eye);
+                createOp('Spanner', hero.spanner);
+
+                hero.specialOperations.push(new hf.Operation('Open Crate',
+                    function(hero) {
+                        hero.specialOperations.removeAll();
+                    },
+                    function () { return true; }));
+                hero.specialOperations.push(new hf.Operation('Interaction Complete',
+                    function(hero) {
+                        hero.specialOperations.removeAll();
+                    },
+                    function() { return true; }));
+            },
+            function (hero) {
+                return hero.activated() && !hero.stunned();
+            },
+            [$.action()])
     ];
 });

@@ -203,6 +203,18 @@
                     'Ranged',
                     'Melee');
             };
+
+            self.testAttribute = function (attribute, onSuccess) {
+                onSuccess = onSuccess || function() {};
+                var dice = _(attribute()).map(f => f()).value();
+                if (self.focused()) {
+                    dice.push(d.GREEN());
+                    self.focused(false);
+                }
+                //TODO: make more sophistimicated
+                modal.ConfirmOperation('Roll ' + _(dice).map(die => "<img src='" + die.blank + "' />").join(' ') + '<br/>Was the attribute test successful?',
+                    onSuccess);
+            };
         };
 
         return [
