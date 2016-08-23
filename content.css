@@ -116,6 +116,11 @@ only screen and (        min-device-pixel-ratio: 2) {
     box-shadow: inset 0px 0px 10px #7E7FB0;
 }
 
+.red.fixed-card-slot {
+    border-color: red;
+    box-shadow: inset 0px 0px 10px red;
+}
+
 .fixed-card-slot img {
     width: 18.5vh;
     max-width: 94%;

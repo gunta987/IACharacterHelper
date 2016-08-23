@@ -1,4 +1,4 @@
-﻿define(['herofunctions', 'cost', 'dice'], function (hf, $, d) {
+﻿define(['herofunctions', 'cost', 'dice', 'Cards/supply'], function (hf, $, d, supply) {
     return [
         new hf.Operation('Activate',
             function (hero) {
@@ -115,6 +115,7 @@
                 hero.specialOperations.push(new hf.Operation('Open Crate',
                     function(hero) {
                         hero.specialOperations.removeAll();
+                        supply.Show();
                     },
                     function () { return true; }));
                 hero.specialOperations.push(new hf.Operation('Interaction Complete',

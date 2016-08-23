@@ -1,5 +1,5 @@
-﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge', 'constants'],
-    function(hf, modal, $, d, s, C$) {
+﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge', 'constants', 'Cards/supply'],
+    function(hf, modal, $, d, s, C$, supply) {
         return [
             new hf.Weapon({
                     name: 'Vintage Blaster',
@@ -21,7 +21,36 @@
                 },
                 false,
                 'Cards/Jyn/Quick As A Whip.jpg'),
-            new hf.Ability({ name: "Smuggler's Luck" }, false, 'Cards/Jyn/Smugglers Luck.jpg'), //TODO: implement this after implementing crates
+            new hf.Ability({
+                    name: "Smuggler's Luck",
+                    events: [
+                        new hf.Event(C$.SUPPLY,
+                            function(hero, conflict, card) {
+                                if (!card.exhausted()) {
+                                    var supplyCard = hero.cards()[hero.cards().length - 1];
+                                    modal.ConfirmOperation("Do you want to exhaust Smuggler's Luck to discard " +
+                                        supplyCard.name +
+                                        ' and draw another supply card?',
+                                        function() {
+                                            card.exhausted(true);
+                                            hero.cards.pop();
+                                            supply.Show();
+                                        });
+                                }
+                            }),
+                        new hf.Event(C$.ATTRIBUTE_TEST,
+                            function(hero, conflict, card) {
+                                if (!card.exhausted()) {
+                                    modal.ConfirmOperation("Do you want to exhaust Smuggler's Luck to reroll any number of dice?",
+                                        function() {
+                                            card.exhausted(true);
+                                        });
+                                }
+                            })
+                    ]
+                },
+                false,
+                'Cards/Jyn/Smugglers Luck.jpg'), //TODO: implement this after implementing crates
             new hf.Ability({
                     name: 'Cheap Shot',
                     events: function() {
@@ -59,10 +88,10 @@
                             [$.strain()],
                             C$.DEFENCEDICE),
                         new hf.Operation('Roll With It',
-                            function (hero, conflict, card) {
+                            function(hero, conflict, card) {
                                 conflict.ExtraEvade(conflict.ExtraEvade() + 1);
                             },
-                            function (hero, conflict, card) {
+                            function(hero, conflict, card) {
                                 return _.indexOf(conflict.UsedAbilities(), 'Roll With It') > -1;
                             },
                             [$.block()],

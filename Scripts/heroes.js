@@ -1,5 +1,5 @@
 ﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants', 'modal'],
-    function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, $C, modal) {
+    function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, C$, modal) {
         var Hero = function(initial) {
             var self = this;
 
@@ -212,6 +212,7 @@
                     self.focused(false);
                 }
                 //TODO: make more sophistimicated
+                self.event(C$.ATTRIBUTE_TEST);
                 modal.ConfirmOperation('Roll ' + _(dice).map(die => "<img src='" + die.blank + "' />").join(' ') + '<br/>Was the attribute test successful?',
                     onSuccess);
             };
@@ -239,7 +240,7 @@
                                         return !card.exhausted() && !conflict.AttackWeapon().ranged && !hero.wounded();
                                     },
                                     [cost.strain(2)],
-                                    $C.ATTACKDICE)
+                                    C$.ATTACKDICE)
                             ]
                         },
                         true),
@@ -254,7 +255,7 @@
                                         return conflict.RollFinished() && _.indexOf(conflict.UsedAbilities(), 'Foresight') === -1;
                                     },
                                     [cost.strain()],
-                                    $C.DEFENCEROLL)
+                                    C$.DEFENCEROLL)
                             ]
                         },
                         true)
@@ -341,7 +342,7 @@
                         true),
                     'Opportunist': new hf.Ability({
                             events: [
-                                new hf.Event($C.ATTACK_RESOLVED,
+                                new hf.Event(C$.ATTACK_RESOLVED,
                                     function (hero, conflict, card) {
                                         if (conflict.MyAttack.damage() > 0) {
                                             modal.ShowInformation('Opportunist: move 1 space');

@@ -5,8 +5,8 @@
     }
 });
 
-require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'constants', 'herofunctions'],
-    function($, ko, _, heroes, cards, modal, conflict, C$, hf) {
+require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'constants', 'herofunctions', 'Cards/supply'],
+    function($, ko, _, heroes, cards, modal, conflict, C$, hf, supply) {
         $(document)
             .ready(function () {
 
@@ -38,10 +38,18 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                         _(wepappobj.AttachmentIndices).compact().forEach(index => weapon.attachments.push(possibleAttachments[index]));
                     });
 
+                var supplyCards = ko.observableArray(supply.Cards);
                 var myViewModel = {
                     hero: hero,
                     modal: modal,
                     conflict: conflict,
+                    supply: supplyCards,
+                    CloseSupply: supply.Close,
+                    AddSupply: function (card) {
+                        supply.Close();
+                        hero.AddCard(card);
+                        hero.event(C$.SUPPLY);
+                    },
                     C$: C$
                 };
 
