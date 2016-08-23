@@ -50,7 +50,7 @@
                     ]
                 },
                 false,
-                'Cards/Jyn/Smugglers Luck.jpg'), //TODO: implement this after implementing crates
+                'Cards/Jyn/Smugglers Luck.jpg'), 
             new hf.Ability({
                     name: 'Cheap Shot',
                     events: function() {

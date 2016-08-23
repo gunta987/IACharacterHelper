@@ -245,10 +245,6 @@
                     <img data-bind="attr: { src: _.get(hero.armour(), 'image', '') }, visible: hero.armour() != null, style: { opacity: _.invoke(_.invoke(hero, 'armour'), 'exhausted') ? 0.4 : 1 }" />
                     <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
                 </div>
-                <div class="fixed-card-slot">
-                    <span>external cards/crates, although on second thoughts i think this will look better as a scrollable with the equipment row, or with the class cards</span>
-                    <img src="Cards/Wearables/Equipment_Placeholder.png" />
-                </div>
             </div>
             <!-- ko with: hero.weapons() -->
             <div>

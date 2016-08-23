@@ -43,9 +43,9 @@
             }
         });
 
-        var askQuestion = function (confirmText, yesAction, noAction, yesText, noText) {
+        var askQuestion = function (question, yesAction, noAction, yesText, noText) {
             modals.push(function() {
-                text(confirmText);
+                text(question);
                 okButtonText(yesText == null ? 'Yes' : yesText);
                 cancelButtonText(noText == null ? 'No' : noText);
                 onOk = yesAction;

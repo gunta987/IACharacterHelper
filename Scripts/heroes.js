@@ -160,14 +160,16 @@
                 self.suffered(self.suffered() + gain);
             };
 
-            self.attack = function(additionalDice, abilitySurges, ranged, restrictionsFunction) {
+            self.focusDie = d.GREEN;
+            self.attack = function (additionalDice, abilitySurges, ranged, restrictionsFunction) {
+                self.event(C$.BEFORE_ATTACK);
                 //step 1: choose your weapon
                 restrictionsFunction = restrictionsFunction || function() { return true; };
                 var availableWeapons = _(self.weapons()).filter(w => restrictionsFunction(w)).value();
                 additionalDice = additionalDice || [];
                 abilitySurges = abilitySurges || [];
                 if (self.focused()) {
-                    additionalDice.push(d.GREEN());
+                    additionalDice.push(self.focusDie());
                     self.focused(false);
                 }
 
@@ -288,7 +290,8 @@
                         
                         },
                         true)
-                }
+                },
+                classCards: cards.Gaarkhan
             }),
             new Hero({
                 name: 'OldDude',
