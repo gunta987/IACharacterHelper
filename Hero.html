@@ -57,7 +57,7 @@
             <div class="well" data-bind="click: function() { performOperation($parent.hero, $parent.conflict); }">
                 <span data-bind="text: name"></span>
                 <div class="cost">
-                    <span data-bind="text: text"></span>
+                    <span data-bind="html: text"></span>
                     <!-- ko foreach: operationImages -->
                     <img data-bind="attr: {src: $data.src || $data }, css: $data.css" />
                     <!-- /ko -->
@@ -137,13 +137,13 @@
                         <div class="conflict-details inline" style="display: inline-block" data-bind="visible: Stage() == $parent.C$.ATTACKROLL">
                             <span class="black-text" data-bind="text: ExtraPierce, visible: ExtraPierce() > 0"></span>
                             <img src="Other/Pierce.png" data-bind="visible: ExtraPierce() > 0" />
-                            <span class="black-text" data-bind="text: ExtraDamage, visible: ExtraDamage() > 0"></span>
-                            <img src="Other/Damage.png" data-bind="visible: ExtraDamage() > 0" />
+                            <span class="black-text" data-bind="text: ExtraDamage, visible: ExtraDamage() != 0"></span>
+                            <img src="Other/Damage.png" data-bind="visible: ExtraDamage() != 0" />
                             <span class="black-text" data-bind="text: ExtraAccuracy() + ' accuracy', visible: ExtraAccuracy() > 0"></span>
                         </div>
                         <div class="conflict-details inline" style="display: inline-block" data-bind="visible: Stage() == $parent.C$.DEFENCEROLL">
-                            <span class="black-text" data-bind="text: ExtraBlock, visible: ExtraBlock() > 0"></span>
-                            <img src="Other/Block.png" data-bind="visible: ExtraBlock() > 0" />
+                            <span class="black-text" data-bind="text: ExtraBlock, visible: ExtraBlock() != 0"></span>
+                            <img src="Other/Block.png" data-bind="visible: ExtraBlock() != 0" />
                             <span class="black-text" data-bind="text: ExtraEvade, visible: ExtraEvade() > 0"></span>
                             <img src="Other/Evade.png" data-bind="visible: ExtraEvade() > 0" />
                         </div>
@@ -174,7 +174,7 @@
                             <img src="Other/Evade.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraEvade(conflict.ExtraEvade() + 1); }" />
                         </div>
                         <div class="inline" data-bind="visible: conflict.Stage() == C$.DEFENCEROLL">
-                            <!-- ko foreach: new Array(conflict.ExtraDamage()) -->
+                            <!-- ko foreach: new Array(Math.max(conflict.ExtraDamage(), 0)) -->
                             <img src="Other/Damage.png" style="height: 2em;" data-bind="click: function() { $parent.conflict.ExtraDamage($parent.conflict.ExtraDamage() - 1); }" />
                             <!-- /ko -->
                             <!-- ko foreach: new Array(conflict.ExtraPierce()) -->

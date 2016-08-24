@@ -1,9 +1,10 @@
-﻿define(['Cards/diala', 'Cards/jyn', 'Cards/gaarkhan', 'Cards/weapons', 'Cards/attachments', 'Cards/armour', 'Cards/equipment'],
-    function(diala, jyn, gaarkhan, weapons, attachments, armour, equipment) {
+﻿define(['Cards/diala', 'Cards/gaarkhan', 'Cards/gideon', 'Cards/jyn', 'Cards/weapons', 'Cards/attachments', 'Cards/armour', 'Cards/equipment'],
+    function (diala, gaarkhan, gideon, jyn, weapons, attachments, armour, equipment) {
         return {
             Diala: diala,
-            Jyn: jyn,
             Gaarkhan: gaarkhan,
+            Gideon: gideon,
+            Jyn: jyn,
             Armour: armour,
             Weapons: weapons,
             Attachments: attachments,

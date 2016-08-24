@@ -329,14 +329,35 @@
                 spanner: [d.BLUE, d.GREEN],
                 coreAbilities: {
                     'Command': new hf.Ability({
-                        
+                            operations: [
+                                new hf.Operation('Command',
+                                    function() {},
+                                    function() { return true; },
+                                    [cost.action(), cost.strain(2)])
+                            ]
                         },
                         true),
                     'Disabling Shot': new hf.Ability({
-                        
+                            events: [
+                                new hf.Event(C$.ATTACK_START,
+                                    function(hero, con) {
+                                        if (con.AttackWeapon().ranged) {
+                                            con.ExtraSurges(con.ExtraSurges() + 1);
+                                        }
+                                    })
+                            ]
                         },
                         true)
-                }
+                },
+                onWounded: function() {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Disabling Shot']);
+                },
+                classCards: cards.Gideon
             }),
             new Hero({
                 name: 'SlipperyBitch',

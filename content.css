@@ -363,6 +363,13 @@ only screen and (        min-device-pixel-ratio: 2) {
     line-height: normal;
 }
 
+.cost span > img {
+    -webkit-filter: grayscale(100%) invert(100%);
+    filter: grayscale(100%) invert(100%);
+    vertical-align: text-bottom;
+    height: 1em;
+}
+
 .conflict #conflictSection {
     height: 49%;
     /*display: block;*/
