@@ -269,6 +269,7 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Precise Strike']);
+                    //TODO: set attribute dice changes
                 },
                 classCards: cards.Diala
             }),
@@ -283,13 +284,37 @@
                 spanner: [d.BLUE, d.GREEN],
                 coreAbilities: {
                     'Charge': new hf.Ability({
-                        
+                            operations: [
+                                new hf.Operation('Charge',
+                                    function(hero) {
+                                        hero.attack();
+                                    },
+                                    function(hero) {
+                                        return !hero.stunned();
+                                    },
+                                    [cost.action(), cost.strain(2)])
+                            ]
                         },
                         true),
                     'Rage': new hf.Ability({
-                        
+                            events: [
+                                new hf.Event(C$.DEFENCE_RESOLVED,
+                                    function(hero) {
+                                        if (hero.suffered() >= 3) {
+                                            hero.focused(true);
+                                        }
+                                    })
+                            ]
                         },
                         true)
+                },
+                onWounded: function() {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Rage']);
                 },
                 classCards: cards.Gaarkhan
             }),
@@ -346,7 +371,7 @@
                     'Opportunist': new hf.Ability({
                             events: [
                                 new hf.Event(C$.ATTACK_RESOLVED,
-                                    function (hero, conflict, card) {
+                                    function(hero, conflict, card) {
                                         if (conflict.MyAttack.damage() > 0) {
                                             modal.ShowInformation('Opportunist: move 1 space');
                                         }
@@ -354,6 +379,14 @@
                             ]
                         },
                         true)
+                },
+                onWounded: function() {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Opportunist']);
                 },
                 classCards: cards.Jyn
             })

@@ -13,8 +13,8 @@
                                         function() {
                                             hero.gainStrain(-3);
                                             hero.focused(true);
-                                            hero.cards.splice(hero.cards.indexOf(card), 1);
                                         });
+                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                 },
                                 function(hero) { return hero.activated(); },
                                 [],
@@ -34,8 +34,8 @@
                                             hero.gainDamage(-3);
                                             hero.bleeding(false);
                                             hero.stunned(false);
-                                            hero.cards.splice(hero.cards.indexOf(card), 1);
                                         });
+                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                 },
                                 function(hero) { return hero.activated(); },
                                 [],
@@ -70,8 +70,8 @@
                                             modal.ConfirmOperation('Is the Emergency Medpack for you?',
                                                 function() {
                                                     hero.gainDamage(-5);
-                                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                                 });
+                                            hero.cards.splice(hero.cards.indexOf(card), 1);
                                         });
                                 })
                         ]
