@@ -2,6 +2,28 @@
     function(hf, modal, $, d, s, C$) {
         return [
             new hf.Armour({
+                    name: 'Combat Coat',
+                    onAdd: function () {
+                        this.extraHealth(this.extraHealth() + 2);
+                    },
+                    operations: function () {
+                        var op = new hf.Operation('Combat Coat',
+                            function (hero, conflict, card) {
+                                conflict.ExtraBlock(conflict.ExtraBlock() - 1);
+                                conflict.ExtraEvade(conflict.ExtraEvade() + 1);
+                            },
+                            function (hero, conflict, card) {
+                                return conflict.Block() >= 1;
+                            },
+                            [],
+                            C$.DEFENCEROLL,
+                            "(-1<img src='Other/block.png' />)");
+                        op.operationImages(['Other/evade.png']);
+                        return [op];
+                    }()
+                },
+                'Cards/Wearables/Combat-coat.png'),
+            new hf.Armour({
                     name: 'Laminate Armour',
                     onAdd: function() {
                         this.extraHealth(this.extraHealth() + 3);

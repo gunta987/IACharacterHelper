@@ -184,9 +184,11 @@
                                     foresightActivated = true;
                                 }),
                             new hf.Event(C$.DEFENCE_RESOLVED,
-                                function(hero, conflict, card) {
-                                    modal.ShowInformation("Foresight + Shu Yen's Lightsaber: Attacker receives 1<img src='Other/Damage.png' />");
-                                    foresightActivated = false;
+                                function (hero, conflict, card) {
+                                    if (foresightActivated) {
+                                        modal.ShowInformation("Foresight + Shu Yen's Lightsaber: Attacker receives 1<img src='Other/Damage.png' />");
+                                        foresightActivated = false;
+                                    }
                                 })
                         ]
                     },

@@ -352,7 +352,7 @@ only screen and (        min-device-pixel-ratio: 2) {
     line-height: 0;
 }
 
-.cost > img:not(.die) {
+.cost img:not(.die) {
     -webkit-filter: grayscale(100%) invert(100%);
     filter: grayscale(100%) invert(100%);
 }
@@ -364,8 +364,6 @@ only screen and (        min-device-pixel-ratio: 2) {
 }
 
 .cost span > img {
-    -webkit-filter: grayscale(100%) invert(100%);
-    filter: grayscale(100%) invert(100%);
     vertical-align: text-bottom;
     height: 1em;
 }

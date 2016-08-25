@@ -65,7 +65,7 @@
                         events: [
                             new hf.Event(C$.REST,
                                 function(hero, conflict, card) {
-                                    modal.ConfirmOperation("Do you wish to discard Emergency Medpack to gain 5 <img src='Other/damage.png' />?",
+                                    modal.ConfirmOperation("Do you wish to discard Emergency Medpack to recover 5<img src='Other/damage.png' />?",
                                         function() {
                                             modal.ConfirmOperation('Is the Emergency Medpack for you?',
                                                 function() {
