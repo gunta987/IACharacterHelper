@@ -55,7 +55,7 @@
         </div>
         <div id="operationsContainer" data-bind="foreach: hero.availableOperations">
             <div class="well" data-bind="click: function() { performOperation($parent.hero, $parent.conflict); }">
-                <span data-bind="text: name"></span>
+                <span data-bind="text: name, css: { red: ($data.isExternal || false) }"></span>
                 <div class="cost">
                     <span data-bind="html: text"></span>
                     <!-- ko foreach: operationImages -->
@@ -80,7 +80,7 @@
         </div>-->
         <div class="fixed-card-container above-modal" data-bind="foreach: hero.purchasedAbilities">
             <div>
-                <div class="fixed-card-slot" style="position: relative; z-index: 1">
+                <div class="fixed-card-slot" style="position: relative; z-index: 1" data-bind="css: {red: isExternal}">
                     <img data-bind="attr: {src: image}, style: { opacity: exhausted() ? 0.4 : 1 }" style="position: absolute;" />
                     <img src="Cards/Wearables/Equipment_Placeholder.png" style="opacity: 0" /> <!-- just to get the heights all the same -->
                 </div>

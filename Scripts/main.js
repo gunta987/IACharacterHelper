@@ -19,6 +19,7 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                     possibleAttachments = cards.Attachments;
 
                 _(args.Abilities.split(',')).compact().forEach(index => hero.AddCard(possibleAbilities[index]));
+                _(args.External.split(',')).compact().forEach(index => hero.AddCard(cards.External[index]));
                 _(args.Equipment.split(',')).compact().forEach(index => hero.AddCard(possibleEquipment[index]));
                 if (args.Armour && args.Armour !== '') {
                     hero.AddCard(possibleArmour[args.Armour]);

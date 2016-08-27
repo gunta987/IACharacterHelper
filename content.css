@@ -117,8 +117,12 @@ only screen and (        min-device-pixel-ratio: 2) {
 }
 
 .red.fixed-card-slot {
-    border-color: red;
-    box-shadow: inset 0px 0px 10px red;
+    border-color: #BC272C;
+    box-shadow: inset 0px 0px 10px #BC272C;
+}
+
+span.red {
+    color: #bc272c;
 }
 
 .fixed-card-slot img {
@@ -432,4 +436,8 @@ only screen and (        min-device-pixel-ratio: 2) {
 
 .plus-text.blue {
     text-shadow: 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25), 0px 1px 10px rgba(126, 127, 176, 0.25), 0px -1px 10px rgba(126, 127, 176, 0.25), -1px 0px 10px rgba(126, 127, 176, 0.25), 1px 0px 10px rgba(126, 127, 176, 0.25), 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25), 0px 1px 10px rgba(126, 127, 176, 0.25), 0px -1px 10px rgba(126, 127, 176, 0.25), -1px 0px 10px rgba(126, 127, 176, 0.25), 1px 0px 10px rgba(126, 127, 176, 0.25), 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25), 1px 1px 10px rgba(126, 127, 176, 0.25), -1px 1px 10px rgba(126, 127, 176, 0.25), 1px -1px 10px rgba(126, 127, 176, 0.25), -1px -1px 10px rgba(126, 127, 176, 0.25);
+}
+
+.plus-text.red {
+    text-shadow: 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 0px 1px 10px rgba(188, 39, 44, 0.25), 0px -1px 10px rgba(188, 39, 44, 0.25), -1px 0px 10px rgba(188, 39, 44, 0.25), 1px 0px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 0px 1px 10px rgba(188, 39, 44, 0.25), 0px -1px 10px rgba(188, 39, 44, 0.25), -1px 0px 10px rgba(188, 39, 44, 0.25), 1px 0px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25);
 }

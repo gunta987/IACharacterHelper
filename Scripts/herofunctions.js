@@ -34,6 +34,8 @@
     var ability = function (properties, isCore, image) {
         card.call(this, properties, image);
         this.isCoreAbility = isCore;
+        this.isExternal = properties.isExternal || false;
+        this.owner = properties.owner || '';
     };
     ability.prototype = Object.create(card.prototype);
     var armour = function (properties, image) {

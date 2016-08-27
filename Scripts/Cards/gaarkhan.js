@@ -11,9 +11,9 @@
                 },
                 'Cards/Gaarkhan/Pic2518434.jpg'),
             new hf.Ability({
-                    name: 'Wookie Fortitude',
+                    name: 'Wookiee Fortitude',
                     operations: [
-                        new hf.Operation('Wookie Fortitude',
+                        new hf.Operation('Wookiee Fortitude',
                             function(hero, conflict, card) {
                                 if (hero.bleeding() || hero.stunned()) {
                                     var bleedText = '';
@@ -70,9 +70,9 @@
                 false,
                 'Cards/Gaarkhan/Wookiee Fortitude.jpg'),
             new hf.Ability({
-                    name: 'Wookie Loyalty',
+                    name: 'Wookiee Loyalty',
                     operations: function() {
-                        var self = new hf.Operation('Wookie Loyalty',
+                        var self = new hf.Operation('Wookiee Loyalty',
                             function(hero, conflict, card) {
                                 conflict.ExtraBlock(conflict.ExtraBlock() + 1);
                                 card.exhausted(true);

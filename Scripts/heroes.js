@@ -37,7 +37,7 @@
             self.bleeding = ko.observable(false);
             self.actions = ko.observable(0);
             self.activated = ko.observable(false);
-            self.interrupt = ko.observable(false);
+            self.hasActivated = ko.observable(false);
             self.movement = ko.observable(0);
 
             self.inConflict = ko.observable(false);
@@ -85,7 +85,15 @@
             _.forEach(coreAbilities, self.AddCard);
 
             self.operations = ko.pureComputed(function () {
-                return _.concat(inherentOperations, _(self.cards()).flatMap(card => card.operations || []).value());
+                return _.concat(inherentOperations,
+                    _(self.cards())
+                    .flatMap(card => _(card.operations || [])
+                        .map(op => {
+                            op.isExternal = card.isExternal || false;
+                            return op;
+                        })
+                        .value())
+                    .value());
             });
             self.specialOperations = ko.observableArray([]);
             self.availableOperations = ko.pureComputed(function () {
@@ -274,7 +282,7 @@
                 classCards: cards.Diala
             }),
             new Hero({
-                name: 'Wookie',
+                name: 'Wookiee',
                 health: 14,
                 endurance: 4,
                 speed: 4,

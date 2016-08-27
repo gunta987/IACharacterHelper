@@ -13,7 +13,8 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
             EQUIPMENT: 3,
             ARMOUR: 4,
             WEAPON: 5,
-            ATTACHMENT: 6
+            ATTACHMENT: 6,
+            EXTERNAL: 7
         };
 
         var showModal = function () { $('.modal-over').css('display', 'inline-flex'); };
@@ -72,6 +73,10 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                         mode(C$.ATTACHMENT);
                         showModal();
                     },
+                    ShowExternal: function() {
+                        mode(C$.EXTERNAL);
+                        showModal();
+                    },
                     Close: close,
                     SetHero: setHero,
                     AvailableAbilities: ko.pureComputed(function() {
@@ -100,6 +105,11 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                             }()
                             : [];
                     }),
+                    AvailableExternal: ko.pureComputed(function() {
+                        return hero() != null
+                            ? _(cards.External).filter(card => card.owner !== hero().imageName()).difference(hero().purchasedAbilities()).value()
+                            : [];
+                    }),
                     AddCard: function (card) {
                         hero().AddCard(card);
                         close();
@@ -124,7 +134,8 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                         var page = _.initial(location.href.split('/')).join('/') + '/Hero.html?';
                         var arguments = [
                             'Hero=' + hero().imageName(),
-                            'Abilities=' + _(hero().purchasedAbilities()).map(ability => abilities().indexOf(ability)).join(','),
+                            'Abilities=' + _(hero().purchasedAbilities()).filter(card => !card.isExternal).map(ability => abilities().indexOf(ability)).join(','),
+                            'External=' + _(hero().purchasedAbilities()).filter(card => card.isExternal).map(ability => cards.External.indexOf(ability)).join(','),
                             'Equipment=' + _(hero().equipment()).map(item => cards.Equipment.indexOf(item)).join(','),
                             'Armour=' + (hero().armour() ? armour().indexOf(hero().armour()) : ''),
                             'Weapons=' + _(hero().weapons()).map(weapon => weapons().indexOf(weapon) + '_' + 

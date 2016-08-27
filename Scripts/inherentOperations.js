@@ -4,7 +4,6 @@
             function (hero) {
                 hero.activated(true);
                 hero.actions(2);
-                hero.interrupt(false);
                 hero.movement(0);
                 hero.strainMoves(0);
                 hero.suffered(0);
@@ -14,7 +13,7 @@
                 hero.event('activate');
             },
             function (hero) {
-                return !hero.activated() && !hero.interrupt();
+                return !hero.activated() && !hero.hasActivated();
             }),
         new hf.Operation('End Activation',
             function(hero) {
@@ -22,6 +21,7 @@
                 hero.strainMoves(0);
                 hero.activated(false);
                 hero.event('endActivation');
+                hero.hasActivated(true);
             },
             function(hero){
                 return hero.activated() && hero.actions() == 0;
@@ -40,7 +40,7 @@
                 hero.event('rest');
             },
             function (hero) {
-                return hero.activated() && !hero.interrupt();
+                return hero.activated();
             },
             [$.action()]),
         new hf.Operation('Gain Movement',
@@ -57,7 +57,7 @@
                 hero.strainMoves(hero.strainMoves() + 1);
             },
             function (hero) {
-                return hero.activated() && !hero.interrupt() && !hero.stunned() && hero.strainMoves() < 2;
+                return hero.activated() && !hero.stunned() && hero.strainMoves() < 2;
             },
             [$.strain()]),
         new hf.Operation('Attack',
@@ -89,7 +89,7 @@
                 hero.defend();
             },
             function (hero) {
-                return !hero.activated() && !hero.interrupt();
+                return !hero.activated();
             }),
         new hf.Operation('Interact',
             function (hero) {
@@ -127,6 +127,14 @@
             function (hero) {
                 return hero.activated() && !hero.stunned();
             },
-            [$.action()])
+            [$.action()]),
+        new hf.Operation('End Round',
+            function(hero) {
+                hero.event(C$.END_ROUND);
+                hero.hasActivated(false);
+            },
+            function(hero) {
+                return !hero.activated() && hero.hasActivated();
+            })
     ];
 });

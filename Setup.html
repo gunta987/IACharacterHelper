@@ -32,7 +32,7 @@
         <div class="fixed-card-container above-modal" data-bind="visible: hero() != null">
             <!-- ko foreach: _.get(hero(), 'purchasedAbilities', []) -->
             <div>
-                <div class="fixed-card-slot" style="position: relative; z-index: 1" data-bind="click: $parent.RemoveCard">
+                <div class="fixed-card-slot" style="position: relative; z-index: 1" data-bind="click: $parent.RemoveCard, css: {red: isExternal}">
                     <img data-bind="attr: {src: image}, style: { opacity: exhausted() ? 0.4 : 1 }" style="position: absolute;"/>
                     <img src="Cards/Wearables/Equipment_Placeholder.png"/> <!-- just to get the heights all the same -->
                 </div>
@@ -41,6 +41,12 @@
             <div>
                 <div class="fixed-card-slot" style="position: relative; z-index: 1" data-bind="click: ShowAbilities">
                     <span class="plus-text" >Add Class Card</span>
+                    <img src="Cards/Wearables/Equipment_Placeholder.png" style="opacity: 0"/> <!-- just to get the heights all the same -->
+                </div>
+            </div>
+            <div>
+                <div class="fixed-card-slot red" style="position: relative; z-index: 1" data-bind="click: ShowExternal">
+                    <span class="plus-text red">Add Other Card</span>
                     <img src="Cards/Wearables/Equipment_Placeholder.png" style="opacity: 0" /> <!-- just to get the heights all the same -->
                 </div>
             </div>
@@ -130,6 +136,11 @@
             </div>
             <div data-bind="foreach: AvailableAttachments, visible: Mode() === C$.ATTACHMENT">
                 <div data-bind="click: function(card) { $parent.AddAttachment(card); }">
+                    <img style="width: 15vw" data-bind="attr: {src: image}"/>
+                </div>
+            </div>
+            <div data-bind="foreach: AvailableExternal, visible: Mode() === C$.EXTERNAL">
+                <div data-bind="click: $parent.AddCard">
                     <img style="width: 15vw" data-bind="attr: {src: image}" />
                 </div>
             </div>
