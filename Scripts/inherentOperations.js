@@ -1,4 +1,4 @@
-﻿define(['herofunctions', 'cost', 'dice', 'Cards/supply'], function (hf, $, d, supply) {
+﻿define(['herofunctions', 'cost', 'dice', 'Cards/supply', 'constants'], function (hf, $, d, supply, C$) {
     return [
         new hf.Operation('Activate',
             function (hero) {

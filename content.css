@@ -121,10 +121,6 @@ only screen and (        min-device-pixel-ratio: 2) {
     box-shadow: inset 0px 0px 10px #BC272C;
 }
 
-span.red {
-    color: #bc272c;
-}
-
 .fixed-card-slot img {
     width: 18.5vh;
     max-width: 94%;
@@ -285,6 +281,10 @@ span.red {
 
 #operationsContainer .well span {
     padding-left: 0.25em;
+}
+
+#operationsContainer span.red {
+    color: #bc272c;
 }
 
 .above-modal {
