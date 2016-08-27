@@ -17,7 +17,7 @@
                             [],
                             C$.ATTACKROLL,
                             '(exhaust)');
-                        op.operationImages(['Other/surge.png']);
+                        op.operationImages(['Other/Surge.png']);
                         return [op];
                     }()
                 },

@@ -31,7 +31,7 @@
                                         stunText = " or remove <img src='Tokens/stun.png' />";
                                         yesButtonText = 'Stun';
                                     }
-                                    modal.AskQuestion("Do you want to recover 2<img src='Other/damage.png' />" + bleedText + stunText,
+                                    modal.AskQuestion("Do you want to recover 2<img src='Other/Damage.png' />" + bleedText + stunText,
                                         function() {
                                             if (hero.bleeding() && hero.stunned()) {
                                                 modal.AskQuestion("Remove <img src='Tokens/bleed.png' /> or <img src='Tokens/stun.png' />",
@@ -83,7 +83,7 @@
                             [],
                             C$.DEFENCEROLL,
                             '(exhaust)');
-                        self.operationImages(['Other/block.png']);
+                        self.operationImages(['Other/Block.png']);
                         var other = new hf.Operation('Wookie Loyalty',
                             function(hero, conflict, card) {
                                 card.exhausted(true);
@@ -93,7 +93,7 @@
                             },
                             [],
                             null,
-                            "(exhaust, give <img src='Other/block.png' />)");
+                            "(exhaust, give <img src='Other/Block.png' />)");
                         return[self, other];
                     }()
                 },
@@ -175,7 +175,7 @@
                                 function() {
                                     if (hasCharged) {
                                         hasCharged = false;
-                                        modal.ShowInformation("Apply 1<img src='Other/damage.png' /> to all adjacent hostiles");
+                                        modal.ShowInformation("Apply 1<img src='Other/Damage.png' /> to all adjacent hostiles");
                                     }
                                 })
                         ];

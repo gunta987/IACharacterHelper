@@ -23,7 +23,7 @@
             incur: function (hero) {
                 hero.gainStrain(count);
             },
-            images: _.fill(Array(count), 'Tokens/Strain.png')
+            images: _.fill(Array(count), 'Tokens/strain.png')
         }
     },
     block: function() {
@@ -34,6 +34,6 @@
             incur: function(hero, conflict) {
                 conflict.ExtraBlock(conflict.ExtraBlock() - 1);
             },
-            images: ['Other/block.png']
+            images: ['Other/Block.png']
     }}
 })

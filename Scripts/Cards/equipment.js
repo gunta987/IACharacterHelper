@@ -7,7 +7,7 @@
                         new hf.Event(C$.REST,
                             function(hero, conflict, card) {
                                 if (!card.exhausted() && !hero.focused()) {
-                                    modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain <img src='Tokens/Focus.png' />?",
+                                    modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain <img src='Tokens/focus.png' />?",
                                         function() {
                                             hero.focused(true);
                                             card.exhausted(true);
@@ -89,7 +89,7 @@
                         new hf.Event(C$.REST,
                             function(hero, conflict, card) {
                                 modal.ConfirmOperation(
-                                    "Do you wish to discard Portable Medkit to recover 3<img src='Other/damage.png' /> and 1<img src='Tokens/strain.png' />?",
+                                    "Do you wish to discard Portable Medkit to recover 3<img src='Other/Damage.png' /> and 1<img src='Tokens/strain.png' />?",
                                     function() {
                                         modal.ConfirmOperation('Is the Portable Medkit for you?',
                                             function() {

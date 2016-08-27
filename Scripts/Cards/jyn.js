@@ -158,7 +158,7 @@
                             [$.strain()],
                             C$.ATTACKROLL,
                             '(exhaust)');
-                        op.operationImages.push('Other/surge.png');
+                        op.operationImages.push('Other/Surge.png');
                         return [op];
                     }()
                 },

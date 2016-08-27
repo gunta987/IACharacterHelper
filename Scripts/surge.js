@@ -36,14 +36,14 @@
                 conflict.Bleed(conflict.Bleed() + 1);
             }, function (conflict) {
                 conflict.Bleed(conflict.Bleed() - 1);
-            }, ['Tokens/Bleed.png']);
+            }, ['Tokens/bleed.png']);
         },
         stun: function () {
             return new Surge(function (conflict) {
                 conflict.Stun(conflict.Stun() + 1);
             }, function (conflict) {
                 conflict.Stun(conflict.Stun() - 1);
-            }, ['Tokens/Stun.png']);
+            }, ['Tokens/stun.png']);
         },
         accuracy: function (count) {
             count = count || 1;

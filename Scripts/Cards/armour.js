@@ -17,8 +17,8 @@
                             },
                             [],
                             C$.DEFENCEROLL,
-                            "(-1<img src='Other/block.png' />)");
-                        op.operationImages(['Other/evade.png']);
+                            "(-1<img src='Other/Block.png' />)");
+                        op.operationImages(['Other/Evade.png']);
                         return [op];
                     }()
                 },

@@ -394,7 +394,7 @@
                                 new hf.Event(C$.ATTACK_RESOLVED,
                                     function(hero, conflict, card) {
                                         if (conflict.MyAttack.damage() > 0) {
-                                            modal.ShowInformation('Opportunist: move 1 space');
+                                            modal.ShowInformation('Opportunist: you may move 1 space');
                                         }
                                     })
                             ]

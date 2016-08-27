@@ -22,7 +22,7 @@
                             },
                             [],
                             null,
-                            "(exhaust, give <img src='Other/surge.png' />)");
+                            "(exhaust, give <img src='Other/Surge.png' />)");
                         var self = new hf.Operation('Called Shot',
                             function(hero, conflict, card) {
                                 card.exhausted(true);
@@ -34,7 +34,7 @@
                             [],
                             C$.ATTACKROLL,
                             '(exhaust)');
-                        self.operationImages(['Other/surge.png']);
+                        self.operationImages(['Other/Surge.png']);
                         return [other, self];
                     }()
                 },
@@ -54,8 +54,8 @@
                             },
                             [],
                             C$.ATTACKROLL,
-                            "(exhaust -1<img src='Other/damage.png' />)");
-                        attack.operationImages(['Other/surge.png']);
+                            "(exhaust -1<img src='Other/Damage.png' />)");
+                        attack.operationImages(['Other/Surge.png']);
                         var defend = new hf.Operation('Military Efficiency',
                             function(hero, conflict, card) {
                                 card.exhausted(true);
@@ -67,8 +67,8 @@
                             },
                             [],
                             C$.DEFENCEROLL,
-                            "(exhaust -1<img src='Other/block.png' />)");
-                        defend.operationImages(['Other/evade.png']);
+                            "(exhaust -1<img src='Other/Block.png' />)");
+                        defend.operationImages(['Other/Evade.png']);
                         return [attack, defend];
                     }()
                 },
@@ -103,7 +103,7 @@
                             },
                             [$.strain()],
                             null,
-                            "(exhaust, give <img src='Tokens/Focus.png' />)")
+                            "(exhaust, give <img src='Tokens/focus.png' />)")
                     ]
                 },
                 false,
