@@ -10,33 +10,33 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
         $(document)
             .ready(function () {
 
-                var args = _(decodeURIComponent(location.search.slice(1)).split('&')).map(pair => pair.split('=')).fromPairs().value(),
-                    hero = _(heroes).find(h => h.imageName() === args.Hero),
-                    possibleAbilities = _(hero.classCards).filter(c => c instanceof hf.Ability).value(),
+                var args = _(decodeURIComponent(location.search.slice(1)).split('&')).map(function(pair) { return pair.split('='); }).fromPairs().value(),
+                    hero = _(heroes).find(function (h) { return h.imageName() === args.Hero;}),
+                    possibleAbilities = _(hero.classCards).filter(function(c) { return c instanceof hf.Ability; }).value(),
                     possibleEquipment = cards.Equipment,
-                    possibleArmour = _.concat(cards.Armour, _(hero.classCards).filter(c => c instanceof hf.Armour).value()),
-                    possibleWeapons = _.concat(cards.Weapons, _(hero.classCards).filter(c => c instanceof hf.Weapon).value()),
+                    possibleArmour = _.concat(cards.Armour, _(hero.classCards).filter(function(c) { return c instanceof hf.Armour; }).value()),
+                    possibleWeapons = _.concat(cards.Weapons, _(hero.classCards).filter(function(c) { return c instanceof hf.Weapon }).value()),
                     possibleAttachments = cards.Attachments;
 
-                _(args.Abilities.split(',')).compact().forEach(index => hero.AddCard(possibleAbilities[index]));
-                _(args.External.split(',')).compact().forEach(index => hero.AddCard(cards.External[index]));
-                _(args.Equipment.split(',')).compact().forEach(index => hero.AddCard(possibleEquipment[index]));
+                _(args.Abilities.split(',')).compact().forEach(function(index) { hero.AddCard(possibleAbilities[index]); });
+                _(args.External.split(',')).compact().forEach(function(index) { hero.AddCard(cards.External[index]); });
+                _(args.Equipment.split(',')).compact().forEach(function(index) { hero.AddCard(possibleEquipment[index]); });
                 if (args.Armour && args.Armour !== '') {
                     hero.AddCard(possibleArmour[args.Armour]);
                 }
 
                 _(args.Weapons.split(','))
-                    .map(wepstring => wepstring.split('_'))
-                    .map(wepattpair => {
+                    .map(function(wepstring) { return wepstring.split('_'); })
+                    .map(function (wepattpair) {
                         return {
                             WeaponIndex: wepattpair[0],
                             AttachmentIndices: (wepattpair[1] || '').split('-')
-                        }
+                        };
                     })
-                    .forEach(wepappobj => {
+                    .forEach(function(wepappobj) {
                         var weapon = possibleWeapons[wepappobj.WeaponIndex];
                         hero.AddCard(weapon);
-                        _(wepappobj.AttachmentIndices).compact().forEach(index => weapon.attachments.push(possibleAttachments[index]));
+                        _(wepappobj.AttachmentIndices).compact().forEach(function(index) { weapon.attachments.push(possibleAttachments[index]); });
                     });
 
                 var supplyCards = ko.observableArray(supply.Cards);

@@ -34,13 +34,13 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                     attachmentsForWeapon = ko.observable(null);
 
                 var weapons = ko.pureComputed(function() {
-                    return _.concat(cards.Weapons, _(hero().classCards).filter(c => c instanceof hf.Weapon).value());
+                    return _.concat(cards.Weapons, _(hero().classCards).filter(function(c) { return c instanceof hf.Weapon; }).value());
                     }),
                     armour = ko.pureComputed(function() {
-                        return _.concat(cards.Armour, _(hero().classCards).filter(c => c instanceof hf.Armour).value());
+                        return _.concat(cards.Armour, _(hero().classCards).filter(function(c) { return c instanceof hf.Armour; }).value());
                     }),
                     abilities = ko.pureComputed(function() {
-                        return _(hero().classCards).filter(c => c instanceof hf.Ability).value();
+                        return _(hero().classCards).filter(function(c) { return c instanceof hf.Ability; }).value();
                     });
 
                 var myViewModel = {
@@ -96,18 +96,20 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                     AvailableAttachments: ko.pureComputed(function() {
                         return hero() != null && attachmentsForWeapon() != null
                             ? function () {
-                                var existingTraits = _(attachmentsForWeapon().attachments()).flatMap(a => a.trait).value();
+                                var existingTraits = _(attachmentsForWeapon().attachments()).flatMap(function(a) { return a.trait; }).value();
                                 //cannot choose an attachment already in use or with the same trait as one on this weapon
                                 return _.difference(_(cards.Attachments)
-                                    .filter(a => a.ranged === attachmentsForWeapon().ranged && _(a.trait).every(t => !_(existingTraits).includes(t)))
+                                    .filter(function(a) {
+                                        return a.ranged === attachmentsForWeapon().ranged && _(a.trait).every(function(t) { return !_(existingTraits).includes(t); });
+                                    })
                                     .value(),
-                                    _(hero().weapons()).flatMap(w => w.attachments()).value());
+                                    _(hero().weapons()).flatMap(function(w) { return w.attachments(); }).value());
                             }()
                             : [];
                     }),
                     AvailableExternal: ko.pureComputed(function() {
                         return hero() != null
-                            ? _(cards.External).filter(card => card.owner !== hero().imageName()).difference(hero().purchasedAbilities()).value()
+                            ? _(cards.External).filter(function(card) { return card.owner !== hero().imageName(); }).difference(hero().purchasedAbilities()).value()
                             : [];
                     }),
                     AddCard: function (card) {
@@ -134,12 +136,15 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                         var page = _.initial(location.href.split('/')).join('/') + '/Hero.html?';
                         var arguments = [
                             'Hero=' + hero().imageName(),
-                            'Abilities=' + _(hero().purchasedAbilities()).filter(card => !card.isExternal).map(ability => abilities().indexOf(ability)).join(','),
-                            'External=' + _(hero().purchasedAbilities()).filter(card => card.isExternal).map(ability => cards.External.indexOf(ability)).join(','),
-                            'Equipment=' + _(hero().equipment()).map(item => cards.Equipment.indexOf(item)).join(','),
+                            'Abilities=' + _(hero().purchasedAbilities()).filter(function(card) { return !card.isExternal; }).map(function(ability) { return abilities().indexOf(ability); }).join(','),
+                            'External=' + _(hero().purchasedAbilities()).filter(function(card) { return card.isExternal; }).map(function(ability) { return cards.External.indexOf(ability); }).join(','),
+                            'Equipment=' + _(hero().equipment()).map(function(item) { return cards.Equipment.indexOf(item); }).join(','),
                             'Armour=' + (hero().armour() ? armour().indexOf(hero().armour()) : ''),
-                            'Weapons=' + _(hero().weapons()).map(weapon => weapons().indexOf(weapon) + '_' + 
-                                _(weapon.attachments()).map(attachment => cards.Attachments.indexOf(attachment)).join('-')).join(',')
+                            'Weapons=' + _(hero().weapons()).map(function(weapon) {
+                                return weapons().indexOf(weapon) +
+                                    '_' +
+                                    _(weapon.attachments()).map(function(attachment) { return cards.Attachments.indexOf(attachment); }).join('-');
+                            }).join(',')
                         ];
                         location.replace(page + encodeURIComponent(_(arguments).join('&')));
                     }

@@ -140,7 +140,7 @@
                                     if (otherWeapon != null) {
                                         var extraSurges = _(conflict.AttackWeapon().attachments()).last().surges;
                                         //slice 1 to exclude the gain strain inherent surge ability
-                                        _(otherWeapon.surges().slice(1)).forEach(surge => extraSurges.push(surge));
+                                        _(otherWeapon.surges().slice(1)).forEach(function(surge) { return extraSurges.push(surge); });
                                         conflict.AttackWeapon().attachments.notifySubscribers();
                                     }
                                 }

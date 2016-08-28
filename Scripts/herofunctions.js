@@ -110,7 +110,7 @@
         });
         self.modifyDicePool = function(dice) {
             var result = [dice];
-            _(self.attachments()).forEach(a => { result = a.modifyDicePool(result) });
+            _(self.attachments()).forEach(function(a) { result = a.modifyDicePool(result) });
             return result;
         };
     };

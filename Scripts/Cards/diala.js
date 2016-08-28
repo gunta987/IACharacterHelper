@@ -125,7 +125,7 @@
                                     });
                             },
                             function(hero) {
-                                return !hero.stunned() && _(hero.weapons()).some(w => !w.ranged);
+                                return !hero.stunned() && _(hero.weapons()).some(function(w) { return !w.ranged; });
                             },
                             [$.action(), $.strain()])
                     ]
@@ -146,7 +146,7 @@
                                     attack(hero);
                                 },
                                 function(hero) {
-                                    return !hero.stunned() && _(hero.weapons()).some(w => !w.ranged);
+                                    return !hero.stunned() && _(hero.weapons()).some(function (w) { return !w.ranged; });
                                 },
                                 [$.action(), $.strain(2)])
                         ],

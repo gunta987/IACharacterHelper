@@ -30,9 +30,9 @@
                     modifyDicePool: function(dicePool) {
                         var result = [];
                         _(dicePool)
-                            .forEach(pool => {
+                            .forEach(function (pool) {
                                 _(pool)
-                                    .forEach((die, index) => {
+                                    .forEach(function(die, index) {
                                         var newPool = pool.slice();
                                         newPool[index] = d.RED();
                                         result.push(newPool);

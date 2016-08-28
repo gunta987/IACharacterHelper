@@ -94,7 +94,7 @@
         new hf.Operation('Interact',
             function (hero) {
                 var createOp = function (name, attribute) {
-                    var dice = _(attribute()).map(f => f()).value();
+                    var dice = _(attribute()).map(function(f) { return f(); }).value();
                     if (hero.focused()) {
                         dice.push(d.GREEN());
                     }

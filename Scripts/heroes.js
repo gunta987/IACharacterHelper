@@ -87,12 +87,15 @@
             self.operations = ko.pureComputed(function () {
                 return _.concat(inherentOperations,
                     _(self.cards())
-                    .flatMap(card => _(card.operations || [])
-                        .map(op => {
-                            op.isExternal = card.isExternal || false;
-                            return op;
-                        })
-                        .value())
+                    .flatMap(function(card) {
+                        return _(card.operations || [])
+                            .map(function(op) {
+                                    op.isExternal = card.isExternal || false;
+                                    return op;
+                                }
+                            )
+                            .value();
+                    })
                     .value());
             });
             self.specialOperations = ko.observableArray([]);
@@ -173,7 +176,7 @@
                 self.event(C$.BEFORE_ATTACK);
                 //step 1: choose your weapon
                 restrictionsFunction = restrictionsFunction || function() { return true; };
-                var availableWeapons = _(self.weapons()).filter(w => restrictionsFunction(w)).value();
+                var availableWeapons = _(self.weapons()).filter(function(w) { return restrictionsFunction(w); }).value();
                 additionalDice = additionalDice || [];
                 abilitySurges = abilitySurges || [];
                 if (self.focused()) {
@@ -182,10 +185,10 @@
                 }
 
                 _(availableWeapons)
-                    .forEach(weapon => {
+                    .forEach(function(weapon) {
                         var originalPool = _.concat(weapon.dice(), additionalDice);
                         _(weapon.modifyDicePool(originalPool))
-                            .forEach(dice => {
+                            .forEach(function(dice) {
                                 var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
                                 var operation = new hf.Operation(weapon.name,
                                     function() {
@@ -216,14 +219,14 @@
 
             self.testAttribute = function (attribute, onSuccess) {
                 onSuccess = onSuccess || function() {};
-                var dice = _(attribute()).map(f => f()).value();
+                var dice = _(attribute()).map(function(f) { return f(); }).value();
                 if (self.focused()) {
                     dice.push(d.GREEN());
                     self.focused(false);
                 }
                 //TODO: make more sophistimicated
                 self.event(C$.ATTRIBUTE_TEST);
-                modal.ConfirmOperation('Roll ' + _(dice).map(die => "<img src='" + die.blank + "' />").join(' ') + '<br/>Was the attribute test successful?',
+                modal.ConfirmOperation('Roll ' + _(dice).map(function(die) { return "<img src='" + die.blank + "' />"; }).join(' ') + '<br/>Was the attribute test successful?',
                     onSuccess);
             };
         };
