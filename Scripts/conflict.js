@@ -95,23 +95,26 @@
             usedAbilities = ko.observableArray([]),
 
             conflictComplete = function () {
+                var endConflict = function() {
+                    hero.inConflict(false);
+                    closeModal();
+                };
+
                 if (attacking()) {
                     //remove attachment added for ability surges
                     weapon().attachments.pop();
                     if (regainStrain()) {
                         hero.gainStrain(-1);
                     }
-                    hero.event(C$.ATTACK_RESOLVED);
+                    hero.publishEventWithFollowOn(C$.ATTACK_RESOLVED, endConflict);
                 } else {
                     var finalDamage = damage();
                     hero.gainDamage(finalDamage);
                     hero.gainStrain(strain());
                     if (finalDamage > 0 && bleed() > 0) hero.bleeding(true);
                     if (finalDamage > 0 && stun() > 0) hero.stunned(true);
-                    hero.event(C$.DEFENCE_RESOLVED);
+                    hero.publishEventWithFollowOn(C$.DEFENCE_RESOLVED, endConflict);
                 }
-                hero.inConflict(false);
-                closeModal();
             },
 
             rollFinished = ko.pureComputed(function() {

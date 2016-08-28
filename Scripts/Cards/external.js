@@ -81,19 +81,20 @@
                     name: 'For the Cause!',
                     isExternal: true,
                     owner: 'OldDude',
-                    operations: function() {
+                    eventOperations: function () {
                         var op = new hf.Operation('For the Cause!',
-                            function(hero, conflict) {
-                                conflict.MyDice.push(hero.focusDie());
-                                conflict.UsedAbilities.push('For the Cause!');
+                            function(hero) {
+                                hero.focused(true);
                             },
-                            function(hero, conflict) {
-                                return _.indexOf(conflict.UsedAbilities(), 'For the Cause!') === -1;
+                            function (hero) {
+                                op.operationImages.removeAll();
+                                op.operationImages.push({ src: hero.focusDie().blank, css: 'die' });
+                                return !hero.focused();
                             },
                             [],
-                            C$.ATTACKDICE);
-                        op.operationImages.push({ src: 'Dice/green.png', css: 'die' });
-                        return [op];
+                            null,
+                            '+');
+                        return [{ operation: op, event: C$.BEFORE_ATTACK }];
                     }()
                 },
                 false,

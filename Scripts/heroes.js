@@ -76,11 +76,17 @@
                 return _.filter(self.abilities(), function(ability) { return !ability.isCoreAbility; });
             });
             self.classCards = initial.classCards;
+            var eventOperations = {};
             self.AddCard = function(card) {
                 self.cards.push(card);
                 if (card.onAdd != null) {
                     card.onAdd.call(self);
                 }
+                _(card.eventOperations || [])
+                    .forEach(function (eventOperation) {
+                        eventOperations[eventOperation.event] = eventOperations[eventOperation.event] || [];
+                        eventOperations[eventOperation.event].push(eventOperation.operation);
+                    });
             };
             _.forEach(coreAbilities, self.AddCard);
 
@@ -123,7 +129,7 @@
                 return _.flatMap(self.cards(), 'events');
             });
             self.event.subscribe(function(eventName) {
-                if (eventName != '') {
+                if (eventName !== '') {
                     _(self.cardEvents())
                         .forEach(function(event) {
                             if (event != null) {
@@ -133,6 +139,38 @@
                     self.event('');
                 }
             });
+            self.publishEventWithFollowOn = function(eventName, followOn) {
+                self.event(eventName);
+                followOn = followOn || function() {};
+                new Promise(function(resolve, reject) {
+                        var thisEventOperations = _(eventOperations[C$.BEFORE_ATTACK] || [])
+                            .filter(function(operation) {
+                                return operation.canPerformOperation(self, conflict);
+                            })
+                            .value();
+                        if (thisEventOperations.length === 0) {
+                            resolve();
+                            return;
+                        }
+                        thisEventOperations.push(new hf.Operation('Continue',
+                            function() {},
+                            function() { return true; },
+                            []));
+                        var operationNames = thisEventOperations.map(function(operation) { return operation.name });
+                        var eventSubscription = self.event.subscribe(function(event) {
+                            if (operationNames.indexOf(event) !== -1) {
+                                self.specialOperations.removeAll();
+                                eventSubscription.dispose();
+                                resolve();
+                            }
+                        });
+                        thisEventOperations.forEach(function(operation) {
+                            self.specialOperations.push(operation);
+                        });
+                    })
+                    .then(followOn)
+                    .catch(console.log.bind(console));
+            };
 
             self.damage.subscribe(function() {
                 var health = fullHealth.call(self);
@@ -172,39 +210,41 @@
             };
 
             self.focusDie = d.GREEN;
-            self.attack = function (additionalDice, abilitySurges, ranged, restrictionsFunction) {
-                self.event(C$.BEFORE_ATTACK);
-                //step 1: choose your weapon
-                restrictionsFunction = restrictionsFunction || function() { return true; };
-                var availableWeapons = _(self.weapons()).filter(function(w) { return restrictionsFunction(w); }).value();
-                additionalDice = additionalDice || [];
-                abilitySurges = abilitySurges || [];
-                if (self.focused()) {
-                    additionalDice.push(self.focusDie());
-                    self.focused(false);
-                }
+            self.attack = function(additionalDice, abilitySurges, ranged, restrictionsFunction) {
+                self.publishEventWithFollowOn(C$.BEFORE_ATTACK,
+                    function() {
+                        //step 1: choose your weapon
+                        restrictionsFunction = restrictionsFunction || function() { return true; };
+                        var availableWeapons = _(self.weapons()).filter(function(w) { return restrictionsFunction(w); }).value();
+                        additionalDice = additionalDice || [];
+                        abilitySurges = abilitySurges || [];
+                        if (self.focused()) {
+                            additionalDice.push(self.focusDie());
+                            self.focused(false);
+                        }
 
-                _(availableWeapons)
-                    .forEach(function(weapon) {
-                        var originalPool = _.concat(weapon.dice(), additionalDice);
-                        _(weapon.modifyDicePool(originalPool))
-                            .forEach(function(dice) {
-                                var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
-                                var operation = new hf.Operation(weapon.name,
-                                    function() {
-                                        self.specialOperations.removeAll();
-                                        conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
-                                    },
-                                    function() { return true; });
-                                var images = [];
-                                images.push(_.map(dice, function(die) { return { src: die.blank, css: 'die' }; }));
-                                images.push(_.times(additional.pierce, function() { return 'Other/Pierce.png' }));
-                                images.push(_.times(additional.damage, function() { return 'Other/Damage.png' }));
-                                if (weapon.accuracy() > 0) {
-                                    images.push(['Other/' + additional.accuracy + '.png']);
-                                }
-                                operation.operationImages(_.flatten(images));
-                                self.specialOperations.push(operation);
+                        _(availableWeapons)
+                            .forEach(function(weapon) {
+                                var originalPool = _.concat(weapon.dice(), additionalDice);
+                                _(weapon.modifyDicePool(originalPool))
+                                    .forEach(function(dice) {
+                                        var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
+                                        var operation = new hf.Operation(weapon.name,
+                                            function() {
+                                                self.specialOperations.removeAll();
+                                                conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
+                                            },
+                                            function() { return true; });
+                                        var images = [];
+                                        images.push(_.map(dice, function(die) { return { src: die.blank, css: 'die' }; }));
+                                        images.push(_.times(additional.pierce, function() { return 'Other/Pierce.png' }));
+                                        images.push(_.times(additional.damage, function() { return 'Other/Damage.png' }));
+                                        if (weapon.accuracy() > 0) {
+                                            images.push(['Other/' + additional.accuracy + '.png']);
+                                        }
+                                        operation.operationImages(_.flatten(images));
+                                        self.specialOperations.push(operation);
+                                    });
                             });
                     });
             };

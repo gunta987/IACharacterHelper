@@ -36,6 +36,10 @@
         this.isCoreAbility = isCore;
         this.isExternal = properties.isExternal || false;
         this.owner = properties.owner || '';
+        this.eventOperations = _.map(properties.eventOperations, function (eventOperation) {
+            eventOperation.operation.card = self;
+            return eventOperation;
+        });
     };
     ability.prototype = Object.create(card.prototype);
     var armour = function (properties, image) {
