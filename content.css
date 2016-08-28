@@ -3,6 +3,8 @@
     src: url(ufonts.com_agency-fb.ttf);
 }
 
+:-webkit-full-screen {background-color:transparent;}
+
 body {
     background-image: url('Background_tile.png');
     margin: 0;

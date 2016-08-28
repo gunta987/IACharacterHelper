@@ -32,11 +32,12 @@
         self.exhausted = ko.observable(false);
     };
     var ability = function (properties, isCore, image) {
-        card.call(this, properties, image);
-        this.isCoreAbility = isCore;
-        this.isExternal = properties.isExternal || false;
-        this.owner = properties.owner || '';
-        this.eventOperations = _.map(properties.eventOperations, function (eventOperation) {
+        var self = this;
+        card.call(self, properties, image);
+        self.isCoreAbility = isCore;
+        self.isExternal = properties.isExternal || false;
+        self.owner = properties.owner || '';
+        self.eventOperations = _.map(properties.eventOperations, function (eventOperation) {
             eventOperation.operation.card = self;
             return eventOperation;
         });

@@ -51,7 +51,11 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                         hero.AddCard(card);
                         hero.event(C$.SUPPLY);
                     },
-                    C$: C$
+                    C$: C$,
+                    enfullscreenify: function() {
+                        var html = $('html')[0];
+                        html.webkitRequestFullScreen();
+                    }
                 };
 
                 //set max height on operations container so that window scrollbar doesn't show

@@ -84,6 +84,7 @@
                 }
                 _(card.eventOperations || [])
                     .forEach(function (eventOperation) {
+                        eventOperation.operation.isExternal = card.isExternal;
                         eventOperations[eventOperation.event] = eventOperations[eventOperation.event] || [];
                         eventOperations[eventOperation.event].push(eventOperation.operation);
                     });
@@ -143,7 +144,7 @@
                 self.event(eventName);
                 followOn = followOn || function() {};
                 new Promise(function(resolve, reject) {
-                        var thisEventOperations = _(eventOperations[C$.BEFORE_ATTACK] || [])
+                    var thisEventOperations = _(eventOperations[eventName] || [])
                             .filter(function(operation) {
                                 return operation.canPerformOperation(self, conflict);
                             })

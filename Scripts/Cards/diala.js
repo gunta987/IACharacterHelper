@@ -97,17 +97,20 @@
                 'Cards/Diala/Pic2444789.jpg'),
             new hf.Ability({
                     name: 'Snap Kick',
-                    events: [
-                        new hf.Event(C$.ATTACK_RESOLVED,
-                            function(hero, conflict, card) {
-                                if (!card.exhausted() && !conflict.AttackWeapon().ranged) {
-                                    modal.ConfirmOperation(
-                                        "Do you want to exhaust 'Snap Kick' to roll <img src='Dice/green.png' /> for damage to an adjacent figure?",
-                                        function() {
-                                            card.exhausted(true);
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Snap Kick',
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted() && !conflict.AttackWeapon().ranged;
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.ATTACK_RESOLVED
+                        }
                     ]
                 },
                 false,
@@ -146,7 +149,7 @@
                                     attack(hero);
                                 },
                                 function(hero) {
-                                    return !hero.stunned() && _(hero.weapons()).some(function (w) { return !w.ranged; });
+                                    return !hero.stunned() && _(hero.weapons()).some(function(w) { return !w.ranged; });
                                 },
                                 [$.action(), $.strain(2)])
                         ],
@@ -184,7 +187,7 @@
                                     foresightActivated = true;
                                 }),
                             new hf.Event(C$.DEFENCE_RESOLVED,
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     if (foresightActivated) {
                                         modal.ShowInformation("Foresight + Shu Yen's Lightsaber: Attacker receives 1<img src='Other/Damage.png' />");
                                         foresightActivated = false;
