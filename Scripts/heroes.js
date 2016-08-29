@@ -105,10 +105,18 @@
                     })
                     .value());
             });
-            self.specialOperations = ko.observableArray([]);
+            var specialOperations = ko.observableArray([]);
+            var clearPreviousSpecialOperations;
+            self.setSpecialOperations = function (operations, dispose) {
+                if (clearPreviousSpecialOperations != null) {
+                    clearPreviousSpecialOperations();
+                }
+                clearPreviousSpecialOperations = dispose;
+                specialOperations(operations);
+            };
             self.availableOperations = ko.pureComputed(function () {
-                if (!_.isEmpty(self.specialOperations())) {
-                    return self.specialOperations();
+                if (!_.isEmpty(specialOperations())) {
+                    return specialOperations();
                 } else {
                     var emptyArrayFunction = function () { return []; };
                     //TODO: ummm... rethink how this is extracted - there has to be a neater method.
@@ -143,31 +151,49 @@
             self.publishEventWithFollowOn = function(eventName, followOn) {
                 self.event(eventName);
                 followOn = followOn || function() {};
-                new Promise(function(resolve, reject) {
-                    var thisEventOperations = _(eventOperations[eventName] || [])
-                            .filter(function(operation) {
-                                return operation.canPerformOperation(self, conflict);
-                            })
-                            .value();
-                        if (thisEventOperations.length === 0) {
-                            resolve();
-                            return;
-                        }
-                        thisEventOperations.push(new hf.Operation('Continue',
-                            function() {},
-                            function() { return true; },
-                            []));
-                        var operationNames = thisEventOperations.map(function(operation) { return operation.name });
-                        var eventSubscription = self.event.subscribe(function(event) {
-                            if (operationNames.indexOf(event) !== -1) {
-                                self.specialOperations.removeAll();
-                                eventSubscription.dispose();
-                                resolve();
+                new Promise(function (resolve, reject) {
+                        var operationNames;
+                        var operations = [];
+                        self.setSpecialOperations(operations,
+                            function() {
+                                if (eventSubscription != null) {
+                                    eventSubscription.dispose();
+                                }
+                            });
+                        function getEventOperations() {
+                            var thisEventOperations = _(eventOperations[eventName] || [])
+                                .filter(function(operation) {
+                                    return operation.canPerformOperation(self, conflict);
+                                })
+                                .value();
+                            if (thisEventOperations.length === 0) {
+                                return false;
                             }
-                        });
-                        thisEventOperations.forEach(function(operation) {
-                            self.specialOperations.push(operation);
-                        });
+                            thisEventOperations.push(new hf.Operation('Continue',
+                                function() {},
+                                function() { return true; },
+                                []));
+                            operationNames = thisEventOperations.map(function (operation) { return operation.name });
+                            thisEventOperations.forEach(function (operation) {
+                                operations.push(operation);
+                            });
+                            return true;
+                        }
+
+                        if (!getEventOperations()) {
+                            resolve();
+                        } else {
+                            //another operation (e.g. attack) requires special operations. Cancel these operations
+                            var eventSubscription = self.event.subscribe(function(event) {
+                                if (operationNames.indexOf(event) !== -1) {
+                                    operations.length = 0;
+                                    if (event === 'Continue' || !getEventOperations()) {
+                                        self.setSpecialOperations([]);
+                                        resolve();
+                                    }
+                                }
+                            });
+                        }
                     })
                     .then(followOn)
                     .catch(console.log.bind(console));
@@ -224,6 +250,7 @@
                             self.focused(false);
                         }
 
+                        var chooseWeaponOperations = [];
                         _(availableWeapons)
                             .forEach(function(weapon) {
                                 var originalPool = _.concat(weapon.dice(), additionalDice);
@@ -232,7 +259,7 @@
                                         var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
                                         var operation = new hf.Operation(weapon.name,
                                             function() {
-                                                self.specialOperations.removeAll();
+                                                self.setSpecialOperations([]);
                                                 conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
                                             },
                                             function() { return true; });
@@ -244,9 +271,10 @@
                                             images.push(['Other/' + additional.accuracy + '.png']);
                                         }
                                         operation.operationImages(_.flatten(images));
-                                        self.specialOperations.push(operation);
+                                        chooseWeaponOperations.push(operation);
                                     });
                             });
+                        self.setSpecialOperations(chooseWeaponOperations);
                     });
             };
 

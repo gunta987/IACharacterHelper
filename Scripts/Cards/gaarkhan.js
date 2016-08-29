@@ -126,21 +126,18 @@
                 'Cards/Gaarkhan/Ferocity.jpg'),
             new hf.Ability({
                     name: 'Staggering Blow',
-                    events: [
-                        new hf.Event(C$.ATTACK_RESOLVED,
-                            function(hero, conflict, card) {
-                                if (!card
-                                    .exhausted() &&
-                                    conflict.MyAttack.damage() >= 3 &&
-                                    (hero.strain() < (hero.endurance + hero.extraEndurance()))) {
-                                    modal.ConfirmOperation(
-                                        "Do you want to exhaust 'Staggering Blow' for 1<img src='Tokens/strain.png' /> to <img src='Tokens/stun.png' /> your target",
-                                        function() {
-                                            card.exhausted(true);
-                                            hero.gainStrain(1);
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Staggering Blow',
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                },
+                                function(hero, conflict, card) {
+                                    return conflict.MyAttack.damage() >= 3 && !card.exhausted();
+                                },
+                                [$.strain()]),
+                            event: C$.ATTACK_RESOLVED
+                        }
                     ]
                 },
                 false,
@@ -202,20 +199,19 @@
                 'Cards/Gaarkhan/Unstoppable.jpg'),
             new hf.Ability({
                     name: 'Brutal Cleave',
-                    events: [
-                        new hf.Event(C$.ATTACK_RESOLVED,
-                            function(hero, conflict, card) {
-                                if (!conflict.AttackWeapon().ranged &&
-                                    !card.exhausted() &&
-                                    (hero.strain() < (hero.endurance + hero.extraEndurance()))) {
-                                    modal.ConfirmOperation("Do you want to exhaust 'Brutal Cleave' for 1<img src='Tokens/strain.png' />?",
-                                        function() {
-                                            card.exhausted(true);
-                                            hero.gainStrain(1);
-                                            hero.attack();
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Brutal Cleave',
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                    hero.attack();
+                                },
+                                function(hero, conflict, card) {
+                                    return !conflict.AttackWeapon().ranged && !card.exhausted();
+                                },
+                                [$.strain()]),
+                            event: C$.ATTACK_RESOLVED
+                        }
                     ]
                 },
                 false,
