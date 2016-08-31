@@ -14,49 +14,34 @@
                     name: 'Wookiee Fortitude',
                     operations: [
                         new hf.Operation('Wookiee Fortitude',
-                            function(hero, conflict, card) {
-                                if (hero.bleeding() || hero.stunned()) {
-                                    var bleedText = '';
-                                    var stunText = '';
-                                    var yesButtonText = '';
-                                    if (hero.bleeding()) {
-                                        bleedText = " or remove <img src='Tokens/bleed.png' />";
-                                        yesButtonText = 'Bleed';
-                                        if (hero.stunned()) {
-                                            bleedText += " or <img src='Tokens/stun.png' />";
-                                            yesButtonText += '/Stun';
-                                        }
-                                    }
-                                    if (hero.stunned() && !hero.bleeding()) {
-                                        stunText = " or remove <img src='Tokens/stun.png' />";
-                                        yesButtonText = 'Stun';
-                                    }
-                                    modal.AskQuestion("Do you want to recover 2<img src='Other/Damage.png' />" + bleedText + stunText,
-                                        function() {
-                                            if (hero.bleeding() && hero.stunned()) {
-                                                modal.AskQuestion("Remove <img src='Tokens/bleed.png' /> or <img src='Tokens/stun.png' />",
-                                                    function() {
-                                                        hero.stunned(false);
-                                                    },
-                                                    function() {
-                                                        hero.bleeding(false);
-                                                    },
-                                                    'Stun',
-                                                    'Bleed');
-                                            } else if (hero.bleeding()) {
+                            function (hero, conflict, card) {
+                                hero.setSpecialOperations(_.filter([
+                                        new hf.Operation("Remove <img src='Tokens/bleed.png' />",
+                                            function(hero) {
                                                 hero.bleeding(false);
-                                            } else {
+                                                hero.setSpecialOperations([]);
+                                            },
+                                            function(hero) {
+                                                return hero.bleeding();
+                                            }),
+                                        new hf.Operation("Remove <img src='Tokens/stun.png' />",
+                                            function(hero) {
                                                 hero.stunned(false);
-                                            }
-                                        },
-                                        function() {
-                                            hero.gainDamage(-2);
-                                        },
-                                        yesButtonText,
-                                        'Damage');
-                                } else {
-                                    hero.gainDamage(-2);
-                                }
+                                                hero.setSpecialOperations([]);
+                                            },
+                                            function(hero) {
+                                                return hero.stunned();
+                                            }),
+                                        new hf.Operation("Recover 2<img src='Other/Damage.png' class='greyscale'/>",
+                                            function(hero) {
+                                                hero.gainDamage(-2);
+                                                hero.setSpecialOperations([]);
+                                            },
+                                            function(hero) {
+                                                return hero.damage() > 0;
+                                            })
+                                    ],
+                                    function(operation) { return operation.canPerformOperation(hero, conflict); }));
                                 card.exhausted(true);
                             },
                             function(hero, conflict, card) {

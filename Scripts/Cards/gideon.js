@@ -142,17 +142,21 @@
                 'Cards/Gideon/Pic2446103.jpg'),
             new hf.Ability({
                     name: 'Masterstroke',
-                    events: [
-                        new hf.Event('Command',
-                            function (hero, conflict, card) {
-                                if (!card.exhausted()) {
-                                    modal.ConfirmOperation("Do you want to exhaust 'Masterstroke' to command again for no cost?",
-                                        function() {
-                                            card.exhausted(true);
-                                            hero.event('Command');
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Masterstroke',
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                    hero.event('Command');
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted();
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: 'Command'
+                        }
                     ]
                 },
                 false,

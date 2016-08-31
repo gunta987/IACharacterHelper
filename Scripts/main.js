@@ -49,7 +49,7 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                     AddSupply: function (card) {
                         supply.Close();
                         hero.AddCard(card);
-                        hero.event(C$.SUPPLY);
+                        hero.publishEventWithFollowOn(C$.SUPPLY);
                     },
                     C$: C$,
                     enfullscreenify: function() {

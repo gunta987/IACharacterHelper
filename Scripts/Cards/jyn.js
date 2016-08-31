@@ -23,34 +23,39 @@
                 'Cards/Jyn/Quick As A Whip.jpg'),
             new hf.Ability({
                     name: "Smuggler's Luck",
-                    events: [
-                        new hf.Event(C$.SUPPLY,
-                            function(hero, conflict, card) {
-                                if (!card.exhausted()) {
-                                    var supplyCard = hero.cards()[hero.cards().length - 1];
-                                    modal.ConfirmOperation("Do you want to exhaust Smuggler's Luck to discard " +
-                                        supplyCard.name +
-                                        ' and draw another supply card?',
-                                        function() {
-                                            card.exhausted(true);
-                                            hero.cards.pop();
-                                            supply.Show();
-                                        });
-                                }
-                            }),
-                        new hf.Event(C$.ATTRIBUTE_TEST,
-                            function(hero, conflict, card) {
-                                if (!card.exhausted()) {
-                                    modal.ConfirmOperation("Do you want to exhaust Smuggler's Luck to reroll any number of dice?",
-                                        function() {
-                                            card.exhausted(true);
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation("Smuggler's Luck (redraw)",
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                    hero.cards.pop();
+                                    supply.Show();
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted();
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.SUPPLY
+                        },
+                        {
+                            operation: new hf.Operation("Smuggler's Luck (reroll)",
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted();
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.ATTRIBUTE_TEST
+                        }
                     ]
                 },
                 false,
-                'Cards/Jyn/Smugglers Luck.jpg'), 
+                'Cards/Jyn/Smugglers Luck.jpg'),
             new hf.Ability({
                     name: 'Cheap Shot',
                     events: function() {
@@ -95,37 +100,50 @@
                                 return _.indexOf(conflict.UsedAbilities(), 'Roll With It') > -1;
                             },
                             [$.block()],
-                            C$.DEFENCEROLL)
+                            C$.DEFENCEROLL,
+                            '-1')
                     ]
                 },
                 false,
                 'Cards/Jyn/Roll With It.jpg'),
             new hf.Ability({
                     name: 'Get Cocky',
-                    events: [
-                        new hf.Event(C$.ATTACK_RESOLVED,
-                            function(hero, conflict, card) {
-                                if (!card.exhausted() && conflict.MyAttack.damage() > 0) {
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Get Cocky',
+                                function(hero, conflict, card) {
                                     modal.ConfirmOperation('Was your target defeated?',
                                         function() {
-                                            modal.ConfirmOperation(
-                                                "Exhaust 'Get Cocky' to recover 2 <img src='Tokens/strain.png' /> or become <img src='Tokens/focus.png' />?",
-                                                function() {
-                                                    card.exhausted(true);
-                                                    modal.AskQuestion(
-                                                        "Recover 2 <img src='Tokens/strain.png' /> or become <img src='Tokens/focus.png' />?",
-                                                        function() {
+                                            hero.setSpecialOperations(_.filter([
+                                                    new hf.Operation("Gain <img src='Tokens/focus.png' />",
+                                                        function(hero) {
                                                             hero.focused(true);
+                                                            hero.setSpecialOperations([]);
                                                         },
-                                                        function() {
+                                                        function(hero) {
+                                                            return !hero.focused();
+                                                        }),
+                                                    new hf.Operation("Recover 2<img src='Tokens/strain.png' />",
+                                                        function(hero) {
                                                             hero.gainStrain(-2);
+                                                            hero.setSpecialOperations([]);
                                                         },
-                                                        'Focus',
-                                                        'Strain');
-                                                });
+                                                        function(hero) {
+                                                            return true;
+                                                        })
+                                                ],
+                                                function(operation) { return operation.canPerformOperation(hero, conflict); }));
+                                            card.exhausted(true);
                                         });
-                                }
-                            })
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted() && conflict.MyAttack.damage() > 0;
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.ATTACK_RESOLVED
+                        }
                     ]
                 },
                 false,
@@ -137,7 +155,7 @@
                             function(hero, conflict, card) {
                                 if (_(conflict.AttackWeapon().type).includes('pistol')) {
                                     var otherWeapon = _.difference(hero.weapons(), [conflict.AttackWeapon()])[0];
-                                    if (otherWeapon != null) {
+                                    if (otherWeapon != null && _(otherWeapon.type).includes('pistol')) {
                                         var extraSurges = _(conflict.AttackWeapon().attachments()).last().surges;
                                         //slice 1 to exclude the gain strain inherent surge ability
                                         _(otherWeapon.surges().slice(1)).forEach(function(surge) { return extraSurges.push(surge); });
@@ -192,19 +210,22 @@
                 'Cards/Jyn/Trickshot.png'),
             new hf.Ability({
                     name: 'Peacemaker',
-                    events: [
-                        new hf.Event(C$.DEFENCE_RESOLVED,
-                            function(hero, conflict, card) {
-                                if (!card.exhausted() && hero.strain() < (hero.endurance + hero.extraEndurance())) {
-                                    modal.ConfirmOperation(
-                                        "Do you want to exhaust 'Peacemaker' for 1<img src='Tokens/strain.png' /> to attack your attacker?",
-                                        function() {
-                                            card.exhausted(true);
-                                            hero.gainStrain(1);
-                                            hero.attack();
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Peacemaker',
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                    hero.gainStrain(1);
+                                    hero.attack();
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted();
+                                },
+                                [$.strain()],
+                                null,
+                                '(exhaust)'),
+                            event: C$.DEFENCE_RESOLVED
+                        }
                     ]
                 },
                 false,

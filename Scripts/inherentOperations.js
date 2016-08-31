@@ -3,6 +3,7 @@
         new hf.Operation('Activate',
             function (hero) {
                 hero.activated(true);
+                hero.abilitiesUsedDuringActivation([]);
                 hero.actions(2);
                 hero.movement(0);
                 hero.strainMoves(0);
@@ -20,6 +21,7 @@
                 hero.movement(0);
                 hero.strainMoves(0);
                 hero.activated(false);
+                hero.abilitiesUsedDuringActivation([]);
                 hero.event('endActivation');
                 hero.hasActivated(true);
             },
@@ -101,28 +103,30 @@
 
                     var op = new hf.Operation(name,
                         function(hero) {
-                            hero.specialOperations.removeAll();
+                            hero.setSpecialOperations([]);
                             hero.testAttribute(attribute);
                         },
                         function() { return true; });
                     op.operationImages(_(dice).map(function (die) { return { src: die.blank, css: 'die' } }).value());
-                    hero.specialOperations.push(op);
+                   return op;
                 }
-                createOp('Fisting', hero.fisting);
-                createOp('Eye', hero.eye);
-                createOp('Spanner', hero.spanner);
+                var operations = [];
+                operations.push(createOp('Fisting', hero.fisting));
+                operations.push(createOp('Eye', hero.eye));
+                operations.push(createOp('Spanner', hero.spanner));
 
-                hero.specialOperations.push(new hf.Operation('Open Crate',
+                operations.push(new hf.Operation('Open Crate',
                     function(hero) {
-                        hero.specialOperations.removeAll();
+                        hero.setSpecialOperations([]);
                         supply.Show();
                     },
                     function () { return true; }));
-                hero.specialOperations.push(new hf.Operation('Interaction Complete',
+                operations.push(new hf.Operation('Interaction Complete',
                     function(hero) {
-                        hero.specialOperations.removeAll();
+                        hero.setSpecialOperations([]);
                     },
-                    function() { return true; }));
+                    function () { return true; }));
+                hero.setSpecialOperations(operations);
             },
             function (hero) {
                 return hero.activated() && !hero.stunned();

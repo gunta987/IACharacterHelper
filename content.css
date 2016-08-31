@@ -285,6 +285,11 @@ only screen and (        min-device-pixel-ratio: 2) {
     padding-left: 0.25em;
 }
 
+#operationsContainer .well > span > img {
+    vertical-align: text-bottom;
+    height: 1em;
+}
+
 #operationsContainer span.red {
     color: #bc272c;
 }
@@ -358,7 +363,7 @@ only screen and (        min-device-pixel-ratio: 2) {
     line-height: 0;
 }
 
-.cost img:not(.die) {
+.cost img:not(.die), .greyscale {
     -webkit-filter: grayscale(100%) invert(100%);
     filter: grayscale(100%) invert(100%);
 }

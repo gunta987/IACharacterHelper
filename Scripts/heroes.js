@@ -37,6 +37,7 @@
             self.bleeding = ko.observable(false);
             self.actions = ko.observable(0);
             self.activated = ko.observable(false);
+            self.abilitiesUsedDuringActivation = ko.observableArray([]);
             self.hasActivated = ko.observable(false);
             self.movement = ko.observable(0);
 
@@ -154,12 +155,7 @@
                 new Promise(function (resolve, reject) {
                         var operationNames;
                         var operations = [];
-                        self.setSpecialOperations(operations,
-                            function() {
-                                if (eventSubscription != null) {
-                                    eventSubscription.dispose();
-                                }
-                            });
+                        var hasSetSpecialOps = false;
                         function getEventOperations() {
                             var thisEventOperations = _(eventOperations[eventName] || [])
                                 .filter(function(operation) {
@@ -171,12 +167,22 @@
                             }
                             thisEventOperations.push(new hf.Operation('Continue',
                                 function() {},
-                                function() { return true; },
-                                []));
+                                function() { return true; }));
                             operationNames = thisEventOperations.map(function (operation) { return operation.name });
                             thisEventOperations.forEach(function (operation) {
                                 operations.push(operation);
                             });
+                            if (!hasSetSpecialOps) {
+                                hasSetSpecialOps = true;
+                                self.setSpecialOperations(operations,
+                                    function() {
+                                        if (eventSubscription != null) {
+                                            eventSubscription.dispose();
+                                        }
+                                    });
+                            } else {
+                                specialOperations.notifySubscribers();
+                            }
                             return true;
                         }
 
@@ -294,7 +300,7 @@
                     self.focused(false);
                 }
                 //TODO: make more sophistimicated
-                self.event(C$.ATTRIBUTE_TEST);
+                self.publishEventWithFollowOn(C$.ATTRIBUTE_TEST);
                 modal.ConfirmOperation('Roll ' + _(dice).map(function(die) { return "<img src='" + die.blank + "' />"; }).join(' ') + '<br/>Was the attribute test successful?',
                     onSuccess);
             };

@@ -10,7 +10,7 @@
         self.performOperation = function (hero, conflict) {
             performOperation(hero, conflict, self.card);
             _(cost || []).forEach(function (c) { c.incur(hero, conflict); });
-            hero.event(self.name);
+            hero.publishEventWithFollowOn(self.name);
         }
         self.operationImages = ko.observableArray(_.flatMap(cost || [], 'images'));
         self.text = text;
