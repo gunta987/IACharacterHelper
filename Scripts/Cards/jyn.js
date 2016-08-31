@@ -43,6 +43,10 @@
                             operation: new hf.Operation("Smuggler's Luck (reroll)",
                                 function(hero, conflict, card) {
                                     card.exhausted(true);
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                    }
                                 },
                                 function(hero, conflict, card) {
                                     return !card.exhausted();
@@ -50,7 +54,7 @@
                                 [],
                                 null,
                                 '(exhaust)'),
-                            event: C$.ATTRIBUTE_TEST
+                            event: C$.ATTRIBUTE_TEST_FAIL
                         }
                     ]
                 },

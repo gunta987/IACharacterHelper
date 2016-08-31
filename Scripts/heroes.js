@@ -292,17 +292,24 @@
                     'Melee');
             };
 
-            self.testAttribute = function (attribute, onSuccess) {
+            self.lastAttributeTest = ko.observable({});
+            self.testAttribute = function (attribute, onSuccess, overrideDice) {
                 onSuccess = onSuccess || function() {};
-                var dice = _(attribute()).map(function(f) { return f(); }).value();
+                var dice = overrideDice || _(attribute()).map(function(f) { return f(); }).value();
                 if (self.focused()) {
                     dice.push(d.GREEN());
                     self.focused(false);
                 }
-                //TODO: make more sophistimicated
-                self.publishEventWithFollowOn(C$.ATTRIBUTE_TEST);
-                modal.ConfirmOperation('Roll ' + _(dice).map(function(die) { return "<img src='" + die.blank + "' />"; }).join(' ') + '<br/>Was the attribute test successful?',
-                    onSuccess);
+
+                self.lastAttributeTest({ attribute: attribute, onSuccess: onSuccess, dice: dice });
+                self.event(C$.ATTRIBUTE_TEST);
+                self.setSpecialOperations([]);
+                modal.AskQuestion(
+                    'Roll ' + _(dice).map(function (die) { return "<img src='" + die.blank + "' />"; }).join(' ') + '<br/>Was the attribute test successful?',
+                    onSuccess,
+                    function () {
+                        self.publishEventWithFollowOn(C$.ATTRIBUTE_TEST_FAIL);
+                    });
             };
         };
 

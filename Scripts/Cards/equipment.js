@@ -35,7 +35,25 @@
                 'Cards/Wearables/Combat_Knife.jpg'),
             new hf.Equipment({
                     name: 'Combat Visor',
-                    //TODO: exhaust for eye reroll
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Combat Visor (reroll 1)',
+                                function (hero, conflict, card) {
+                                    card.exhausted(true);
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                    }
+                                },
+                                function (hero, conflict, card) {
+                                    return !card.exhausted() && hero.lastAttributeTest().attribute === hero.eye;
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.ATTRIBUTE_TEST_FAIL
+                        }
+                    ],
                     operations: [
                         new hf.Operation('Combat Visor',
                             function(hero, conflict, card) {
@@ -120,11 +138,31 @@
                 'Cards/Wearables/Reinforced_Helmet.jpg'),
             new hf.Equipment({
                     name: 'Slicing Tools',
-                    //TODO: implement spanner reroll
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Slicing Tools (reroll 1)',
+                                function (hero, conflict, card) {
+                                    card.exhausted(true);
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                    }
+                                },
+                                function (hero, conflict, card) {
+                                    return !card.exhausted() && hero.lastAttributeTest().attribute === hero.spanner;
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.ATTRIBUTE_TEST_FAIL
+                        }
+                    ],
                     operations: [
                         new hf.Operation('Slicing Tools',
                             function(hero) {
-                                hero.testAttribute(hero.spanner);
+                                hero.testAttribute(hero.spanner, function () {
+                                    modal.ShowInformation("Chosen droid suffers 1<img src='Other/Damage.png' /> and gains <img src='Tokens/stun.png' />");
+                                });
                             },
                             function(hero) {
                                 return true;
@@ -134,8 +172,26 @@
                 },
                 'Cards/Wearables/Slicing_Tools.jpg'),
             new hf.Equipment({
-                    name: 'Survival Gear'
-                    //TODO: implement fisting reroll
+                    name: 'Survival Gear',
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Survival Gear (reroll 1)',
+                                function (hero, conflict, card) {
+                                    card.exhausted(true);
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                    }
+                                },
+                                function (hero, conflict, card) {
+                                    return !card.exhausted() && hero.lastAttributeTest().attribute === hero.fisting;
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.ATTRIBUTE_TEST_FAIL
+                        }
+                    ]
                 },
                 'Cards/Wearables/Survival_Gear.jpg')
         ];

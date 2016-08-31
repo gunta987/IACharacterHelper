@@ -32,7 +32,6 @@
                             [$.strain()],
                             null,
                             '(give reroll)')
-                        //TODO: exhaust for fist or spanner ability test
                     ]
                 },
                 false,

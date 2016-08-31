@@ -132,7 +132,12 @@
     };
     attachment.prototype = Object.create(card.prototype);
     var equipment = function (properties, image) {
+        var self = this;
         card.call(this, properties, image);
+        self.eventOperations = _.map(properties.eventOperations, function (eventOperation) {
+            eventOperation.operation.card = self;
+            return eventOperation;
+        });
     };
     equipment.prototype = Object.create(card.prototype);
 

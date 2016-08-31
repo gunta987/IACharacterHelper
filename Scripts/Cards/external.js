@@ -6,7 +6,7 @@
                     isExternal: true,
                     owner: 'Dialasis',
                     operations: [
-                        new hf.Operation('Force Adept',
+                        new hf.Operation('Force Adept (reroll 1)',
                             function(hero, conflict) {
                                 conflict.UsedAbilities.push('Force Adept');
                             },
@@ -15,6 +15,22 @@
                             },
                             [],
                             C$.ATTACKROLL)
+                    ],
+                    eventOperations: [
+                            {
+                                operation: new hf.Operation('Force Adept (reroll 1)',
+                                    function (hero, conflict, card) {
+                                        hero.abilitiesUsedDuringActivation.push('Force Adept');
+                                        var lastTest = hero.lastAttributeTest();
+                                        if (lastTest != null && lastTest.attribute != null) {
+                                            hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                        }
+                                    },
+                                    function (hero, conflict, card) {
+                                        return _.indexOf(hero.abilitiesUsedDuringActivation(), 'Force Adept') === -1;
+                                    }),
+                                event: C$.ATTRIBUTE_TEST_FAIL
+                            }
                     ]
                 },
                 false,
@@ -120,7 +136,7 @@
                     isExternal: true,
                     owner: 'Luke',
                     operations: [
-                        new hf.Operation('Inspiring',
+                        new hf.Operation('Inspiring (reroll 1)',
                             function(hero, conflict) {
                                 conflict.UsedAbilities.push('Inspiring');
                             },
