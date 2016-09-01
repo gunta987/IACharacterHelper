@@ -99,13 +99,16 @@
                     owner: 'OldDude',
                     eventOperations: function () {
                         var op = new hf.Operation('For the Cause!',
-                            function(hero) {
+                            function(hero, conflict, card) {
                                 hero.focused(true);
+                                if (hero.activated()) {
+                                    hero.abilitiesUsedDuringActivation.push(card.name);
+                                }
                             },
-                            function (hero) {
+                            function (hero, conflict, card) {
                                 op.operationImages.removeAll();
                                 op.operationImages.push({ src: hero.focusDie().blank, css: 'die' });
-                                return !hero.focused();
+                                return !hero.focused() && (!hero.activated() || _.indexOf(hero.abilitiesUsedDuringActivation(), card.name) === -1);
                             },
                             [],
                             null,

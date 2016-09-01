@@ -38,6 +38,7 @@
             self.actions = ko.observable(0);
             self.activated = ko.observable(false);
             self.abilitiesUsedDuringActivation = ko.observableArray([]);
+            self.abilitiesUsedDuringRound = ko.observableArray([]);
             self.hasActivated = ko.observable(false);
             self.movement = ko.observable(0);
 
@@ -328,11 +329,14 @@
                             operations: [
                                 new hf.Operation('Precise Strike',
                                     function(hero, conflict, card) {
-                                        //TODO: this can also be used during interrupt
-                                        card.exhausted(true);
+                                        if (hero.activated()) {
+                                            hero.abilitiesUsedDuringActivation.push(card.name);
+                                        }
                                     },
                                     function(hero, conflict, card) {
-                                        return !card.exhausted() && !conflict.AttackWeapon().ranged && !hero.wounded();
+                                        return (!hero.activated() || _.indexOf(hero.abilitiesUsedDuringActivation(), card.name) === -1) &&
+                                            !conflict.AttackWeapon().ranged &&
+                                            !hero.wounded();
                                     },
                                     [cost.strain(2)],
                                     C$.ATTACKDICE)
@@ -466,8 +470,7 @@
                             operations: [
                                 new hf.Operation('Quick Draw',
                                     function(hero, conflict, card) {
-                                        //TODO: unexhaust at beginning of round, not beginning of activation
-                                        card.exhausted(true);
+                                        hero.abilitiesUsedDuringRound.push(card.name);
                                         hero.attack(null,
                                             null,
                                             true,
@@ -476,7 +479,7 @@
                                             });
                                     },
                                     function(hero, conflict, card) {
-                                        return !card.exhausted() && !hero.wounded() && !hero.inConflict() && !hero.activated() && !hero.stunned();
+                                        return _.indexOf(hero.abilitiesUsedDuringRound(), card.name) === -1 && !hero.wounded() && !hero.inConflict() && !hero.activated() && !hero.stunned();
                                     },
                                     [cost.strain(2)])
                             ]

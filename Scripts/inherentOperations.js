@@ -136,6 +136,7 @@
             function(hero) {
                 hero.event(C$.END_ROUND);
                 hero.hasActivated(false);
+                hero.abilitiesUsedDuringRound([]);
             },
             function(hero) {
                 return !hero.activated() && hero.hasActivated();
