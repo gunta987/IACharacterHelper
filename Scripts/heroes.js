@@ -381,11 +381,33 @@
                 spanner: [d.BLUE, d.GREEN],
                 coreAbilities: {
                     'Havoc Shot': new hf.Ability({
-                    
+                            operations: [
+                                new hf.Operation('Havoc Shot',
+                                    function(hero, conflict, card) {
+                                        conflict.UsedAbilities.push(card.name);
+                                    },
+                                    function(hero, conflict, card) {
+                                        return conflict.AttackWeapon().ranged && _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                                    },
+                                    [cost.strain()],
+                                    C$.ATTACKROLL)
+                            ]
                         },
                         true),
                     'Lone Wolf': new hf.Ability({
-                    
+                            eventOperations: [
+                                {
+                                    operation: new hf.Operation('Lone Wolf',
+                                        function(hero, conflict, card) {
+                                            hero.gainStrain(-1);
+                                            hero.abilitiesUsedDuringActivation.push(card.name);
+                                        },
+                                        function(hero, conflict, card) {
+                                            return _.indexOf(hero.abilitiesUsedDuringActivation(), card.name) === -1;
+                                        }),
+                                    event: 'End Activation'
+                                }
+                            ]
                         },
                         true)
                 },
@@ -398,7 +420,7 @@
                     hero.cards.remove(hero.coreAbilities['Lone Wolf']);
                     //TODO: set attribute dice changes
                 },
-                classCards: cards.Diala
+                classCards: cards.Fenn
             }),
             new Hero({
                 name: 'Wookiee',
@@ -567,7 +589,7 @@
                         },
                         true),
                     'Covert': new hf.Ability({
-                    
+                        
                         },
                         true)
                 },

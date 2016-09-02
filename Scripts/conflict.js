@@ -145,7 +145,6 @@
             },
 
             init = function() {
-                showModal();
                 hero.inConflict(true);
                 extraPierce(0);
                 extraDamage(0);
@@ -178,6 +177,7 @@
                 extraDamage(additional.damage);
                 extraAccuracy(additional.accuracy);
                 hero.event(C$.ATTACK_START);
+                showModal();
 
                 if (ranged) {
                     conflictStage(C$.ATTACKRANGE);
@@ -201,21 +201,23 @@
                 init();
                 myDice(hero.defence());
                 weapon({});
-                hero.event(C$.DEFENCE_START);
-                
-                if (ranged) {
-                    conflictStage(C$.DEFENCERANGE);
-                    caption("Select attacker's range");
-                    button1Text('Continue');
-                    button1 = function () {
-                        selectOpponentDice(C$.DEFENCEDICE, 'attacker');
-                    }
-                    canButton1 = function () {
-                        return requiredAccuracy() > 0;
-                    }
-                } else {
-                    selectOpponentDice(C$.DEFENCEDICE, 'attacker');
-                }
+                hero.publishEventWithFollowOn(C$.DEFENCE_START,
+                    function() {
+                        showModal();
+                        if (ranged) {
+                            conflictStage(C$.DEFENCERANGE);
+                            caption("Select attacker's range");
+                            button1Text('Continue');
+                            button1 = function() {
+                                selectOpponentDice(C$.DEFENCEDICE, 'attacker');
+                            }
+                            canButton1 = function() {
+                                return requiredAccuracy() > 0;
+                            }
+                        } else {
+                            selectOpponentDice(C$.DEFENCEDICE, 'attacker');
+                        }
+                    });
             };
 
         return {

@@ -4,5 +4,5 @@
     DEFENCE_START: 'defencestart', BEFORE_ATTACK: 'beforeattack', ATTACK_START: 'attackstart',
     DEFENCE_RESOLVED: 'defenceresolved', ATTACK_RESOLVED: 'attackresolved',
     REST: 'rest', SUPPLY: 'supply', ATTRIBUTE_TEST: 'attributetest', ATTRIBUTE_TEST_FAIL: 'attributetestfail',
-    END_ROUND: 'endround'
+    END_ROUND: 'endround', END_ACTIVATION: 'endactivation'
 });

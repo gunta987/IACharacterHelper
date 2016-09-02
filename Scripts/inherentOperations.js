@@ -18,15 +18,17 @@
             }),
         new hf.Operation('End Activation',
             function(hero) {
-                hero.movement(0);
-                hero.strainMoves(0);
-                hero.activated(false);
-                hero.abilitiesUsedDuringActivation([]);
-                hero.event('endActivation');
-                hero.hasActivated(true);
+                hero.publishEventWithFollowOn(C$.END_ACTIVATION,
+                    function() {
+                        hero.movement(0);
+                        hero.strainMoves(0);
+                        hero.activated(false);
+                        hero.abilitiesUsedDuringActivation([]);
+                        hero.hasActivated(true);
+                    });
             },
             function(hero){
-                return hero.activated() && hero.actions() == 0;
+                return hero.activated() && hero.actions() === 0;
             }),
         new hf.Operation('Rest',
             function (hero) {
@@ -39,7 +41,7 @@
                         hero.damage(hero.damage() - 1);
                     };
                 });
-                hero.event('rest');
+                hero.publishEventWithFollowOn(C$.REST);
             },
             function (hero) {
                 return hero.activated();
