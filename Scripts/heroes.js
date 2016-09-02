@@ -371,6 +371,36 @@
                 classCards: cards.Diala
             }),
             new Hero({
+                name: 'Loner',
+                health: 12,
+                endurance: 4,
+                speed: 4,
+                defence: [d.BLACK],
+                fisting: [d.BLUE, d.GREEN],
+                eye: [d.BLUE, d.GREEN],
+                spanner: [d.BLUE, d.GREEN],
+                coreAbilities: {
+                    'Havoc Shot': new hf.Ability({
+                    
+                        },
+                        true),
+                    'Lone Wolf': new hf.Ability({
+                    
+                        },
+                        true)
+                },
+                onWounded: function() {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Lone Wolf']);
+                    //TODO: set attribute dice changes
+                },
+                classCards: cards.Diala
+            }),
+            new Hero({
                 name: 'Wookiee',
                 health: 14,
                 endurance: 4,
@@ -479,7 +509,11 @@
                                             });
                                     },
                                     function(hero, conflict, card) {
-                                        return _.indexOf(hero.abilitiesUsedDuringRound(), card.name) === -1 && !hero.wounded() && !hero.inConflict() && !hero.activated() && !hero.stunned();
+                                        return _.indexOf(hero.abilitiesUsedDuringRound(), card.name) === -1 &&
+                                            !hero.wounded() &&
+                                            !hero.inConflict() &&
+                                            !hero.activated() &&
+                                            !hero.stunned();
                                     },
                                     [cost.strain(2)])
                             ]
@@ -506,6 +540,47 @@
                     hero.cards.remove(hero.coreAbilities['Opportunist']);
                 },
                 classCards: cards.Jyn
+            }),
+            new Hero({
+                name: 'MakkaPakka',
+                health: 10,
+                endurance: 5,
+                speed: 4,
+                defence: [d.WHITE],
+                fisting: [d.BLUE, d.GREEN],
+                eye: [d.BLUE, d.GREEN],
+                spanner: [d.BLUE, d.GREEN, d.YELLOW],
+                coreAbilities: {
+                    'Ambush': new hf.Ability({
+                            operations: [
+                                new hf.Operation('Ambush',
+                                    function(hero, conflict, card) {
+                                        conflict.ExtraPierce(conflict.ExtraPierce() + 2);
+                                        conflict.UsedAbilities.push(card.name);
+                                    },
+                                    function(hero, conflict, card) {
+                                        return _.indexOf(conflict.UsedAbilities(), card.name) === -1;;
+                                    },
+                                    [cost.strain()],
+                                    C$.ATTACKDICE)
+                            ]
+                        },
+                        true),
+                    'Covert': new hf.Ability({
+                    
+                        },
+                        true)
+                },
+                onWounded: function() {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Covert']);
+                    //TODO: set attribute dice changes
+                },
+                classCards: cards.Mak
             })
         ];
     });
