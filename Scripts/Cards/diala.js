@@ -32,6 +32,23 @@
                             [$.strain()],
                             null,
                             '(give reroll)')
+                    ],
+                    eventOperations: [
+                            {
+                                operation: new hf.Operation('Force Adept',
+                                    function (hero, conflict, card) {
+                                        var lastTest = hero.lastAttributeTest();
+                                        if (lastTest != null && lastTest.attribute != null) {
+                                            lastTest.usedAbilities.push(card.name);
+                                            hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                        }
+                                    },
+                                    function (hero, conflict, card) {
+                                        return hero.lastAttributeTest() == null || _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
+                                    },
+                                    [$.strain()]),
+                                event: C$.ATTRIBUTE_TEST_FAIL
+                            }
                     ]
                 },
                 false,

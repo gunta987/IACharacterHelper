@@ -3,6 +3,7 @@
     DEFENCERANGE: 3, DEFENCEDICE: 4, DEFENCEROLL: 5,
     DEFENCE_START: 'defencestart', BEFORE_ATTACK: 'beforeattack', ATTACK_START: 'attackstart',
     DEFENCE_RESOLVED: 'defenceresolved', ATTACK_RESOLVED: 'attackresolved',
-    REST: 'rest', SUPPLY: 'supply', ATTRIBUTE_TEST: 'attributetest', ATTRIBUTE_TEST_FAIL: 'attributetestfail',
+    REST: 'rest', SUPPLY: 'supply',
+    BEFORE_ATTRIBUTE_TEST: 'beforeattributetest', ATTRIBUTE_TEST: 'attributetest', ATTRIBUTE_TEST_FAIL: 'attributetestfail',
     END_ROUND: 'endround', END_ACTIVATION: 'endactivation'
 });

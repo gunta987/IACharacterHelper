@@ -45,7 +45,7 @@
                                     card.exhausted(true);
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
-                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
                                 function(hero, conflict, card) {

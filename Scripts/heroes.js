@@ -294,23 +294,35 @@
             };
 
             self.lastAttributeTest = ko.observable({});
-            self.testAttribute = function (attribute, onSuccess, overrideDice) {
+            self.testAttribute = function (attribute, onSuccess, overrideDice, isReroll) {
                 onSuccess = onSuccess || function() {};
-                var dice = overrideDice || _(attribute()).map(function(f) { return f(); }).value();
-                if (self.focused()) {
-                    dice.push(d.GREEN());
-                    self.focused(false);
-                }
+                var dice = overrideDice || _(attribute()).map(function (f) { return f(); }).value();
+                var performTest = function() {
+                    if (self.focused()) {
+                        dice.push(d.GREEN());
+                        self.focused(false);
+                    }
 
-                self.lastAttributeTest({ attribute: attribute, onSuccess: onSuccess, dice: dice });
-                self.event(C$.ATTRIBUTE_TEST);
-                self.setSpecialOperations([]);
-                modal.AskQuestion(
-                    'Roll ' + _(dice).map(function (die) { return "<img src='" + die.blank + "' />"; }).join(' ') + '<br/>Was the attribute test successful?',
-                    onSuccess,
-                    function () {
-                        self.publishEventWithFollowOn(C$.ATTRIBUTE_TEST_FAIL);
-                    });
+                    if (!isReroll) {
+                        self.lastAttributeTest({ attribute: attribute, onSuccess: onSuccess, dice: dice, usedAbilities: [] });
+                    }
+                    self.event(C$.ATTRIBUTE_TEST);
+                    self.setSpecialOperations([]);
+                    modal.AskQuestion( isReroll ?
+                        'What about now?' :
+                        'Roll ' +
+                        _(dice).map(function(die) { return "<img src='" + die.blank + "' />"; }).join(' ') +
+                        '<br/>Was the attribute test successful?',
+                        onSuccess,
+                        function() {
+                            self.publishEventWithFollowOn(C$.ATTRIBUTE_TEST_FAIL);
+                        });
+                };
+                if (isReroll) {
+                    performTest();
+                } else {
+                    self.publishEventWithFollowOn(C$.BEFORE_ATTRIBUTE_TEST, performTest);
+                }
             };
         };
 

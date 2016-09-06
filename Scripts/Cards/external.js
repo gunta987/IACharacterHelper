@@ -23,7 +23,7 @@
                                     hero.abilitiesUsedDuringActivation.push('Force Adept');
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
-                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
                                 function(hero, conflict, card) {
@@ -197,6 +197,30 @@
                     ]
                 },
                 false,
-                'Cards/Characters/Han-solo.png')
+                'Cards/Characters/Han-solo.png'),
+            new hf.Ability({
+                    name: 'The Ways of the Force',
+                    isExternal: true,
+                    owner: 'None',
+                    eventOperations: function() {
+                        var op = new hf.Operation('The Ways of the Force',
+                            function(hero, conflict, card) {
+                                hero.focused(true);
+                                if (hero.activated()) {
+                                }
+                            },
+                            function(hero, conflict, card) {
+                                op.operationImages.removeAll();
+                                op.operationImages.push({ src: hero.focusDie().blank, css: 'die' });
+                                return !hero.focused();
+                            },
+                            [$.strain()],
+                            null,
+                            '+');
+                        return [{ operation: op, event: C$.BEFORE_ATTRIBUTE_TEST }];
+                    }()
+                },
+                false,
+                'Cards/Other/The Ways of the Force.png')
         ];
     });
