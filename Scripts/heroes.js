@@ -366,7 +366,9 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Precise Strike']);
-                    //TODO: set attribute dice changes
+                    hero.fisting([d.BLUE, d.RED]);
+                    hero.eye([d.BLUE, d.RED, d.GREEN]);
+                    hero.spanner([d.RED]);
                 },
                 classCards: cards.Diala
             }),
@@ -418,7 +420,9 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Lone Wolf']);
-                    //TODO: set attribute dice changes
+                    hero.fisting([d.BLUE, d.RED]);
+                    hero.eye([d.BLUE, d.RED]);
+                    hero.spanner([d.BLUE, d.RED]);
                 },
                 classCards: cards.Fenn
             }),
@@ -464,6 +468,9 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Rage']);
+                    hero.fisting([d.BLUE, d.RED, d.GREEN]);
+                    hero.eye([d.RED]);
+                    hero.spanner([d.BLUE, d.RED]);
                 },
                 classCards: cards.Gaarkhan
             }),
@@ -505,6 +512,9 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Disabling Shot']);
+                    hero.fisting([d.BLUE, d.RED]);
+                    hero.eye([d.BLUE, d.RED, d.GREEN]);
+                    hero.spanner([d.BLUE, d.RED]);
                 },
                 classCards: cards.Gideon
             }),
@@ -560,6 +570,9 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Opportunist']);
+                    hero.fisting([d.RED]);
+                    hero.eye([d.BLUE, d.RED]);
+                    hero.spanner([d.BLUE, d.RED, d.GREEN]);
                 },
                 classCards: cards.Jyn
             }),
@@ -600,7 +613,9 @@
                     hero.endurance--;
                     hero.speed--;
                     hero.cards.remove(hero.coreAbilities['Covert']);
-                    //TODO: set attribute dice changes
+                    hero.fisting([d.BLUE, d.RED]);
+                    hero.eye([d.BLUE, d.RED]);
+                    hero.spanner([d.BLUE, d.RED, d.GREEN]);
                 },
                 classCards: cards.Mak
             })

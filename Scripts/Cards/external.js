@@ -17,20 +17,20 @@
                             C$.ATTACKROLL)
                     ],
                     eventOperations: [
-                            {
-                                operation: new hf.Operation('Force Adept (reroll 1)',
-                                    function (hero, conflict, card) {
-                                        hero.abilitiesUsedDuringActivation.push('Force Adept');
-                                        var lastTest = hero.lastAttributeTest();
-                                        if (lastTest != null && lastTest.attribute != null) {
-                                            hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
-                                        }
-                                    },
-                                    function (hero, conflict, card) {
-                                        return _.indexOf(hero.abilitiesUsedDuringActivation(), 'Force Adept') === -1;
-                                    }),
-                                event: C$.ATTRIBUTE_TEST_FAIL
-                            }
+                        {
+                            operation: new hf.Operation('Force Adept (reroll 1)',
+                                function(hero, conflict, card) {
+                                    hero.abilitiesUsedDuringActivation.push('Force Adept');
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice);
+                                    }
+                                },
+                                function(hero, conflict, card) {
+                                    return _.indexOf(hero.abilitiesUsedDuringActivation(), 'Force Adept') === -1;
+                                }),
+                            event: C$.ATTRIBUTE_TEST_FAIL
+                        }
                     ]
                 },
                 false,
@@ -97,7 +97,7 @@
                     name: 'For the Cause!',
                     isExternal: true,
                     owner: 'OldDude',
-                    eventOperations: function () {
+                    eventOperations: function() {
                         var op = new hf.Operation('For the Cause!',
                             function(hero, conflict, card) {
                                 hero.focused(true);
@@ -105,7 +105,7 @@
                                     hero.abilitiesUsedDuringActivation.push(card.name);
                                 }
                             },
-                            function (hero, conflict, card) {
+                            function(hero, conflict, card) {
                                 op.operationImages.removeAll();
                                 op.operationImages.push({ src: hero.focusDie().blank, css: 'die' });
                                 return !hero.focused() && (!hero.activated() || _.indexOf(hero.abilitiesUsedDuringActivation(), card.name) === -1);
@@ -151,6 +151,52 @@
                     ]
                 },
                 false,
-                'Cards/Characters/Luke-skywalker-1-.png')
+                'Cards/Characters/Luke-skywalker-1-.png'),
+            new hf.Ability({
+                    name: 'Protector',
+                    isExternal: true,
+                    owner: 'Chewbacca',
+                    operations: [
+                        function() {
+                            var op = new hf.Operation('Protector',
+                                function(hero, conflict) {
+                                    conflict.UsedAbilities.push('Protector');
+                                    conflict.ExtraBlock(conflict.ExtraBlock() + 1);
+                                },
+                                function(hero, conflict) {
+                                    return _.indexOf(conflict.UsedAbilities(), 'Protector') === -1;
+                                },
+                                [],
+                                C$.DEFENCEROLL);
+                            op.operationImages.push('Other/Block.png');
+                            return op;
+                        }()
+                    ]
+                },
+                false,
+                'Cards/Characters/Chewbacca-1-.png'),
+            new hf.Ability({
+                    name: 'Distracting',
+                    isExternal: true,
+                    owner: 'Han',
+                    operations: [
+                        function() {
+                            var op = new hf.Operation('Distracting',
+                                function(hero, conflict) {
+                                    conflict.UsedAbilities.push('Distracting');
+                                    conflict.ExtraEvade(conflict.ExtraEvade() + 1);
+                                },
+                                function(hero, conflict) {
+                                    return _.indexOf(conflict.UsedAbilities(), 'Distracting') === -1;
+                                },
+                                [],
+                                C$.DEFENCEROLL);
+                            op.operationImages.push('Other/Evade.png');
+                            return op;
+                        }()
+                    ]
+                },
+                false,
+                'Cards/Characters/Han-solo.png')
         ];
     });
