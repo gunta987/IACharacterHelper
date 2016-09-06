@@ -9,7 +9,7 @@
                     dice: [d.RED, d.YELLOW],
                     surges: [[s.pierce()], [s.cleave()]]
                 },
-                'Cards/Gaarkhan/Pic2518434.jpg'),
+                'Cards/Gaarkhan/Vibro-Ax.png'),
             new hf.Ability({
                     name: 'Wookiee Fortitude',
                     operations: [
@@ -53,7 +53,7 @@
                     ]
                 },
                 false,
-                'Cards/Gaarkhan/Wookiee Fortitude.jpg'),
+                'Cards/Gaarkhan/Wookiee Fortitude.png'),
             new hf.Ability({
                     name: 'Wookiee Loyalty',
                     operations: function() {
@@ -69,7 +69,7 @@
                             C$.DEFENCEROLL,
                             '(exhaust)');
                         self.operationImages(['Other/Block.png']);
-                        var other = new hf.Operation('Wookie Loyalty',
+                        var other = new hf.Operation('Wookiee Loyalty',
                             function(hero, conflict, card) {
                                 card.exhausted(true);
                             },
@@ -83,7 +83,7 @@
                     }()
                 },
                 false,
-                'Cards/Gaarkhan/Wookie Loyalty.jpg'),
+                'Cards/Gaarkhan/Wookiee Loyalty.png'),
             new hf.Ability({
                     name: 'Ferocity',
                     onAdd: function() { this.focusDie = d.RED; },
@@ -108,7 +108,7 @@
                     }()
                 },
                 false,
-                'Cards/Gaarkhan/Ferocity.jpg'),
+                'Cards/Gaarkhan/Ferocity.png'),
             new hf.Ability({
                     name: 'Staggering Blow',
                     eventOperations: [
@@ -126,7 +126,7 @@
                     ]
                 },
                 false,
-                'Cards/Gaarkhan/Staggering Blow.jpg'),
+                'Cards/Gaarkhan/Staggering Blow.png'),
             new hf.Ability({
                     name: 'Vicious Strike',
                     operations: [
@@ -143,7 +143,7 @@
                     ]
                 },
                 false,
-                'Cards/Gaarkhan/Vicious Strike.jpg'),
+                'Cards/Gaarkhan/Vicious Strike.png'),
             new hf.Ability({
                     name: 'Rampage',
                     events: function() {
@@ -164,7 +164,7 @@
                     }()
                 },
                 false,
-                'Cards/Gaarkhan/Rampage.jpg'),
+                'Cards/Gaarkhan/Rampage.png'),
             new hf.Ability({
                     name: 'Unstoppable',
                     onAdd: function() {
@@ -181,7 +181,7 @@
                     ]
                 },
                 false,
-                'Cards/Gaarkhan/Unstoppable.jpg'),
+                'Cards/Gaarkhan/Unstoppable.png'),
             new hf.Ability({
                     name: 'Brutal Cleave',
                     eventOperations: [
@@ -200,7 +200,7 @@
                     ]
                 },
                 false,
-                'Cards/Gaarkhan/Brutal Cleave.jpg'),
+                'Cards/Gaarkhan/Brutal Cleave.png'),
             new hf.Ability({
                     name: 'Life Debt',
                     operations: [
@@ -218,6 +218,6 @@
                     ]
                 },
                 false,
-                'Cards/Gaarkhan/Life_Debt.png')
+                'Cards/Gaarkhan/Life Debt.png')
         ];
     });

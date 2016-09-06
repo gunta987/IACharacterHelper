@@ -9,7 +9,7 @@
                     dice: [d.BLUE, d.BLUE],
                     surges: [[s.damage()], [s.pierce()]]
                 },
-                'Cards/Mak/Longblaster.jpg'),
+                'Cards/Mak/Longblaster.png'),
             new hf.Ability({
                     name: 'Disengage',
                     operations: [
@@ -26,7 +26,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Disengage.jpg'),
+                'Cards/Mak/Disengage.png'),
             new hf.Ability({
                     name: 'Supply Network',
                     operations: [
@@ -55,7 +55,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Supply Network.jpg'),
+                'Cards/Mak/Supply Network.png'),
             new hf.Ability({
                     name: 'Jeswandi Training',
                     onAdd: function() {
@@ -76,7 +76,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Jeswandi Training.jpg'),
+                'Cards/Mak/Jeswandi Training.png'),
             new hf.Ability({
                     name: 'Target Acquired',
                     operations: [
@@ -94,7 +94,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Target Acquired.jpg'),
+                'Cards/Mak/Target Acquired.png'),
             new hf.Ability({
                     name: 'Execute',
                     events: [
@@ -122,7 +122,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Execute.jpg'),
+                'Cards/Mak/Execute.png'),
             new hf.Ability({
                     name: 'Expertise',
                     events: [
@@ -141,7 +141,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Expertise.jpg'),
+                'Cards/Mak/Expertise.png'),
             new hf.Ability({
                     name: 'Decoy',
                     operations: [
@@ -160,7 +160,7 @@
                     ]
                 },
                 false,
-                'Cards/Mak/Decoy.jpg'),
+                'Cards/Mak/Decoy.png'),
             new hf.Ability({
                     name: 'No Escape',
                     eventOperations: [
@@ -182,10 +182,10 @@
                     ]
                 },
                 false,
-                'Cards/Mak/No Escape.jpg'),
+                'Cards/Mak/No Escape.png'),
             new hf.Armour({
                     name: 'Shadow Suit'
                 },
-                'Cards/Mak/Shadow_Suit.png')
+                'Cards/Mak/Shadow Suit.png')
         ];
     });

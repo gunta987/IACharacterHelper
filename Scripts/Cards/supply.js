@@ -23,7 +23,7 @@
                         ]
                     },
                     false,
-                    'Cards/Supply/Adrenal_Stim.jpg'),
+                    'Cards/Supply/Adrenal Stim.png'),
                 new hf.Ability({
                         name: 'Bacta Infusion',
                         operations: [
@@ -44,7 +44,7 @@
                         ]
                     },
                     false,
-                    'Cards/Supply/Bacta_Infusion.jpg'),
+                    'Cards/Supply/Bacta Infusion.png'),
                 new hf.Ability({
                         name: 'C22 Frag Grenade',
                         operations: [
@@ -59,7 +59,7 @@
                         ]
                     },
                     false,
-                    'Cards/Supply/C22_Frag_Grenade.jpg'),
+                    'Cards/Supply/C22 Frag Grenade.png'),
                 new hf.Ability({
                         name: 'Emergency Medpack',
                         events: [
@@ -77,7 +77,7 @@
                         ]
                     },
                     false,
-                    'Cards/Supply/Emergency_Medpack.jpg'),
+                    'Cards/Supply/Emergency Medpac.png'),
                 new hf.Ability({
                         name: 'Shock Grenade',
                         operations: [
@@ -92,7 +92,7 @@
                         ]
                     },
                     false,
-                    'Cards/Supply/Shock_Grenade.jpg')
+                    'Cards/Supply/Shock Grenade.png')
             ]
         };
     });

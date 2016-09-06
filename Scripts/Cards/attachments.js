@@ -21,7 +21,7 @@
                         return [op];
                     }()
                 },
-                'Cards/WeaponAttachments/Balanced_Hilt.jpg'),
+                'Cards/WeaponAttachments/Balanced Hilt.png'),
             new hf.Attachment({
                     name: 'Disruption Cell',
                     ranged: true,
@@ -41,14 +41,14 @@
                         return result;
                     }
                 },
-                'Cards/WeaponAttachments/Disruption_Cell.jpg'),
+                'Cards/WeaponAttachments/Disruption Cell.png'),
             new hf.Attachment({
                     name: 'Extended Haft',
                     ranged: false,
                     trait: ['Balance'],
                     pierce: function(weapon) { return weapon.reach ? 1 : 0; }
                 },
-                'Cards/WeaponAttachments/Extended_Haft.jpg'),
+                'Cards/WeaponAttachments/Extended Haft.png'),
             new hf.Attachment({
                     name: 'High-Impact Guard',
                     ranged: false,
@@ -70,14 +70,14 @@
                         return [op];
                     }()
                 },
-                'Cards/WeaponAttachments/High-Impact_Guard.jpg'),
+                'Cards/WeaponAttachments/High-Impact Guard.png'),
             new hf.Attachment({
                     name: 'Marksman Barrel',
                     ranged: true,
                     trait: ['Barrel'],
                     accuracy: function() { return 2 }
                 },
-                'Cards/WeaponAttachments/Marksman_Barrel.jpg'),
+                'Cards/WeaponAttachments/Marksman Barrel.png'),
             new hf.Attachment({
                     name: 'Overcharger',
                     ranged: true,
@@ -117,7 +117,7 @@
                         return [op];
                     }()
                 },
-                'Cards/WeaponAttachments/Shock-emitter.png'),
+                'Cards/WeaponAttachments/Shock Emitter.png'),
             new hf.Attachment({
                     name: 'Spread Barrel',
                     ranged: true,
@@ -140,7 +140,7 @@
                         return [op];
                     }()
                 },
-                'Cards/WeaponAttachments/Spread_Barrel.jpg'),
+                'Cards/WeaponAttachments/Spread Barrel.png'),
             new hf.Attachment({
                     name: 'Tactical Display',
                     ranged: true,
@@ -161,7 +161,7 @@
                         return [op];
                     }()
                 },
-                'Cards/WeaponAttachments/Tactical_Display.jpg'),
+                'Cards/WeaponAttachments/Tactical Display.png'),
             new hf.Attachment({
                     name: 'Telescoping Sights',
                     ranged: true,
@@ -183,6 +183,6 @@
                             [$.action(2)])
                     ]
                 },
-                'Cards/WeaponAttachments/Telescoping_Sights.jpg')
+                'Cards/WeaponAttachments/Telescoping Sights.png')
         ];
     });

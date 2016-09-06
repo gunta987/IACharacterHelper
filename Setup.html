@@ -14,7 +14,7 @@
 <body>
     <div class="column noclick-when-disabled">
         <div id="characterContainer" style="position: relative", data-bind="click: ShowHeroes">
-            <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + _.result(hero(), 'imageName', 'Unknown') + '.png'}" style="width: 100%"/>
+            <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + _.result(hero(), 'imageName', 'Unknown') + (hero() != null ? '.jpg' : '.png')}" style="width: 100%"/>
             <div class="modifier" style="left: 52.5%" data-bind="visible: hero() != null && hero().extraHealth() > 0">
                 <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraHealth', '0') + '.png'}"/>
             </div>
@@ -110,7 +110,7 @@
         <div class="modal-content">
             <div data-bind="foreach: heroes, visible: Mode() === C$.HERO">
                 <div data-bind="click: $parent.SetHero">
-                    <img style="width: 50vw" data-bind="attr: {src: 'Cards/Heroes/' + imageName() + '.png'}"/>
+                    <img style="width: 50vw" data-bind="attr: {src: 'Cards/Heroes/' + imageName() + '.jpg'}"/>
                 </div>
             </div>
             <div data-bind="foreach: AvailableAbilities, visible: Mode() === C$.ABILITY">

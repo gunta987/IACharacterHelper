@@ -9,7 +9,7 @@
                     dice: [d.GREEN, d.GREEN],
                     surges: [[s.damage()], [s.accuracy()]]
                 },
-                'Cards/Jyn/Vintage Blaster.jpg'),
+                'Cards/Jyn/Vintage Blaster.png'),
             new hf.Ability({
                     name: 'Quick As A Whip',
                     events: [
@@ -20,7 +20,7 @@
                     ]
                 },
                 false,
-                'Cards/Jyn/Quick As A Whip.jpg'),
+                'Cards/Jyn/Quick As A Whip.png'),
             new hf.Ability({
                     name: "Smuggler's Luck",
                     eventOperations: [
@@ -59,7 +59,7 @@
                     ]
                 },
                 false,
-                'Cards/Jyn/Smugglers Luck.jpg'),
+                'Cards/Jyn/Smugglers Luck.png'),
             new hf.Ability({
                     name: 'Cheap Shot',
                     events: function() {
@@ -82,7 +82,7 @@
                     }()
                 },
                 false,
-                'Cards/Jyn/Cheap Shot.jpg'),
+                'Cards/Jyn/Cheap Shot.png'),
             new hf.Ability({
                     name: 'Roll With It',
                     operations: [
@@ -109,7 +109,7 @@
                     ]
                 },
                 false,
-                'Cards/Jyn/Roll With It.jpg'),
+                'Cards/Jyn/Roll With It.png'),
             new hf.Ability({
                     name: 'Get Cocky',
                     eventOperations: [
@@ -151,7 +151,7 @@
                     ]
                 },
                 false,
-                'Cards/Jyn/Get Cocky.jpg'),
+                'Cards/Jyn/Get Cocky.png'),
             new hf.Ability({
                     name: 'Gunslinger',
                     events: [
@@ -211,7 +211,7 @@
                     ]
                 },
                 false,
-                'Cards/Jyn/Trickshot.png'),
+                'Cards/Jyn/Trick Shot.png'),
             new hf.Ability({
                     name: 'Peacemaker',
                     eventOperations: [

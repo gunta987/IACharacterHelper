@@ -16,7 +16,7 @@
                             })
                     ]
                 },
-                'Cards/Wearables/Adrenal_Implant.png'),
+                'Cards/Wearables/Adrenal Implant.png'),
             new hf.Equipment({
                     name: 'Combat Knife',
                     operations: [
@@ -32,7 +32,7 @@
                             "(exhaust, roll <img class='die' src='Dice/green.png' />)")
                     ]
                 },
-                'Cards/Wearables/Combat_Knife.jpg'),
+                'Cards/Wearables/Combat Knife.png'),
             new hf.Equipment({
                     name: 'Combat Visor',
                     eventOperations: [
@@ -67,7 +67,7 @@
                             C$.ATTACKROLL)
                     ]
                 },
-                'Cards/Wearables/Combat_Visor.jpg'),
+                'Cards/Wearables/Combat Visor.png'),
             new hf.Equipment({
                     name: 'Extra Ammunition',
                     operations: [
@@ -83,7 +83,7 @@
                             '(exhaust)')
                     ]
                 },
-                'Cards/Wearables/Extra-ammunition.png'),
+                'Cards/Wearables/Extra Ammunition.png'),
             new hf.Equipment({
                     name: 'Personal Shields',
                     operations: [
@@ -100,7 +100,7 @@
                             '(deplete)')
                     ]
                 },
-                'Cards/Wearables/Personal_Shields.jpg'),
+                'Cards/Wearables/Personal Shields.png'),
             new hf.Equipment({
                     name: 'Portable Medkit',
                     events: [
@@ -119,7 +119,7 @@
                             })
                     ]
                 },
-                'Cards/Wearables/Portable_Medkit.jpg'),
+                'Cards/Wearables/Portable Medkit.png'),
             new hf.Equipment({
                     name: 'Reinforced Helmet',
                     operations: [
@@ -135,7 +135,7 @@
                             '(exhaust)')
                     ]
                 },
-                'Cards/Wearables/Reinforced_Helmet.jpg'),
+                'Cards/Wearables/Reinforced Helmet.png'),
             new hf.Equipment({
                     name: 'Slicing Tools',
                     eventOperations: [
@@ -170,7 +170,7 @@
                             [$.action()])
                     ]
                 },
-                'Cards/Wearables/Slicing_Tools.jpg'),
+                'Cards/Wearables/Slicing Tools.png'),
             new hf.Equipment({
                     name: 'Survival Gear',
                     eventOperations: [
@@ -193,6 +193,6 @@
                         }
                     ]
                 },
-                'Cards/Wearables/Survival_Gear.jpg')
+                'Cards/Wearables/Survival Gear.png')
         ];
     });

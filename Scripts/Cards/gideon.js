@@ -9,7 +9,7 @@
                     dice: [d.BLUE, d.YELLOW],
                     surges: [[s.pierce(2)]]
                 },
-                'Cards/Gideon/Holdout Blaster.jpg'),
+                'Cards/Gideon/Holdout Blaster.png'),
             new hf.Ability({
                     name: 'Called Shot',
                     operations: function() {
@@ -39,7 +39,7 @@
                     }()
                 },
                 false,
-                'Cards/Gideon/Called-shot.png'),
+                'Cards/Gideon/Called Shot.png'),
             new hf.Ability({
                     name: 'Military Efficiency',
                     operations: function() {
@@ -73,13 +73,13 @@
                     }()
                 },
                 false,
-                'Cards/Gideon/Pic2446098.jpg'),
+                'Cards/Gideon/Military Efficiency.png'),
             new hf.Ability({
                     name: 'Air of Command',
                     onAdd: function() { this.extraHealth(this.extraHealth() + 2); }
                 },
                 false,
-                'Cards/Gideon/Air-of-command.png'),
+                'Cards/Gideon/Air of Command.png'),
             new hf.Ability({
                     name: 'Mobile Tactician',
                     events: [
@@ -90,7 +90,7 @@
                     ]
                 },
                 false,
-                'Cards/Gideon/Pic2446100.jpg'),
+                'Cards/Gideon/Mobile Tactician.png'),
             new hf.Ability({
                     name: 'For the Cause!',
                     operations: [
@@ -107,7 +107,7 @@
                     ]
                 },
                 false,
-                'Cards/Gideon/For-the-cause.png'),
+                'Cards/Gideon/For the Cause!.png'),
             new hf.Ability({
                     name: 'Rallying Shout',
                     operations: [
@@ -124,7 +124,7 @@
                     ]
                 },
                 false,
-                'Cards/Gideon/Pic2446102.jpg'),
+                'Cards/Gideon/Rallying Shout.png'),
             new hf.Ability({
                     name: 'Hammer and Anvil',
                     operations: [
@@ -139,7 +139,7 @@
                     ]
                 },
                 false,
-                'Cards/Gideon/Pic2446103.jpg'),
+                'Cards/Gideon/Hammer and Anvil.png'),
             new hf.Ability({
                     name: 'Masterstroke',
                     eventOperations: [
@@ -171,6 +171,6 @@
                     ]
                 },
                 false,
-                'Cards/Gideon/Fearless_Leader.png')
+                'Cards/Gideon/Fearless Leader.png')
         ];
     });

@@ -22,7 +22,7 @@
                         return [op];
                     }()
                 },
-                'Cards/Wearables/Combat-coat.png'),
+                'Cards/Wearables/Combat Coat.png'),
             new hf.Armour({
                     name: 'Laminate Armour',
                     onAdd: function() {
@@ -44,6 +44,6 @@
                         return [op];
                     }()
                 },
-                'Cards/Wearables/Laminate_Armor.jpg'),
+                'Cards/Wearables/Laminate Armour.png')
         ];
     });

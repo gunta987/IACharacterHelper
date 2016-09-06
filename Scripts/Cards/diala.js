@@ -10,7 +10,7 @@
                     reach: true,
                     surges: [[s.stun()], [s.damage()]]
                 },
-                'Cards/Diala/Pic2444795.jpg'),
+                'Cards/Diala/Plasteel Staff.png'),
             new hf.Ability({
                     name: 'Force Adept',
                     operations: [
@@ -35,7 +35,7 @@
                     ]
                 },
                 false,
-                'Cards/Diala/Pic2444785.jpg'),
+                'Cards/Diala/Force Adept.png'),
             new hf.Ability({
                     name: 'Force Throw',
                     operations: [
@@ -51,7 +51,7 @@
                     ]
                 },
                 false,
-                'Cards/Diala/Pic2444786.jpg'),
+                'Cards/Diala/Force Throw.png'),
             new hf.Ability({
                     name: 'Battle Meditation',
                     events: [
@@ -68,7 +68,7 @@
                     ]
                 },
                 false,
-                'Cards/Diala/Pic2444787.jpg'),
+                'Cards/Diala/Battle Meditation.png'),
             new hf.Ability({
                     name: 'Defensive Stance',
                     events: [
@@ -85,7 +85,7 @@
                     ]
                 },
                 false,
-                'Cards/Diala/Pic2444788.jpg'),
+                'Cards/Diala/Defensive Stance.png'),
             new hf.Ability({
                     name: 'Art of Movement',
                     onAdd: function() {
@@ -93,7 +93,7 @@
                     }
                 },
                 false,
-                'Cards/Diala/Pic2444789.jpg'),
+                'Cards/Diala/Art of Movement.png'),
             new hf.Ability({
                     name: 'Snap Kick',
                     eventOperations: [
@@ -113,7 +113,7 @@
                     ]
                 },
                 false,
-                'Cards/Diala/Pic2444790.jpg'),
+                'Cards/Diala/Snap Kick.png'),
             new hf.Ability({
                     name: 'Dancing Weapon',
                     operations: [
@@ -133,7 +133,7 @@
                     ]
                 },
                 false,
-                'Cards/Diala/Pic2444791.jpg'),
+                'Cards/Diala/Dancing Weapon.png'),
             function() {
                 var activated = false;
                 var attack = function(hero) {
@@ -168,7 +168,7 @@
                         ]
                     },
                     false,
-                    'Cards/Diala/Pic2444792.jpg');
+                    'Cards/Diala/Way of the Sarlacc.png');
             }(),
             function() {
                 var foresightActivated = false;
@@ -194,7 +194,7 @@
                                 })
                         ]
                     },
-                    "Cards/Diala/Shu_Yen's_Lightsaber.png");
+                    "Cards/Diala/Shu Yen's Lightsaber.png");
             }()
         ];
     });

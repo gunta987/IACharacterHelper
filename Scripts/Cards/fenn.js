@@ -9,7 +9,7 @@
                     dice: [d.BLUE, d.GREEN],
                     surges: [[s.damage()], [s.accuracy()]]
                 },
-                'Cards/Fenn/Infantry-Rifle.png'),
+                'Cards/Fenn/Infantry Rifle.png'),
             new hf.Ability({
                     name: 'Tactical Movement',
                     operations: [
@@ -75,7 +75,7 @@
                     ]
                 },
                 false,
-                'Cards/Fenn/Adrenaline Rush.jpg'),
+                'Cards/Fenn/Adrenaline Rush.png'),
             new hf.Ability({
                     name: 'Weapon Expert',
                     operations: [
@@ -131,7 +131,7 @@
                     ]
                 },
                 false,
-                'Cards/Fenn/Trench Fighter.jpg'),
+                'Cards/Fenn/Trench Fighter.png'),
             new hf.Ability({
                     name: 'Rebel Elite',
                     onAdd: function() {
@@ -140,7 +140,7 @@
                     }
                 },
                 false,
-                'Cards/Fenn/Rebel Elite.jpg'),
+                'Cards/Fenn/Rebel Elite.png'),
             new hf.Ability({
                     name: 'Superior Positioning',
                     operations: [
@@ -195,6 +195,6 @@
                     ]
                 },
                 false,
-                'Cards/Fenn/Veteran_Prowess.png')
+                'Cards/Fenn/Veteran Prowess.png')
         ];
     });
