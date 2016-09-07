@@ -180,7 +180,7 @@
                             function(hero, conflict, card) {
                                 return hero.activated() && !hero.stunned();
                             },
-                            [$.action(2)])
+                            [$.action(2, true)])
                     ]
                 },
                 'Cards/WeaponAttachments/Telescoping Sights.png')

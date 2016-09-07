@@ -200,7 +200,7 @@
                 'Cards/Characters/Han-solo.png'),
             new hf.Ability({
                     name: 'The Ways of the Force',
-                    isExternal: true,
+                    isExternal: false,
                     owner: 'None',
                     eventOperations: function() {
                         var op = new hf.Operation('The Ways of the Force',

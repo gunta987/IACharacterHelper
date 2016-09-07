@@ -135,7 +135,7 @@
                             function(hero) {
                                 return !hero.stunned();
                             },
-                            [$.action(), $.strain(2)])
+                            [$.action(1, true), $.strain(2)])
                     ]
                 },
                 false,

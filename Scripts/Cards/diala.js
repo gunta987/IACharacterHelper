@@ -146,7 +146,7 @@
                             function(hero) {
                                 return !hero.stunned() && _(hero.weapons()).some(function(w) { return !w.ranged; });
                             },
-                            [$.action(), $.strain()])
+                            [$.action(1, true), $.strain()])
                     ]
                 },
                 false,
@@ -167,7 +167,7 @@
                                 function(hero) {
                                     return !hero.stunned() && _(hero.weapons()).some(function(w) { return !w.ranged; });
                                 },
-                                [$.action(), $.strain(2)])
+                                [$.action(1, true), $.strain(2)])
                         ],
                         events: [
                             new hf.Event(C$.ATTACK_RESOLVED,

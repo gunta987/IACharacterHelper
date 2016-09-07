@@ -151,7 +151,7 @@
                             function(hero) {
                                 return !hero.stunned() && !hero.focused();
                             },
-                            [$.action(), $.strain()])
+                            [$.action(1, true), $.strain()])
                     ],
                     events: [
                         new hf.Event(C$.DEFENCE_START,

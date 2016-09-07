@@ -167,7 +167,7 @@
                             function(hero) {
                                 return true;
                             },
-                            [$.action()])
+                            [$.action(1, true)])
                     ]
                 },
                 'Cards/Wearables/Slicing Tools.png'),
