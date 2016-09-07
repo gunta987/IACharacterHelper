@@ -59,9 +59,6 @@
             });
 
             self.cards = ko.observableArray([]);
-            self.exhausted = ko.pureComputed(function() {
-                return _.filter(self.cards(), 'exhausted');
-            });
             self.equipment = ko.pureComputed(function() {
                 return _.filter(self.cards(), function(card) { return card instanceof hf.Equipment; });
             });
@@ -76,6 +73,13 @@
             });
             self.purchasedAbilities = ko.pureComputed(function() {
                 return _.filter(self.abilities(), function(ability) { return !ability.isCoreAbility; });
+            });
+            self.exhausted = ko.pureComputed(function () {
+                return _(self.weapons())
+                    .flatMap(function(w) { return w.attachments(); })
+                    .concat(self.cards())
+                    .filter(_.method('exhausted'))
+                    .value();
             });
             self.classCards = initial.classCards;
             var eventOperations = {};

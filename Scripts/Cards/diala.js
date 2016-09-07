@@ -64,7 +64,9 @@
                             function(hero, conflict, card) {
                                 return hero.activated() && !card.exhausted();
                             },
-                            [$.strain(2)])
+                            [$.strain(2)],
+                            null,
+                            '(exhaust)')
                     ]
                 },
                 false,
