@@ -2,7 +2,7 @@
     function(hf, modal, $, d, s, C$) {
         return [
             new hf.Weapon({
-                    name: 'Longblaster',
+                    name: 'Infantry Rifle',
                     ranged: true,
                     type: ['blaster', 'rifle'],
                     slots: 1,

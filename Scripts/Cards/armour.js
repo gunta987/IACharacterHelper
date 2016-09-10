@@ -9,16 +9,16 @@
                     operations: function () {
                         var op = new hf.Operation('Combat Coat',
                             function (hero, conflict, card) {
-                                conflict.ExtraBlock(conflict.ExtraBlock() - 1);
-                                conflict.ExtraEvade(conflict.ExtraEvade() + 1);
+                                conflict.ExtraEvade(conflict.ExtraEvade() - 1);
+                                conflict.ExtraBlock(conflict.ExtraBlock() + 1);
                             },
                             function (hero, conflict, card) {
-                                return conflict.Block() >= 1;
+                                return conflict.Evade() >= 1;
                             },
                             [],
                             C$.DEFENCEROLL,
-                            "(-1<img src='Other/Block.png' />)");
-                        op.operationImages(['Other/Evade.png']);
+                            "(-1<img src='Other/Evade.png' />)");
+                        op.operationImages(['Other/Block.png']);
                         return [op];
                     }()
                 },

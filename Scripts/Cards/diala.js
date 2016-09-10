@@ -19,7 +19,7 @@
                                 conflict.UsedAbilities.push('Force Adept');
                             },
                             function(hero, conflict) {
-                                return _.indexOf(conflict.UsedAbilities(), 'Force Adept') === -1;
+                                return conflict.RollFinished() && _.indexOf(conflict.UsedAbilities(), 'Force Adept') === -1;
                             },
                             [$.strain()],
                             C$.ATTACKROLL),
@@ -34,21 +34,22 @@
                             '(give reroll)')
                     ],
                     eventOperations: [
-                            {
-                                operation: new hf.Operation('Force Adept',
-                                    function (hero, conflict, card) {
-                                        var lastTest = hero.lastAttributeTest();
-                                        if (lastTest != null && lastTest.attribute != null) {
-                                            lastTest.usedAbilities.push(card.name);
-                                            hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
-                                        }
-                                    },
-                                    function (hero, conflict, card) {
-                                        return hero.lastAttributeTest() == null || _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
-                                    },
-                                    [$.strain()]),
-                                event: C$.ATTRIBUTE_TEST_FAIL
-                            }
+                        {
+                            operation: new hf.Operation('Force Adept',
+                                function(hero, conflict, card) {
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        lastTest.usedAbilities.push(card.name);
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                    }
+                                },
+                                function(hero, conflict, card) {
+                                    return hero.lastAttributeTest() == null || _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
+                                },
+                                [$.strain()]),
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
+                        }
                     ]
                 },
                 false,
@@ -73,17 +74,22 @@
                 'Cards/Diala/Force Throw.png'),
             new hf.Ability({
                     name: 'Battle Meditation',
-                    events: [
-                        new hf.Event(C$.REST,
-                            function(hero) {
-                                hero.testAttribute(hero.eye,
-                                    function() {
-                                        modal.ConfirmOperation("Battle Meditation: Is the <img src='Tokens/focus.png' /> for you?",
-                                            function() {
-                                                hero.focused(true);
-                                            });
-                                    });
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Battle Meditation',
+                                function(hero) {
+                                    hero.testAttribute(hero.eye,
+                                        function() {
+                                            modal.ConfirmOperation("Battle Meditation: Is the <img src='Tokens/focus.png' /> for you?",
+                                                function() {
+                                                    hero.focused(true);
+                                                    hero.RefreshCurrentEvent();
+                                                });
+                                        });
+                                },
+                                function() { return true; }),
+                            event: C$.REST
+                        }
                     ]
                 },
                 false,

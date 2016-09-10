@@ -206,17 +206,11 @@
                         var op = new hf.Operation('The Ways of the Force',
                             function(hero, conflict, card) {
                                 hero.focused(true);
-                                if (hero.activated()) {
-                                }
                             },
                             function(hero, conflict, card) {
-                                op.operationImages.removeAll();
-                                op.operationImages.push({ src: hero.focusDie().blank, css: 'die' });
                                 return !hero.focused();
                             },
-                            [$.strain()],
-                            null,
-                            '+');
+                            [$.strain()]);
                         return [{ operation: op, event: C$.BEFORE_ATTRIBUTE_TEST }];
                     }()
                 },

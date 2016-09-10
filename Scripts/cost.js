@@ -29,15 +29,5 @@
             },
             images: _.fill(Array(count), 'Tokens/strain.png')
         }
-    },
-    block: function() {
-        return {
-            required: function(hero, conflict) {
-                return conflict.Block() > 0;
-            },
-            incur: function(hero, conflict) {
-                conflict.ExtraBlock(conflict.ExtraBlock() - 1);
-            },
-            images: ['Other/Block.png']
-    }}
+    }
 })

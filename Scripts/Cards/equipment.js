@@ -3,17 +3,21 @@
         return [
             new hf.Equipment({
                     name: 'Adrenal Implant',
-                    events: [
-                        new hf.Event(C$.REST,
-                            function(hero, conflict, card) {
-                                if (!card.exhausted() && !hero.focused()) {
-                                    modal.ConfirmOperation("Do you wish to exhaust Adrenal Implant to gain <img src='Tokens/focus.png' />?",
-                                        function() {
-                                            hero.focused(true);
-                                            card.exhausted(true);
-                                        });
-                                }
-                            })
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation('Adrenal Implant',
+                                function(hero, conflict, card) {
+                                    hero.focused(true);
+                                    card.exhausted(true);
+                                },
+                                function(hero, conflict, card) {
+                                    return !hero.focused() && !card.exhausted();
+                                },
+                                [],
+                                null,
+                                '(exhaust)'),
+                            event: C$.REST
+                        }
                     ]
                 },
                 'Cards/Wearables/Adrenal Implant.png'),
@@ -29,7 +33,7 @@
                             },
                             [$.strain()],
                             null,
-                            "(exhaust, roll <img class='die' src='Dice/green.png' />)")
+                            "(exhaust)")
                     ]
                 },
                 'Cards/Wearables/Combat Knife.png'),
@@ -38,30 +42,31 @@
                     eventOperations: [
                         {
                             operation: new hf.Operation('Combat Visor (reroll 1)',
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     card.exhausted(true);
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
                                         hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     return !card.exhausted() && hero.lastAttributeTest().attribute === hero.eye;
                                 },
                                 [],
                                 null,
                                 '(exhaust)'),
-                            event: C$.ATTRIBUTE_TEST_FAIL
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
                         }
                     ],
                     operations: [
                         new hf.Operation('Combat Visor',
                             function(hero, conflict, card) {
                                 conflict.ExtraAccuracy(conflict.ExtraAccuracy() + 2);
-                                conflict.UsedAbilities.push('Combat Visor');
+                                conflict.UsedAbilities.push(card.name);
                             },
                             function(hero, conflict, card) {
-                                return _.indexOf(conflict.UsedAbilities(), 'Force Adept') === -1;
+                                return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
                             },
                             [$.strain()],
                             C$.ATTACKROLL)
@@ -76,7 +81,7 @@
                                 card.exhausted(true);
                             },
                             function(hero, conflict, card) {
-                                return conflict.AttackWeapon().ranged && !card.exhausted();
+                                return conflict.RollFinished() && conflict.AttackWeapon().ranged && !card.exhausted();
                             },
                             [],
                             C$.ATTACKROLL,
@@ -141,28 +146,31 @@
                     eventOperations: [
                         {
                             operation: new hf.Operation('Slicing Tools (reroll 1)',
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     card.exhausted(true);
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
                                         hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     return !card.exhausted() && hero.lastAttributeTest().attribute === hero.spanner;
                                 },
                                 [],
                                 null,
                                 '(exhaust)'),
-                            event: C$.ATTRIBUTE_TEST_FAIL
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
                         }
                     ],
                     operations: [
                         new hf.Operation('Slicing Tools',
                             function(hero) {
-                                hero.testAttribute(hero.spanner, function () {
-                                    modal.ShowInformation("Chosen droid suffers 1<img src='Other/Damage.png' /> and gains <img src='Tokens/stun.png' />");
-                                });
+                                hero.testAttribute(hero.spanner,
+                                    function() {
+                                        modal
+                                            .ShowInformation("Chosen droid suffers 1<img src='Other/Damage.png' /> and gains <img src='Tokens/stun.png' />");
+                                    });
                             },
                             function(hero) {
                                 return true;
@@ -176,20 +184,21 @@
                     eventOperations: [
                         {
                             operation: new hf.Operation('Survival Gear (reroll 1)',
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     card.exhausted(true);
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
                                         hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     return !card.exhausted() && hero.lastAttributeTest().attribute === hero.fisting;
                                 },
                                 [],
                                 null,
                                 '(exhaust)'),
-                            event: C$.ATTRIBUTE_TEST_FAIL
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
                         }
                     ]
                 },

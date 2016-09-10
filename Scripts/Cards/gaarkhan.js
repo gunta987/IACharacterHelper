@@ -157,7 +157,7 @@
                                 function() {
                                     if (hasCharged) {
                                         hasCharged = false;
-                                        modal.ShowInformation("Apply 1<img src='Other/Damage.png' /> to all adjacent hostiles");
+                                        modal.ShowInformation("Rampage: Apply 1<img src='Other/Damage.png' /> to all adjacent hostiles");
                                     }
                                 })
                         ];

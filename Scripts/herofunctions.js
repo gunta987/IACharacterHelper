@@ -7,7 +7,9 @@
             var otherRequirements = canPerformOperation || function () { return true; };
             return _.every(cost || [], function (c) { return c.required(hero, conflict, self.card); }) && otherRequirements(hero, conflict, self.card);
         }
+        self.beforePerformOperation = function() {};
         self.performOperation = function (hero, conflict) {
+            self.beforePerformOperation();
             performOperation(hero, conflict, self.card);
             _(cost || []).forEach(function (c) { c.incur(hero, conflict, self.card); });
             hero.publishEventWithFollowOn(self.name);

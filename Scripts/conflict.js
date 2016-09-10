@@ -40,13 +40,15 @@
             extraSurges = ko.observable(0),
             selectedSurges = ko.observableArray([]),
             extraEvade = ko.observable(0),
+            evade = ko.pureComputed(function() {
+                return _.reduce(defenceDice(), function(sum, die) { return sum + ((die.selectedFace() || {}).evade || 0); }, 0) + extraEvade();
+            }),
             surges = ko.computed(function() {
                 if (_.some(defenceDice(), function(die) { return (die.selectedFace() || {}).dodge; })) {
                     return 0;
                 }
                 var surge = _.reduce(attackDice(), function(sum, die) { return sum + ((die.selectedFace() || {}).surge || 0); }, 0) + extraSurges();
-                var evade = _.reduce(defenceDice(), function(sum, die) { return sum + ((die.selectedFace() || {}).evade || 0); }, 0);
-                var surgeCount = Math.max(surge - evade - extraEvade(), 0);
+                var surgeCount = Math.max(surge - evade(), 0);
                 while (selectedSurges().length > surgeCount) {
                     var selectedSurge = selectedSurges.pop();
                     selectedSurge.deselect.performOperation(hero, self);
@@ -144,7 +146,8 @@
                 };
             },
 
-            init = function() {
+            init = function () {
+                conflictStage(-1);
                 hero.inConflict(true);
                 extraPierce(0);
                 extraDamage(0);
@@ -252,6 +255,7 @@
             OpponentDice: opponentDice,
             Block: block,
             ExtraBlock: extraBlock,
+            Evade: evade,
             ExtraEvade: extraEvade,
             caption: caption,
             requiredAccuracy: requiredAccuracy,

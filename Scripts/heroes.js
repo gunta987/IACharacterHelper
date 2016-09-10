@@ -91,6 +91,7 @@
                 _(card.eventOperations || [])
                     .forEach(function (eventOperation) {
                         eventOperation.operation.isExternal = card.isExternal;
+                        eventOperation.operation.completeEvent = eventOperation.completeEvent || false;
                         eventOperations[eventOperation.event] = eventOperations[eventOperation.event] || [];
                         eventOperations[eventOperation.event].push(eventOperation.operation);
                     });
@@ -120,25 +121,12 @@
                 clearPreviousSpecialOperations = dispose;
                 specialOperations(operations);
             };
-            self.availableOperations = ko.pureComputed(function () {
-                if (!_.isEmpty(specialOperations())) {
-                    return specialOperations();
-                } else {
-                    var emptyArrayFunction = function () { return []; };
-                    //TODO: ummm... rethink how this is extracted - there has to be a neater method.
-                    var weaponOperations = _.concat((conflict.AttackWeapon().surgeOperations || emptyArrayFunction)(),
-                        _.flatMap(_.flatMap(_.map(self.weapons(), function (weapon) { return weapon.attachments || emptyArrayFunction; }),
-                                    function (fn) { return fn(); }),
-                            'operations'));
-                    return _.filter(_.concat(self.operations(), weaponOperations),
-                        function (operation) {
-                            return ((!self.inConflict() && operation.conflictStage == null) ||
-                                (self.inConflict() && operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
-                                operation.canPerformOperation(self, conflict);
-                        });
-                }
-            });
 
+            var eventStack = ko.observableArray([]);
+            var latestEventOperations = ko.pureComputed(function() {
+                var latestEvent = _.last(eventStack());
+                return latestEvent != null ? latestEvent.activeOperations() : [];
+            });
             self.event = ko.observable('');
             self.cardEvents = ko.pureComputed(function() {
                 return _.flatMap(self.cards(), 'events');
@@ -154,61 +142,87 @@
                     self.event('');
                 }
             });
-            self.publishEventWithFollowOn = function(eventName, followOn) {
+            self.RefreshCurrentEvent = function() {
+                eventStack.notifySubscribers();
+            };
+            self.publishEventWithFollowOn = function (eventName, followOn) {
+                //i don't want to pop the stack until after the followon in case the followon changes the conditions for operations
+                //staying valid for the event.
+                var newfollowOn = function() {
+                    (followOn || function () { })();
+                    eventStack.pop();
+                }
+                const thisEvent = { name: eventName, usedOperations: [], activeOperations: ko.observableArray([]) };
+                eventStack.push(thisEvent);
                 self.event(eventName);
-                followOn = followOn || function() {};
+
                 new Promise(function (resolve, reject) {
-                        var operationNames;
-                        var operations = [];
-                        var hasSetSpecialOps = false;
+                        var closeEvent = function() {
+                            eventStackSubscription.dispose();
+                            resolve();
+                        };
+
                         function getEventOperations() {
-                            var thisEventOperations = _(eventOperations[eventName] || [])
+                            const thisEventOperations = _(eventOperations[eventName] || [])
                                 .filter(function(operation) {
-                                    return operation.canPerformOperation(self, conflict);
+                                    return _.indexOf(thisEvent.usedOperations, operation.name) === -1 &&
+                                        operation.canPerformOperation(self, conflict);
+                                })
+                                .map(function(operation) {
+                                    operation.beforePerformOperation = function() {
+                                        thisEvent.usedOperations.push(operation.name);
+                                        if (operation.completeEvent) {
+                                            closeEvent();
+                                        }
+                                    };
+                                    return operation;
                                 })
                                 .value();
                             if (thisEventOperations.length === 0) {
                                 return false;
                             }
                             thisEventOperations.push(new hf.Operation('Continue',
-                                function() {},
-                                function() { return true; }));
-                            operationNames = thisEventOperations.map(function (operation) { return operation.name });
-                            thisEventOperations.forEach(function (operation) {
-                                operations.push(operation);
-                            });
-                            if (!hasSetSpecialOps) {
-                                hasSetSpecialOps = true;
-                                self.setSpecialOperations(operations,
-                                    function() {
-                                        if (eventSubscription != null) {
-                                            eventSubscription.dispose();
-                                        }
-                                    });
-                            } else {
-                                specialOperations.notifySubscribers();
-                            }
+                                closeEvent,
+                                function () { return true; }));
+                            thisEvent.activeOperations(thisEventOperations);
                             return true;
                         }
 
-                        if (!getEventOperations()) {
-                            resolve();
-                        } else {
-                            //another operation (e.g. attack) requires special operations. Cancel these operations
-                            var eventSubscription = self.event.subscribe(function(event) {
-                                if (operationNames.indexOf(event) !== -1) {
-                                    operations.length = 0;
-                                    if (event === 'Continue' || !getEventOperations()) {
-                                        self.setSpecialOperations([]);
-                                        resolve();
-                                    }
-                                }
-                            });
+                        var eventStackSubscription = eventStack.subscribe(function () {
+                            if (thisEvent === _.last(eventStack()) && !getEventOperations()) {
+                                closeEvent();
+                            }
+                        });
+                        if (thisEvent === _.last(eventStack()) && !getEventOperations()) {
+                            closeEvent();
                         }
                     })
-                    .then(followOn)
+                    .then(newfollowOn)
                     .catch(console.log.bind(console));
             };
+
+            self.availableOperations = ko.pureComputed(function () {
+                var so = specialOperations();
+                var leo = latestEventOperations();
+                if (!_.isEmpty(so)) {
+                    return so;
+                } else if (!_.isEmpty(leo)) {
+                    return leo;
+                } else {
+                    var emptyArrayFunction = function () { return []; };
+                    //TODO: ummm... rethink how this is extracted - there has to be a neater method.
+                    var weaponOperations = _.concat((conflict.AttackWeapon().surgeOperations || emptyArrayFunction)(),
+                        _.flatMap(_.flatMap(_.map(self.weapons(), function (weapon) { return weapon.attachments || emptyArrayFunction; }),
+                                    function (fn) { return fn(); }),
+                            'operations'));
+                    return _.filter(_.concat(self.operations(), weaponOperations),
+                        function (operation) {
+                            return ((!self.inConflict() && operation.conflictStage == null) ||
+                                (self.inConflict() && operation.conflictStage != null && operation.conflictStage == conflict.Stage())) &&
+                                operation.canPerformOperation(self, conflict);
+                        });
+                }
+            });
 
             self.damage.subscribe(function() {
                 var health = fullHealth.call(self);
@@ -311,7 +325,7 @@
                         self.lastAttributeTest({ attribute: attribute, onSuccess: onSuccess, dice: dice, usedAbilities: [] });
                     }
                     self.event(C$.ATTRIBUTE_TEST);
-                    self.setSpecialOperations([]);
+                    //self.setSpecialOperations([]);
                     modal.AskQuestion( isReroll ?
                         'What about now?' :
                         'Roll ' +
@@ -461,7 +475,7 @@
                                     function(hero) {
                                         return !hero.stunned();
                                     },
-                                    [cost.action(), cost.strain(2)])
+                                    [cost.action(1, true), cost.strain(2)])
                             ]
                         },
                         true),
@@ -505,7 +519,7 @@
                                 new hf.Operation('Command',
                                     function() {},
                                     function() { return true; },
-                                    [cost.action(), cost.strain(2)])
+                                    [cost.action(1, true), cost.strain(2)])
                             ]
                         },
                         true),

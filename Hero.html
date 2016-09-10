@@ -148,8 +148,8 @@
                         <div class="conflict-details inline" style="display: inline-block" data-bind="visible: Stage() == $parent.C$.DEFENCEROLL">
                             <span class="black-text" data-bind="text: ExtraBlock, visible: ExtraBlock() != 0"></span>
                             <img src="Other/Block.png" data-bind="visible: ExtraBlock() != 0" />
-                            <span class="black-text" data-bind="text: ExtraEvade, visible: ExtraEvade() > 0"></span>
-                            <img src="Other/Evade.png" data-bind="visible: ExtraEvade() > 0" />
+                            <span class="black-text" data-bind="text: ExtraEvade, visible: ExtraEvade() != 0"></span>
+                            <img src="Other/Evade.png" data-bind="visible: ExtraEvade() != 0" />
                         </div>
                     </div>
                     <div data-bind="foreach: conflict.MyDice">
@@ -171,7 +171,7 @@
                             <!-- ko foreach: new Array(Math.max(conflict.ExtraBlock(), 0)) -->
                             <img src="Other/Block.png" style="height: 2em;" data-bind="click: function() { $parent.conflict.ExtraBlock($parent.conflict.ExtraBlock() - 1); }" />
                             <!-- /ko -->
-                            <!-- ko foreach: new Array(conflict.ExtraEvade()) -->
+                            <!-- ko foreach: new Array(Math.max(conflict.ExtraEvade(), 0)) -->
                             <img src="Other/Evade.png" style="height: 2em;" data-bind="click: function() { $parent.conflict.ExtraEvade($parent.conflict.ExtraEvade() - 1); }" />
                             <!-- /ko -->
                             <img src="Other/Block.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraBlock(conflict.ExtraBlock() + 1); }" />
