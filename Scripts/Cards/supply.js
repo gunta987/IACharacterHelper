@@ -62,18 +62,26 @@
                     'Cards/Supply/C22 Frag Grenade.png'),
                 new hf.Ability({
                         name: 'Emergency Medpack',
-                        events: [
-                            new hf.Event(C$.REST,
-                                function(hero, conflict, card) {
-                                    modal.ConfirmOperation("Do you wish to discard Emergency Medpack to recover 5<img src='Other/Damage.png' />?",
-                                        function() {
+                        eventOperations: [
+                            {
+                                operation: function() {
+                                    var op = new hf.Operation('Emergency Medpack',
+                                        function(hero, conflict, card) {
                                             modal.ConfirmOperation('Is the Emergency Medpack for you?',
                                                 function() {
                                                     hero.gainDamage(-5);
                                                 });
                                             hero.cards.splice(hero.cards.indexOf(card), 1);
-                                        });
-                                })
+                                        },
+                                        function() { return true; },
+                                        [],
+                                        null,
+                                        '(discard) 5');
+                                    op.operationImages.push('Other/Damage.png');
+                                    return op;
+                                }(),
+                                event: C$.REST
+                            }
                         ]
                     },
                     false,

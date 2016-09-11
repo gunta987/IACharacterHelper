@@ -108,20 +108,27 @@
                 'Cards/Wearables/Personal Shields.png'),
             new hf.Equipment({
                     name: 'Portable Medkit',
-                    events: [
-                        new hf.Event(C$.REST,
-                            function(hero, conflict, card) {
-                                modal.ConfirmOperation(
-                                    "Do you wish to discard Portable Medkit to recover 3<img src='Other/Damage.png' /> and 1<img src='Tokens/strain.png' />?",
-                                    function() {
+                    eventOperations: [
+                        {
+                            operation: function() {
+                                var op = new hf.Operation('Portable Medkit',
+                                    function(hero, conflict, card) {
                                         modal.ConfirmOperation('Is the Portable Medkit for you?',
                                             function() {
                                                 hero.gainStrain(-1);
                                                 hero.gainDamage(-3);
                                             });
                                         hero.cards.splice(hero.cards.indexOf(card), 1);
-                                    });
-                            })
+                                    },
+                                    function() { return true; },
+                                    [],
+                                    null,
+                                    '(deplete)');
+                                op.operationImages.push('Other/Damage.png', 'Other/Damage.png', 'Other/Damage.png', 'Tokens/strain.png');
+                                return op;
+                            }(),
+                            event: C$.REST
+                        }
                     ]
                 },
                 'Cards/Wearables/Portable Medkit.png'),
@@ -168,8 +175,8 @@
                             function(hero) {
                                 hero.testAttribute(hero.spanner,
                                     function() {
-                                        modal
-                                            .ShowInformation("Chosen droid suffers 1<img src='Other/Damage.png' /> and gains <img src='Tokens/stun.png' />");
+                                        modal.ShowInformation(
+                                            "Chosen droid suffers 1<img src='Other/Damage.png' /> and gains <img src='Tokens/stun.png' />");
                                     });
                             },
                             function(hero) {
