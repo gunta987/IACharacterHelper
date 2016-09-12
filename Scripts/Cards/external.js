@@ -43,10 +43,10 @@
                         var op = new hf.Operation('Wookiee Loyalty',
                             function(hero, conflict, card) {
                                 conflict.ExtraBlock(conflict.ExtraBlock() + 1);
-                                conflict.UsedAbilities.push('Wookie Loyalty');
+                                conflict.UsedAbilities.push('Wookiee Loyalty');
                             },
                             function(hero, conflict, card) {
-                                return _.indexOf(conflict.UsedAbilities(), 'Wookie Loyalty') === -1;
+                                return _.indexOf(conflict.UsedAbilities(), 'Wookiee Loyalty') === -1;
                             },
                             [],
                             C$.DEFENCEROLL);
