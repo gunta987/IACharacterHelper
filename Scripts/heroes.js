@@ -346,6 +346,38 @@
 
         return [
             new Hero({
+                name: 'MrT',
+                health: 13,
+                endurance: 4,
+                speed: 4,
+                defence: [d.BLACK],
+                fisting: [d.BLUE, d.GREEN, d.YELLOW],
+                eye: [d.BLUE],
+                spanner: [d.BLUE, d.GREEN],
+                coreAbilities: {
+                    'Close and Personal': new hf.Ability({
+                        
+                    },
+                        true),
+                    'Deadly Precision': new hf.Ability({
+                        
+                    },
+                        true)
+                },
+                onWounded: function () {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Deadly Precision']);
+                    hero.fisting([d.BLUE, d.RED, d.GREEN]);
+                    hero.eye([d.RED]);
+                    hero.spanner([d.BLUE, d.RED]);
+                },
+                classCards: cards.Biv
+            }),
+            new Hero({
                 name: 'Dialasis',
                 health: 12,
                 endurance: 5,
@@ -648,6 +680,42 @@
                     hero.spanner([d.BLUE, d.RED, d.GREEN]);
                 },
                 classCards: cards.Mak
+            }),
+            new Hero({
+                name: 'Sass',
+                health: 11,
+                endurance: 4,
+                speed: 5,
+                defence: [d.WHITE],
+                fisting: [d.BLUE],
+                eye: [d.BLUE, d.GREEN],
+                spanner: [d.BLUE, d.GREEN, d.YELLOW],
+                coreAbilities: {
+                    'Battle Technician': new hf.Ability({
+
+                    },
+                        true),
+                    'Practical Solutions (attack)': new hf.Ability({
+
+                    },
+                        true),
+                    'Practical Solutions (attribute)': new hf.Ability({
+
+                    },
+                        true)
+                },
+                onWounded: function () {
+                    var hero = this;
+                    if (!(hero instanceof Hero)) return;
+
+                    hero.endurance--;
+                    hero.speed--;
+                    hero.cards.remove(hero.coreAbilities['Practical Solutions (attribute)']);
+                    hero.fisting([d.RED]);
+                    hero.eye([d.BLUE, d.RED]);
+                    hero.spanner([d.BLUE, d.RED, d.GREEN]);
+                },
+                classCards: cards.Saska
             })
         ];
     });

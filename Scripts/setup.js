@@ -34,10 +34,16 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                     attachmentsForWeapon = ko.observable(null);
 
                 var weapons = ko.pureComputed(function() {
-                    return _.concat(cards.Weapons, _(hero().classCards).filter(function(c) { return c instanceof hf.Weapon; }).value());
+                        return _.concat(cards.Weapons, _(hero().classCards).filter(function(c) { return c instanceof hf.Weapon; }).value());
+                    }),
+                    attachments = ko.pureComputed(function() {
+                        return _.concat(cards.Attachments, _(hero().classCards).filter(function(c) { return c instanceof hf.Attachment; }).value());
                     }),
                     armour = ko.pureComputed(function() {
                         return _.concat(cards.Armour, _(hero().classCards).filter(function(c) { return c instanceof hf.Armour; }).value());
+                    }),
+                    equipment = ko.pureComputed(function () {
+                        return _.concat(cards.Equipment, _(hero().classCards).filter(function (c) { return c instanceof hf.Equipment; }).value());
                     }),
                     abilities = ko.pureComputed(function() {
                         return _(hero().classCards).filter(function(c) { return c instanceof hf.Ability; }).value();
@@ -83,7 +89,7 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                         return hero() != null ? _.difference(abilities(), hero().purchasedAbilities()) : [];
                     }),
                     AvailableEquipment: ko.pureComputed(function() {
-                        return hero() != null ? _.difference(cards.Equipment, hero().equipment()) : [];
+                        return hero() != null ? _.difference(equipment(), hero().equipment()) : [];
                     }),
                     AvailableArmour: ko.pureComputed(function() { return hero() != null ? armour() : []; }),
                     AvailableMelee: ko.pureComputed(function () {
@@ -98,7 +104,7 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                             ? function () {
                                 var existingTraits = _(attachmentsForWeapon().attachments()).flatMap(function(a) { return a.trait; }).value();
                                 //cannot choose an attachment already in use or with the same trait as one on this weapon
-                                return _.difference(_(cards.Attachments)
+                                return _.difference(_(attachments())
                                     .filter(function(a) {
                                         return a.ranged === attachmentsForWeapon().ranged && _(a.trait).every(function(t) { return !_(existingTraits).includes(t); });
                                     })
@@ -138,12 +144,12 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                             'Hero=' + hero().imageName(),
                             'Abilities=' + _(hero().purchasedAbilities()).filter(function(card) { return !card.isExternal; }).map(function(ability) { return abilities().indexOf(ability); }).join(','),
                             'External=' + _(hero().purchasedAbilities()).filter(function(card) { return card.isExternal; }).map(function(ability) { return cards.External.indexOf(ability); }).join(','),
-                            'Equipment=' + _(hero().equipment()).map(function(item) { return cards.Equipment.indexOf(item); }).join(','),
+                            'Equipment=' + _(hero().equipment()).map(function(item) { return equipment().indexOf(item); }).join(','),
                             'Armour=' + (hero().armour() ? armour().indexOf(hero().armour()) : ''),
                             'Weapons=' + _(hero().weapons()).map(function(weapon) {
                                 return weapons().indexOf(weapon) +
                                     '_' +
-                                    _(weapon.attachments()).map(function(attachment) { return cards.Attachments.indexOf(attachment); }).join('-');
+                                    _(weapon.attachments()).map(function(attachment) { return attachments().indexOf(attachment); }).join('-');
                             }).join(',')
                         ];
                         location.replace(page + encodeURIComponent(_(arguments).join('&')));

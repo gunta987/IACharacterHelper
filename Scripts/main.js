@@ -13,10 +13,10 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'modal', 'conflict', 'cons
                 var args = _(decodeURIComponent(location.search.slice(1)).split('&')).map(function(pair) { return pair.split('='); }).fromPairs().value(),
                     hero = _(heroes).find(function (h) { return h.imageName() === args.Hero;}),
                     possibleAbilities = _(hero.classCards).filter(function(c) { return c instanceof hf.Ability; }).value(),
-                    possibleEquipment = cards.Equipment,
+                    possibleEquipment = _.concat(cards.Equipment, _(hero.classCards).filter(function (c) { return c instanceof hf.Equipment; }).value()),
                     possibleArmour = _.concat(cards.Armour, _(hero.classCards).filter(function(c) { return c instanceof hf.Armour; }).value()),
                     possibleWeapons = _.concat(cards.Weapons, _(hero.classCards).filter(function(c) { return c instanceof hf.Weapon }).value()),
-                    possibleAttachments = cards.Attachments;
+                    possibleAttachments = _.concat(cards.Attachments, _(hero.classCards).filter(function (c) { return c instanceof hf.Attachment; }).value());
 
                 _(args.Abilities.split(',')).compact().forEach(function(index) { hero.AddCard(possibleAbilities[index]); });
                 _(args.External.split(',')).compact().forEach(function(index) { hero.AddCard(cards.External[index]); });
