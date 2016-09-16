@@ -75,7 +75,7 @@
             new hf.Ability({
                     name: C$.Biv.CrushingBlow,
                     operations: [
-                        new hf.Operation("Gain surge <img src='Tokens/weaken.png' />, <img src='Tokens/stun.png' />",
+                        new hf.Operation(C$.Biv.CrushingBlow,
                             function(hero, conflict, card) {
                                 card.exhausted(true);
                                 conflict.AttackWeapon().attachments.push(new hf.Attachment({ surges: [[s.weaken(), s.stun()]] }, null));
@@ -85,8 +85,8 @@
                             },
                             [],
                             C$.ATTACKROLL,
-                            '(exhaust)'),
-                        new hf.Operation("Gain surge +2<img src='Other/damage.png' class='greyscale' />",
+                            "surge <img src='Tokens/weaken.png' />, <img src='Tokens/stun.png' /> (exhaust)"),
+                        new hf.Operation(C$.Biv.CrushingBlow,
                             function(hero, conflict, card) {
                                 card.exhausted(true);
                                 conflict.AttackWeapon().attachments.push(new hf.Attachment({ surges: [[s.damage(2)]] }, null));
@@ -96,7 +96,7 @@
                             },
                             [],
                             C$.ATTACKROLL,
-                            '(exhaust)')
+                            "surge +2<img src='Other/damage.png' /> (exhaust)")
                     ]
                 },
                 false,
@@ -124,10 +124,10 @@
                 false,
                 'Cards/Biv/Into the Fray.png'),
             new hf.Armour({
-                    name: 'Trophy Armour',
+                name: C$.Biv.TrophyArmour,
                     onAdd: function() { this.extraHealth(this.extraHealth() + 4); },
                     operations: [
-                        new hf.Operation('Trophy Armour',
+                        new hf.Operation(C$.Biv.TrophyArmour,
                             function(hero, conflict, card) {
                                 card.exhausted(true);
                             },
@@ -174,7 +174,7 @@
                                 '(deplete)')
                         ],
                         events: [
-                            new hf.Event('Close and Personal Complete',
+                            new hf.Event(C$.Biv.CloseAndPersonalComplete,
                                 function(hero, conflict, card) {
                                     if (activated) {
                                         activated = false;
@@ -205,14 +205,28 @@
                                     return !card.exhausted();
                                 },
                                 [$.strain(2)]),
-                            event: 'Close and Personal Resolved'
+                            event: C$.Biv.CloseAndPersonalResolved
                         }
                     ]
                 },
                 false,
                 'Cards/Biv/Stay Down.png'),
             new hf.Ability({
-                    name: C$.Biv.HuntThemDown
+                name: C$.Biv.HuntThemDown,
+                operations: [
+                    new hf.Operation(C$.Biv.HuntThemDown,
+                        function(hero, conflict, card) {
+                            conflict.ExtraPierce(conflict.ExtraPierce() + 1);
+                            conflict.ExtraSurges(conflict.ExtraSurges() + 1);
+                            conflict.UsedAbilities.push(card.name);
+                        },
+                        function(hero, conflict, card) {
+                            return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                        },
+                        [],
+                        C$.ATTACKROLL,
+                        '<i>TROOPER</i> Only')
+                ]
                 },
                 false,
                 'Cards/Biv/Hunt Them Down.png')

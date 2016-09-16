@@ -15,6 +15,7 @@
         ShakeItOff: 'Shake It Off',
         CrushingBlow: 'Crushing Blow',
         IntoTheFray: 'Into the Fray',
+        TrophyArmour: 'Trophy Armour',
         FinalStand: 'Final Stand',
         StayDown: 'Stay Down',
         HuntThemDown: 'Hunt Them Down'
