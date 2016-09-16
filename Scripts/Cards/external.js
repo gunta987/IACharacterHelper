@@ -200,7 +200,7 @@
                 'Cards/Characters/Han-solo.png'),
             new hf.Ability({
                     name: 'The Ways of the Force',
-                    isExternal: false,
+                    isExternal: true,
                     owner: 'None',
                     eventOperations: function() {
                         var op = new hf.Operation('The Ways of the Force',
@@ -215,6 +215,42 @@
                     }()
                 },
                 false,
-                'Cards/Other/The Ways of the Force.png')
+                'Cards/Other/The Ways of the Force.png'),
+            new hf.Ability({
+                    name: 'Heroic',
+                    isExternal: true,
+                    owner: 'None',
+                    onAdd: function() { this.extraHealth(this.extraHealth() + 3); },
+                    operations: [
+                        new hf.Operation('Second Activation',
+                            function(hero, conflict, card) {
+                                hero.activate();
+                                hero.abilitiesUsedDuringRound.push(card.name);
+                            },
+                            function(hero, conflict, card) {
+                                return _.indexOf(hero.abilitiesUsedDuringRound(), card.name) === -1 && hero.hasActivated();
+                            })
+                    ]
+                },
+                false,
+                'Cards/Other/Heroic.png'),
+            new hf.Ability({
+                    name: 'Legendary',
+                    isExternal: true,
+                    owner: 'None',
+                    onAdd: function() { this.extraHealth(this.extraHealth() + 10); },
+                    operations: [
+                        new hf.Operation('Second Activation',
+                            function(hero, conflict, card) {
+                                hero.activate();
+                                hero.abilitiesUsedDuringRound.push(card.name);
+                            },
+                            function(hero, conflict, card) {
+                                return _.indexOf(hero.abilitiesUsedDuringRound(), card.name) === -1 && hero.hasActivated();
+                            })
+                    ]
+                },
+                false,
+                'Cards/Other/Legendary.png')
         ];
     });

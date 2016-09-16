@@ -16,13 +16,13 @@
         <div id="characterContainer" style="position: relative", data-bind="click: ShowHeroes">
             <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + _.result(hero(), 'imageName', 'Unknown') + (hero() != null ? '.jpg' : '.png')}" style="width: 100%"/>
             <div class="modifier" style="left: 52.5%" data-bind="visible: hero() != null && hero().extraHealth() > 0">
-                <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraHealth', '0') + '.png'}"/>
+                <span class="black-text" data-bind="text: _.result(hero(), 'extraHealth', '0')"></span>
             </div>
             <div class="modifier" style="left: 62.5%" data-bind="visible: hero() != null && hero().extraEndurance() > 0">
-                <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraEndurance', '0') + '.png'}"/>
+                <span class="black-text" data-bind="text: _.result(hero(), 'extraEndurance', '0')"></span>
             </div>
             <div class="modifier" style="left: 76%" data-bind="visible: hero() != null && hero().extraSpeed() > 0">
-                <img data-bind="attr: {src: 'Other/' + _.result(hero(), 'extraSpeed', '0') + '.png'}"/>
+                <span class="black-text" data-bind="text: _.result(hero(), 'extraSpeed', '0')"></span>
             </div>
         </div>
         <div class="well button" style="margin: 1em" data-bind="visible: hero() != null && hero().weapons().length > 0">

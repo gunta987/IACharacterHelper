@@ -148,6 +148,11 @@ only screen and (        min-device-pixel-ratio: 2) {
     height: 100%;
 }
 
+.modifier span {
+    font-size: 1vw;
+    padding-left: 0.4vw;
+}
+
 .card-tray > div {
     height: 100%;
     white-space: nowrap;

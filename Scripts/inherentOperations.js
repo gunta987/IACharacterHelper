@@ -18,17 +18,7 @@
     return [
         new hf.Operation('Activate',
             function(hero) {
-                hero.activated(true);
-                hero.abilitiesUsedDuringActivation([]);
-                hero.actions(2);
-                hero.movement(0);
-                hero.strainMoves(0);
-                hero.suffered(0);
-                _(hero.exhausted())
-                    .forEach(function(card) {
-                        card.exhausted(false);
-                    });
-                hero.event('activate');
+                hero.activate();
             },
             function(hero) {
                 return !hero.activated() && !hero.hasActivated();

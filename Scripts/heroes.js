@@ -261,6 +261,19 @@
                 self.suffered(self.suffered() + gain);
             };
 
+            self.activate = function() {
+                self.activated(true);
+                self.abilitiesUsedDuringActivation([]);
+                self.actions(2);
+                self.movement(0);
+                self.strainMoves(0);
+                self.suffered(0);
+                _(self.exhausted())
+                    .forEach(function (card) {
+                        card.exhausted(false);
+                    });
+            }
+
             self.focusDie = d.GREEN;
             self.attack = function(additionalDice, abilitySurges, ranged, restrictionsFunction) {
                 self.publishEventWithFollowOn(C$.BEFORE_ATTACK,

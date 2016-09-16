@@ -16,13 +16,13 @@
         <div id="characterContainer" style="position: relative">
             <img id="characterCard" data-bind="attr: {src: 'Cards/Heroes/' + hero.imageName() + '.jpg'}" style="width: 100%" />
             <div class="modifier" style="left: 52.5%" data-bind="visible: hero.extraHealth() > 0">
-                <img data-bind="attr: {src: 'Other/' + hero.extraHealth() + '.png'}" />
+                <span class="black-text" data-bind="text: hero.extraHealth" ></span>
             </div>
             <div class="modifier" style="left: 62.5%" data-bind="visible: hero.extraEndurance() > 0">
-                <img data-bind="attr: {src: 'Other/' + hero.extraEndurance() + '.png'}" />
+                <span class="black-text" data-bind="text: hero.extraEndurance"></span>
             </div>
             <div class="modifier" style="left: 76%" data-bind="visible: hero.extraSpeed() > 0">
-                <img data-bind="attr: {src: 'Other/' + hero.extraSpeed() + '.png'}" />
+                <span class="black-text" data-bind="text: hero.extraSpeed"></span>
             </div>
             <div class="token-tray" style="top: 22%;">
                 <img src="Tokens/focus.png" data-bind="style: {opacity: hero.focused() ? 1 : 0.4}, click: function() { hero.focused(!hero.focused()); }" />
