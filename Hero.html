@@ -28,6 +28,7 @@
                 <img src="Tokens/focus.png" data-bind="style: {opacity: hero.focused() ? 1 : 0.4}, click: function() { hero.focused(!hero.focused()); }" />
                 <img src="Tokens/bleed.png" data-bind="style: {opacity: hero.bleeding() ? 1 : 0.4}, click: function() { hero.bleeding(!hero.bleeding()); }" />
                 <img src="Tokens/stun.png" data-bind="style: {opacity: hero.stunned() ? 1 : 0.4}, click: function() { hero.stunned(!hero.stunned()); }" />
+                <img src="Tokens/weaken.png" data-bind="style: {opacity: hero.weakened() ? 1 : 0.4}, click: function() { hero.weakened(!hero.weakened()); }" />
             </div>
             <div class="token-tray" style="top: 9%;">
                 <div style="float:right; height: 100%">
@@ -190,12 +191,14 @@
                             <img style="height: 2em;" data-bind="attr: {src: 'Other/' + conflict.ExtraAccuracy() + '.png'}, click: function() { conflict.ExtraAccuracy(conflict.ExtraAccuracy() - 1); }, visible: conflict.requiredAccuracy() > 0 && conflict.ExtraAccuracy() > 0" />
                             <img src="Tokens/bleed.png" style="height: 2em;" data-bind="click: function() { conflict.Bleed(0); }, visible: conflict.Bleed() > 0" />
                             <img src="Tokens/stun.png" style="height: 2em;" data-bind="click: function() { conflict.Stun(0); }, visible: conflict.Stun() > 0" />
+                            <img src="Tokens/weaken.png" style="height: 2em;" data-bind="click: function() { conflict.Weaken(0); }, visible: conflict.Weaken() > 0" />
                             <img src="Other/Damage.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraDamage(conflict.ExtraDamage() + 1); }" />
                             <img src="Other/Pierce.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraPierce(conflict.ExtraPierce() + 1); }" />
                             <img src="Other/1.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.ExtraAccuracy(conflict.ExtraAccuracy() + 1); }, visible: conflict.requiredAccuracy() > 0" />
                             <img src="Tokens/strain.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.Strain(conflict.Strain() + 1); }" />
                             <img src="Tokens/bleed.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.Bleed(1); }" />
                             <img src="Tokens/stun.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.Stun(1); }" />
+                            <img src="Tokens/weaken.png" style="height: 2em; opacity: 0.4" data-bind="click: function() { conflict.Weaken(1); }" />
                         </div>
                     </div>
                     <div data-bind="foreach: conflict.OpponentDice">
@@ -215,6 +218,7 @@
                         <img src="Other/Surge.png" data-bind="visible: surges() > 0" />
                         <img src="Tokens/bleed.png" data-bind="visible: bleed() && damage() > 0" />
                         <img src="Tokens/stun.png" data-bind="visible: stun() && damage() > 0" />
+                        <img src="Tokens/weaken.png" data-bind="visible: weaken() && damage() > 0" />
                         <img src="Tokens/strain.png" data-bind="visible: strain" />
                         <div>
                             <span class="black-text" data-bind="text: accuracy() + '/' + requiredAccuracy() + ' accuracy', visible: requiredAccuracy() > 0"></span>

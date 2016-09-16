@@ -94,13 +94,12 @@
                     operations: [
                         new hf.Operation('Personal Shields',
                             function(hero, conflict, card) {
-                                hero.cards.splice(hero.cards.indexOf(card), 1);
                                 conflict.ExtraBlock(conflict.ExtraBlock() + 5);
                             },
                             function(hero, conflict, card) {
                                 return true;
                             },
-                            [],
+                            [$.deplete()],
                             C$.DEFENCEROLL,
                             '(deplete)')
                     ]
@@ -118,10 +117,9 @@
                                                 hero.gainStrain(-1);
                                                 hero.gainDamage(-3);
                                             });
-                                        hero.cards.splice(hero.cards.indexOf(card), 1);
                                     },
                                     function() { return true; },
-                                    [],
+                                    [$.deplete()],
                                     null,
                                     '(deplete)');
                                 op.operationImages.push('Other/Damage.png', 'Other/Damage.png', 'Other/Damage.png', 'Tokens/strain.png');

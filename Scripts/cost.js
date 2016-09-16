@@ -29,5 +29,14 @@
             },
             images: _.fill(Array(count), 'Tokens/strain.png')
         }
+    },
+    deplete: function() {
+        return {
+            required: function () { return true; },
+            incur: function(hero, conflict, card) {
+                hero.cards.splice(hero.cards.indexOf(card), 1);
+            },
+            images: []
+        }
     }
 })

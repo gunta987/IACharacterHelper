@@ -8,10 +8,13 @@
             return _.every(cost || [], function (c) { return c.required(hero, conflict, self.card); }) && otherRequirements(hero, conflict, self.card);
         }
         self.beforePerformOperation = function() {};
-        self.performOperation = function (hero, conflict) {
+        self.performOperation = function (hero, conflict, skipCost) {
+            skipCost = skipCost || false;
             self.beforePerformOperation();
             performOperation(hero, conflict, self.card);
-            _(cost || []).forEach(function (c) { c.incur(hero, conflict, self.card); });
+            if (!skipCost) {
+                _(cost || []).forEach(function(c) { c.incur(hero, conflict, self.card); });
+            }
             hero.publishEventWithFollowOn(self.name);
         }
         self.operationImages = ko.observableArray(_.flatMap(cost || [], 'images'));

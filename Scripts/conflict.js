@@ -58,6 +58,7 @@
 
             bleed = ko.observable(0),
             stun = ko.observable(0),
+            weaken = ko.observable(0),
             strain = ko.observable(0),
             regainStrain = ko.observable(false),
 
@@ -110,6 +111,7 @@
                     hero.gainStrain(strain());
                     if (finalDamage > 0 && bleed() > 0) hero.bleeding(true);
                     if (finalDamage > 0 && stun() > 0) hero.stunned(true);
+                    if (finalDamage > 0 && weaken() > 0) hero.weakened(true);
                     hero.publishEventWithFollowOn(C$.DEFENCE_RESOLVED);
                 }
 
@@ -158,6 +160,7 @@
                 extraBlock(0);
                 bleed(0);
                 stun(0);
+                weaken(0);
                 strain(0);
                 usedAbilities([]);
                 regainStrain(false);
@@ -245,11 +248,13 @@
                 requiredAccuracy: requiredAccuracy,
                 bleed: ko.pureComputed(function() { return bleed() > 0;}),
                 stun: ko.pureComputed(function() { return stun() > 0;}),
+                weaken: ko.pureComputed(function() { return weaken() > 0;}),
                 strain: regainStrain
             },
             SelectedSurges: selectedSurges,
             Bleed: bleed,
             Stun: stun,
+            Weaken: weaken,
             Strain: strain,
             RegainStrain: regainStrain,
             OpponentDice: opponentDice,

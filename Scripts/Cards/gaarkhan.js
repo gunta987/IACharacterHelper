@@ -40,6 +40,7 @@
                                             function(hero) {
                                                 return hero.damage() > 0;
                                             })
+                                            //TODO: add weaken
                                     ],
                                     function(operation) { return operation.canPerformOperation(hero, conflict); }));
                                 card.exhausted(true);

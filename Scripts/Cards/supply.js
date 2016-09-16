@@ -14,10 +14,9 @@
                                             hero.gainStrain(-3);
                                             hero.focused(true);
                                         });
-                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                 },
                                 function(hero) { return hero.activated(); },
-                                [],
+                                [cost.deplete()],
                                 null,
                                 '(discard)')
                         ]
@@ -35,10 +34,9 @@
                                             hero.bleeding(false);
                                             hero.stunned(false);
                                         });
-                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                 },
                                 function(hero) { return hero.activated(); },
-                                [],
+                                [cost.deplete()],
                                 null,
                                 '(discard)')
                         ]
@@ -50,10 +48,9 @@
                         operations: [
                             new hf.Operation('C22 Frag Grenade',
                                 function(hero, conflict, card) {
-                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                 },
                                 function(hero) { return hero.activated(); },
-                                [cost.action()],
+                                [cost.action(), cost.deplete()],
                                 null,
                                 '(discard)')
                         ]
@@ -71,10 +68,9 @@
                                                 function() {
                                                     hero.gainDamage(-5);
                                                 });
-                                            hero.cards.splice(hero.cards.indexOf(card), 1);
                                         },
                                         function() { return true; },
-                                        [],
+                                        [cost.deplete()],
                                         null,
                                         '(discard) 5');
                                     op.operationImages.push('Other/Damage.png');
@@ -91,10 +87,9 @@
                         operations: [
                             new hf.Operation('Shock Grenade',
                                 function(hero, conflict, card) {
-                                    hero.cards.splice(hero.cards.indexOf(card), 1);
                                 },
                                 function(hero) { return hero.activated(); },
-                                [cost.action()],
+                                [cost.action(), cost.deplete()],
                                 null,
                                 '(discard)')
                         ]

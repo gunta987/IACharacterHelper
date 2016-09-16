@@ -11,47 +11,208 @@
                 },
                 'Cards/Biv/Repeating Blaster.png'),
             new hf.Ability({
-                    name: 'Advance'
+                    name: C$.Biv.Advance
                 },
                 false,
                 'Cards/Biv/Advance.png'),
             new hf.Ability({
-                    name: 'Shake It Off'
+                    name: C$.Biv.ShakeItOff,
+                    operations: [
+                        new hf.Operation('<i>Shake It Off</i>',
+                            function(hero, conflict, card) {
+                                hero.testAttribute(hero.fisting,
+                                    function() {
+                                        hero.setSpecialOperations(_.filter([
+                                                new hf.Operation("Remove <img src='Tokens/bleed.png' />",
+                                                    function(hero) {
+                                                        hero.bleeding(false);
+                                                        hero.setSpecialOperations([]);
+                                                    },
+                                                    function(hero) {
+                                                        return hero.bleeding();
+                                                    }),
+                                                new hf.Operation("Remove <img src='Tokens/stun.png' />",
+                                                    function(hero) {
+                                                        hero.stunned(false);
+                                                        hero.setSpecialOperations([]);
+                                                    },
+                                                    function(hero) {
+                                                        return hero.stunned();
+                                                    }),
+                                                new hf.Operation("Remove <img src='Tokens/weaken.png' />",
+                                                    function(hero) {
+                                                        hero.weakened(false);
+                                                        hero.setSpecialOperations([]);
+                                                    },
+                                                    function(hero) {
+                                                        return hero.weakened();
+                                                    }),
+                                                new hf.Operation("Recover 1<img src='Tokens/strain.png' />",
+                                                    function(hero) {
+                                                        hero.gainStrain(-1);
+                                                        hero.setSpecialOperations([]);
+                                                    },
+                                                    function(hero) {
+                                                        return hero.strain() > 0 || hero.damage() > 0;
+                                                    })
+                                            ],
+                                            function(operation) { return operation.canPerformOperation(hero, conflict); }));
+                                    });
+                                card.exhausted(true);
+                            },
+                            function(hero, conflict, card) {
+                                return !card.exhausted() &&
+                                    hero.actions() === 2 &&
+                                    (hero.bleeding() || hero.stunned() || hero.weakened() || hero.strain() > 0 || hero.damage() > 0);
+                            },
+                            [],
+                            null,
+                            '(exhaust)')
+                    ]
                 },
                 false,
                 'Cards/Biv/Shake It Off.png'),
             new hf.Ability({
-                    name: 'Crushing Blow'
+                    name: C$.Biv.CrushingBlow,
+                    operations: [
+                        new hf.Operation("Gain surge <img src='Tokens/weaken.png' />, <img src='Tokens/stun.png' />",
+                            function(hero, conflict, card) {
+                                card.exhausted(true);
+                                conflict.AttackWeapon().attachments.push(new hf.Attachment({ surges: [[s.weaken(), s.stun()]] }, null));
+                            },
+                            function(hero, conflict, card) {
+                                return !card.exhausted() && conflict.AttackWeapon().name === C$.Biv.CloseAndPersonal;
+                            },
+                            [],
+                            C$.ATTACKROLL,
+                            '(exhaust)'),
+                        new hf.Operation("Gain surge +2<img src='Other/damage.png' class='greyscale' />",
+                            function(hero, conflict, card) {
+                                card.exhausted(true);
+                                conflict.AttackWeapon().attachments.push(new hf.Attachment({ surges: [[s.damage(2)]] }, null));
+                            },
+                            function(hero, conflict, card) {
+                                return !card.exhausted() && conflict.AttackWeapon().name === C$.Biv.CloseAndPersonal;
+                            },
+                            [],
+                            C$.ATTACKROLL,
+                            '(exhaust)')
+                    ]
                 },
                 false,
                 'Cards/Biv/Crushing Blow.png'),
             new hf.Ability({
-                    name: 'Into the Fray'
+                    name: C$.Biv.IntoTheFray,
+                    operations: [
+                        function() {
+                            var op = new hf.Operation(C$.Biv.IntoTheFray,
+                                function(hero, conflict, card) {
+                                    conflict.ExtraBlock(conflict.ExtraBlock() + 1);
+                                    conflict.UsedAbilities.push(card.name);
+                                },
+                                function(hero, conflict, card) {
+                                    return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                                },
+                                [],
+                                C$.DEFENCEROLL,
+                                '(Check Card)');
+                            op.operationImages.push('Other/Block.png');
+                            return op;
+                        }()
+                    ]
                 },
                 false,
                 'Cards/Biv/Into the Fray.png'),
             new hf.Armour({
-                    name: 'Trophy Armour'
+                    name: 'Trophy Armour',
+                    onAdd: function() { this.extraHealth(this.extraHealth() + 4); },
+                    operations: [
+                        new hf.Operation('Trophy Armour',
+                            function(hero, conflict, card) {
+                                card.exhausted(true);
+                            },
+                            function(hero, conflict, card) {
+                                return conflict.RollFinished() && !card.exhausted();
+                            },
+                            [],
+                            C$.DEFENCEROLL)
+                    ]
                 },
                 'Cards/Biv/Trophy Armour.png'),
             new hf.Attachment({
                     name: 'Vibrobayonet',
                     ranged: true,
-                    trait: ['Blade']
+                    trait: ['Blade'],
+                    events: [
+                        new hf.Event(C$.ATTACK_START,
+                            function(hero, conflict) {
+                                if (conflict.AttackWeapon().name === C$.Biv.CloseAndPersonal) {
+                                    conflict.ExtraDamage(conflict.ExtraDamage() + 1);
+                                    conflict.ExtraPierce(conflict.ExtraPierce() + 1);
+                                    conflict.Bleed(conflict.Bleed() + 1);
+                                }
+                            })
+                    ]
                 },
                 'Cards/Biv/Vibrobayonet.png'),
+            function() {
+                var activated = false;
+                return new hf.Ability({
+                        name: C$.Biv.FinalStand,
+                        operations: [
+                            new hf.Operation(C$.Biv.FinalStand,
+                                function(hero, conflict, card) {
+                                    activated = true;
+                                    hero.gainStrain(-(hero.endurance + hero.extraEndurance()));
+                                    hero.coreAbilities[C$.Biv.CloseAndPersonal].operations[0].performOperation(hero, conflict, true);
+                                },
+                                function(hero, conflict, card) {
+                                    return !hero.stunned();
+                                },
+                                [$.action()],
+                                null,
+                                '(deplete)')
+                        ],
+                        events: [
+                            new hf.Event('Close and Personal Complete',
+                                function(hero, conflict, card) {
+                                    if (activated) {
+                                        activated = false;
+                                        hero.gainDamage(2);
+                                        hero.stunned(true);
+                                        hero.cards.splice(hero.cards.indexOf(card), 1);
+                                    }
+                                })
+                        ]
+                    },
+                    false,
+                    'Cards/Biv/Final Stand.png');
+            }(),
             new hf.Ability({
-                    name: 'Final Stand'
-                },
-                false,
-                'Cards/Biv/Final Stand.png'),
-            new hf.Ability({
-                    name: 'Stay Down'
+                    name: C$.Biv.StayDown,
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation(C$.Biv.StayDown,
+                                function(hero, conflict, card) {
+                                    card.exhausted(true);
+                                    hero.attack(null,
+                                        null,
+                                        false,
+                                        null,
+                                        new hf.Weapon({ name: C$.Biv.CloseAndPersonal, ranged: false, dice: [d.RED, d.YELLOW] }));
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted();
+                                },
+                                [$.strain(2)]),
+                            event: 'Close and Personal Resolved'
+                        }
+                    ]
                 },
                 false,
                 'Cards/Biv/Stay Down.png'),
             new hf.Ability({
-                    name: 'Hunt Them Down'
+                    name: C$.Biv.HuntThemDown
                 },
                 false,
                 'Cards/Biv/Hunt Them Down.png')

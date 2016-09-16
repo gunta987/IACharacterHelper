@@ -5,5 +5,18 @@
     DEFENCE_RESOLVED: 'defenceresolved', ATTACK_RESOLVED: 'attackresolved',
     REST: 'rest', SUPPLY: 'supply',
     BEFORE_ATTRIBUTE_TEST: 'beforeattributetest', ATTRIBUTE_TEST: 'attributetest', ATTRIBUTE_TEST_FAIL: 'attributetestfail',
-    END_ROUND: 'endround', END_ACTIVATION: 'endactivation'
+    END_ROUND: 'endround', END_ACTIVATION: 'endactivation',
+    Biv: {
+        CloseAndPersonal: 'Close and Personal',
+        CloseAndPersonalResolved: 'Close and Personal Resolved',
+        CloseAndPersonalComplete: 'Close and Personal Complete',
+        DeadlyPrecision: 'Deadly Precision',
+        Advance: 'Advance',
+        ShakeItOff: 'Shake It Off',
+        CrushingBlow: 'Crushing Blow',
+        IntoTheFray: 'Into the Fray',
+        FinalStand: 'Final Stand',
+        StayDown: 'Stay Down',
+        HuntThemDown: 'Hunt Them Down'
+    }
 });

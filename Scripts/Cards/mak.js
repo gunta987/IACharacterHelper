@@ -44,12 +44,11 @@
                         new hf.Operation('Supply Network',
                             function(hero, conflict, card) {
                                 supply.Show();
-                                hero.cards.splice(hero.cards.indexOf(card), 1);
                             },
                             function(hero, conflict, card) {
                                 return !hero.stunned();
                             },
-                            [$.action()],
+                            [$.action(), $.deplete()],
                             null,
                             '(deplete)')
                     ]
@@ -149,12 +148,11 @@
                             function(hero, conflict, card) {
                                 hero.focused(true);
                                 hero.attack();
-                                hero.cards.splice(hero.cards.indexOf(card), 1);
                             },
                             function(hero) {
                                 return !hero.activated() && !hero.stunned();
                             },
-                            [],
+                            [$.deplete()],
                             null,
                             '(deplete)')
                     ]

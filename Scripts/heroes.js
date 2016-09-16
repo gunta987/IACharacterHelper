@@ -34,6 +34,7 @@
             self.strainMoves = ko.observable(0);
             self.focused = ko.observable(false);
             self.stunned = ko.observable(false);
+            self.weakened = ko.observable(false);
             self.bleeding = ko.observable(false);
             self.actions = ko.observable(0);
             self.activated = ko.observable(false);
@@ -129,7 +130,11 @@
             });
             self.event = ko.observable('');
             self.cardEvents = ko.pureComputed(function() {
-                return _.flatMap(self.cards(), 'events');
+                return _(self.weapons())
+                    .flatMap(function(w) { return w.attachments(); })
+                    .concat(self.cards())
+                    .flatMap('events')
+                    .value();
             });
             self.event.subscribe(function(eventName) {
                 if (eventName !== '') {
@@ -275,7 +280,7 @@
             }
 
             self.focusDie = d.GREEN;
-            self.attack = function(additionalDice, abilitySurges, ranged, restrictionsFunction) {
+            self.attack = function(additionalDice, abilitySurges, ranged, restrictionsFunction, overrideWeapon) {
                 self.publishEventWithFollowOn(C$.BEFORE_ATTACK,
                     function() {
                         //step 1: choose your weapon
@@ -288,31 +293,36 @@
                             self.focused(false);
                         }
 
-                        var chooseWeaponOperations = [];
-                        _(availableWeapons)
-                            .forEach(function(weapon) {
-                                var originalPool = _.concat(weapon.dice(), additionalDice);
-                                _(weapon.modifyDicePool(originalPool))
-                                    .forEach(function(dice) {
-                                        var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
-                                        var operation = new hf.Operation(weapon.name,
-                                            function() {
-                                                self.setSpecialOperations([]);
-                                                conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
-                                            },
-                                            function() { return true; });
-                                        var images = [];
-                                        images.push(_.map(dice, function(die) { return { src: die.blank, css: 'die' }; }));
-                                        images.push(_.times(additional.pierce, function() { return 'Other/Pierce.png' }));
-                                        images.push(_.times(additional.damage, function() { return 'Other/Damage.png' }));
-                                        if (weapon.accuracy() > 0) {
-                                            images.push(['Other/' + additional.accuracy + '.png']);
-                                        }
-                                        operation.operationImages(_.flatten(images));
-                                        chooseWeaponOperations.push(operation);
-                                    });
-                            });
-                        self.setSpecialOperations(chooseWeaponOperations);
+                        if (overrideWeapon != null) {
+                            var additional = { pierce: overrideWeapon.pierce(), damage: overrideWeapon.damage(), accuracy: overrideWeapon.accuracy() };
+                            conflict.Attack(self, overrideWeapon.ranged || ranged || false, overrideWeapon.dice(), additional, overrideWeapon, abilitySurges);
+                        } else {
+                            var chooseWeaponOperations = [];
+                            _(availableWeapons)
+                                .forEach(function(weapon) {
+                                    var originalPool = _.concat(weapon.dice(), additionalDice);
+                                    _(weapon.modifyDicePool(originalPool))
+                                        .forEach(function(dice) {
+                                            var additional = { pierce: weapon.pierce(), damage: weapon.damage(), accuracy: weapon.accuracy() };
+                                            var operation = new hf.Operation(weapon.name,
+                                                function() {
+                                                    self.setSpecialOperations([]);
+                                                    conflict.Attack(self, weapon.ranged || ranged || false, dice, additional, weapon, abilitySurges);
+                                                },
+                                                function() { return true; });
+                                            var images = [];
+                                            images.push(_.map(dice, function(die) { return { src: die.blank, css: 'die' }; }));
+                                            images.push(_.times(additional.pierce, function() { return 'Other/Pierce.png' }));
+                                            images.push(_.times(additional.damage, function() { return 'Other/Damage.png' }));
+                                            if (weapon.accuracy() > 0) {
+                                                images.push(['Other/' + additional.accuracy + '.png']);
+                                            }
+                                            operation.operationImages(_.flatten(images));
+                                            chooseWeaponOperations.push(operation);
+                                        });
+                                });
+                            self.setSpecialOperations(chooseWeaponOperations);
+                        }
                     });
             };
 
@@ -368,22 +378,69 @@
                 eye: [d.BLUE],
                 spanner: [d.BLUE, d.GREEN],
                 coreAbilities: {
-                    'Close and Personal': new hf.Ability({
-                        
-                    },
-                        true),
+                    'Close and Personal': function() {
+                        var activated = 0;
+                        var attack = function(hero) {
+                            hero.attack(null, null, false, null, new hf.Weapon({ name: C$.Biv.CloseAndPersonal, ranged: false, dice: [d.RED, d.YELLOW] }));
+                            activated++;
+                        };
+                        return new hf.Ability({
+                                operations: [
+                                    new hf.Operation(C$.Biv.CloseAndPersonal,
+                                        function(hero) {
+                                            attack(hero);
+                                        },
+                                        function(hero) {
+                                            return !hero.stunned() && _(hero.weapons()).some(function(w) { return w.ranged; });
+                                        },
+                                        [cost.action(1, true), cost.strain(2)])
+                                ],
+                                events: [
+                                    new hf.Event(C$.ATTACK_RESOLVED,
+                                        function (hero) {
+                                            function resolve() {
+                                                activated = 0;
+                                                hero.publishEventWithFollowOn(C$.Biv.CloseAndPersonalResolved, function () {
+                                                    hero.event(C$.Biv.CloseAndPersonalComplete);
+                                                });
+                                            };
+                                            if (activated === 1) {
+                                                activated++;
+                                                modal.AskQuestion('Close and Personal: was your target defeated?',
+                                                    function () { resolve() },
+                                                    function() {
+                                                        hero.attack(null, null, false, function(weapon) { return weapon.ranged; });
+                                                    });
+                                            } else if (activated === 2) {
+                                                resolve();
+                                            }
+                                        })
+                                ]
+                            },
+                            true);
+                    }(),
                     'Deadly Precision': new hf.Ability({
-                        
-                    },
+                            operations: [
+                                new hf.Operation(C$.Biv.DeadlyPrecision,
+                                    function(hero, conflict, card) {
+                                        conflict.UsedAbilities.push(card.name);
+                                    },
+                                    function(hero, conflict, card) {
+                                        return conflict.RollFinished() && _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                                    },
+                                    [cost.strain()],
+                                    C$.ATTACKROLL)
+                            ]
+                        },
                         true)
                 },
-                onWounded: function () {
+                onWounded: function() {
                     var hero = this;
                     if (!(hero instanceof Hero)) return;
 
                     hero.endurance--;
                     hero.speed--;
-                    hero.cards.remove(hero.coreAbilities['Deadly Precision']);
+                    hero.cards.remove(hero.coreAbilities[C$.Biv.DeadlyPrecision]);
                     hero.fisting([d.BLUE, d.RED, d.GREEN]);
                     hero.eye([d.RED]);
                     hero.spanner([d.BLUE, d.RED]);
@@ -705,19 +762,19 @@
                 spanner: [d.BLUE, d.GREEN, d.YELLOW],
                 coreAbilities: {
                     'Battle Technician': new hf.Ability({
-
-                    },
+                    
+                        },
                         true),
                     'Practical Solutions (attack)': new hf.Ability({
-
-                    },
+                    
+                        },
                         true),
                     'Practical Solutions (attribute)': new hf.Ability({
-
-                    },
+                    
+                        },
                         true)
                 },
-                onWounded: function () {
+                onWounded: function() {
                     var hero = this;
                     if (!(hero instanceof Hero)) return;
 
