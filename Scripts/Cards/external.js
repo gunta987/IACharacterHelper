@@ -1,5 +1,5 @@
-﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge', 'constants'],
-    function (hf, modal, $, d, s, C$) {
+﻿define(['herofunctions', 'modal', 'cost', 'dice', 'surge', 'constants', 'tokens', 'Cards/saska'],
+    function (hf, modal, $, d, s, C$, tokens, saska) {
         return [
             new hf.Ability({
                     name: 'Force Adept',
@@ -19,14 +19,14 @@
                     eventOperations: [
                         {
                             operation: new hf.Operation('Force Adept (reroll 1)',
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
                                         lastTest.usedAbilities.push(card.name);
                                         hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
-                                function (hero, conflict, card) {
+                                function(hero, conflict, card) {
                                     return hero.lastAttributeTest() == null || _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
                                 }),
                             event: C$.ATTRIBUTE_TEST_FAIL,
@@ -58,7 +58,7 @@
                 false,
                 'Cards/External/WookieLoyalty.png'),
             new hf.Ability({
-                    name: 'Command (Attack)',
+                    name: 'Command',
                     isExternal: true,
                     owner: 'OldDude',
                     operations: [
@@ -70,9 +70,9 @@
                                 return !hero.activated();
                             }),
                         new hf.Operation(C$.External.CommandMove,
-                            function (hero) {
+                            function(hero) {
                             },
-                            function (hero) {
+                            function(hero) {
                                 return !hero.activated();
                             })
                     ]
@@ -141,6 +141,118 @@
                 },
                 false,
                 'Cards/External/HammerAndAnvil.png'),
+            new hf.Ability({
+                    name: C$.Saska.BattleTechnician,
+                    isExternal: true,
+                    owner: 'Sass',
+                    operations: [
+                                    new hf.Operation(C$.Saska.BattleTechnician,
+                                        function(hero) {
+                                                    hero.tokens.push(new tokens.Device());
+                                        },
+                                        function(hero) {
+                                            return !hero.activated();
+                                        })
+                                        ]
+                },
+                false,
+                'Cards/External/BattleTechnician.png'),
+            new hf.Ability({
+                    name: 'Practical Solutions',
+                    isExternal: true,
+                    owner: 'Sass',
+                operations: [
+                                new hf.Operation(C$.Saska.PracticalSolutionsAttack,
+                                    function(hero, conflict, card) {
+                                        conflict.ExtraSurges(conflict.ExtraSurges() + 1);
+                                        conflict.UsedAbilities.push(card.name);
+                                    },
+                                    function(hero, conflict, card) {
+                                        return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                                    },
+                                    [$.deviceToken()],
+                                    C$.ATTACKDICE)
+                ],
+                eventOperations: [
+                                {
+                                    operation: new hf.Operation(C$.Saska.PracticalSolutionsTest,
+                                        function (hero, conflict, card) {
+                                            var lastTest = hero.lastAttributeTest();
+                                            if (lastTest != null && lastTest.attribute != null) {
+                                                lastTest.usedAbilities.push(card.name);
+                                                hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                            }
+                                        },
+                                        function (hero, conflict, card) {
+                                            return hero.lastAttributeTest() == null ||
+                                                _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
+                                        },
+                                        [$.deviceToken()],
+                                        null,
+                                        'Not if Saska is wounded'),
+                                    event: C$.ATTRIBUTE_TEST_FAIL,
+                                    completeEvent: true
+                                }
+                ]
+                },
+                false,
+                'Cards/External/PracticalSolutions.png'),
+            new hf.Ability({
+                    name: C$.Saska.ToolKit,
+                    isExternal: true,
+                    owner: 'Sass',
+                    eventOperations: [
+                    {
+                        //TODO: this doesn't work
+                        operation: function() {
+                            var op = new hf.Operation(C$.Saska.ToolKit,
+                                function() {},
+                                function() { return true; },
+                                [],
+                                null,
+                                '(exhaust)');
+                            op.operationImages.push('Other/Surge.png');
+                            return op;
+                        }(),
+                        event: C$.Saska.PracticalSolutionsTest,
+                        completeEvent: true
+                    }
+            ]
+                },
+                false,
+                'Cards/External/ToolKit.png'),
+            new hf.Ability({
+                    name: C$.Saska.UnstableDevice,
+                    isExternal: true,
+                    owner: 'Sass',
+                    operations: _(saska).filter(function (ability) { return ability.name === C$.Saska.UnstableDevice }).first().operations
+                },
+                false,
+                'Cards/External/UnstableDevice.png'),
+            new hf.Ability({
+                    name: C$.Saska.EnergyShield,
+                    isExternal: true,
+                    owner: 'Sass',
+                    operations: _(saska).filter(function (ability) { return ability.name === C$.Saska.EnergyShield }).first().operations
+                },
+                false,
+                'Cards/External/EnergyShield.png'),
+            new hf.Ability({
+                    name: C$.Saska.PowerConverter,
+                    isExternal: true,
+                    owner: 'Sass',
+                    operations: _(saska).filter(function (ability) { return ability.name === C$.Saska.PowerConverter }).first().operations
+                },
+                false,
+                'Cards/External/PowerConverter.png'),
+            new hf.Ability({
+                    name: C$.Saska.AdrenalineInjector,
+                    isExternal: true,
+                    owner: 'Sass',
+                    eventOperations: _(saska).filter(function (ability) { return ability.name === C$.Saska.AdrenalineInjector }).first().eventOperations
+                },
+                false,
+                'Cards/External/AdrenalineInjector.png'),
             new hf.Ability({
                     name: 'Inspiring',
                     isExternal: true,

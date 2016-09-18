@@ -19,7 +19,8 @@
                 },
                 'Cards/Saska/Modified Blaster.png'),
             new hf.Ability({
-                    name: C$.Saska.ToolKit
+                name: C$.Saska.ToolKit
+                //TODO: all the things
                 },
                 false,
                 'Cards/Saska/Tool Kit.png'),
