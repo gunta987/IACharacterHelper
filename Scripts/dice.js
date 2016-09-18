@@ -1,6 +1,7 @@
 ﻿define(['ko'], function (ko) {
     var Die = function (colour, faces, invert) {
         var self = this;
+        self.colour = colour;
         self.faces = faces;
         self.invert = invert || false;
         self.showSelection = ko.observable(false);
@@ -45,7 +46,21 @@
     DefenceDie.prototype = Object.create(Die.prototype);
 
     return {
-        RED: function () {
+        SortOrder: function(colour) {
+            switch (colour) {
+            case 'blue':
+                return 1;
+            case 'red':
+                return 2;
+            case 'green':
+                return 3;
+            case 'yellow':
+                return 4;
+            default:
+                return 5;
+            }
+        },
+        RED: function() {
             return new AttackDie('red',
                 [
                     { damage: 1 },
@@ -57,7 +72,7 @@
                 ],
                 true);
         },
-        BLUE: function () {
+        BLUE: function() {
             return new AttackDie('blue',
                 [
                     { surge: 1, accuracy: 2 },
@@ -69,7 +84,7 @@
                 ],
                 true);
         },
-        GREEN: function () {
+        GREEN: function() {
             return new AttackDie('green',
                 [
                     { surge: 1, accuracy: 1 },
@@ -81,7 +96,7 @@
                 ],
                 true);
         },
-        YELLOW: function () {
+        YELLOW: function() {
             return new AttackDie('yellow',
             [
                 { surge: 1 },
@@ -92,7 +107,7 @@
                 { damage: 1, accuracy: 2 }
             ]);
         },
-        BLACK: function () {
+        BLACK: function() {
             return new DefenceDie('black',
                 [
                     { block: 1 },
@@ -104,7 +119,7 @@
                 ],
                 true);
         },
-        WHITE: function () {
+        WHITE: function() {
             return new DefenceDie('white',
             [
                 {},

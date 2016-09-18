@@ -1,5 +1,5 @@
-﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants', 'modal'],
-    function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, C$, modal) {
+﻿define(['jquery', 'ko', 'lodash', 'herofunctions', 'cards', 'inherentOperations', 'dice', 'conflict', 'cost', 'constants', 'modal', 'tokens'],
+    function ($, ko, _, hf, cards, inherentOperations, d, conflict, cost, C$, modal, tokens) {
         var Hero = function(initial) {
             var self = this;
 
@@ -58,6 +58,8 @@
 
                 return tokens;
             });
+            self.tokenStash = ko.observableArray(initial.tokenStash || []);
+            self.tokens = ko.observableArray([]);
 
             self.cards = ko.observableArray([]);
             self.equipment = ko.pureComputed(function() {
@@ -381,7 +383,11 @@
                     'Close and Personal': function() {
                         var activated = 0;
                         var attack = function(hero) {
-                            hero.attack(null, null, false, null, new hf.Weapon({ name: C$.Biv.CloseAndPersonal, ranged: false, dice: [d.RED, d.YELLOW] }));
+                            hero.attack(null,
+                                null,
+                                false,
+                                null,
+                                new hf.Weapon({ name: C$.Biv.CloseAndPersonal, ranged: false, dice: [d.RED, d.YELLOW] }));
                             activated++;
                         };
                         return new hf.Ability({
@@ -397,17 +403,19 @@
                                 ],
                                 events: [
                                     new hf.Event(C$.ATTACK_RESOLVED,
-                                        function (hero) {
+                                        function(hero) {
                                             function resolve() {
                                                 activated = 0;
-                                                hero.publishEventWithFollowOn(C$.Biv.CloseAndPersonalResolved, function () {
-                                                    hero.event(C$.Biv.CloseAndPersonalComplete);
-                                                });
+                                                hero.publishEventWithFollowOn(C$.Biv.CloseAndPersonalResolved,
+                                                    function() {
+                                                        hero.event(C$.Biv.CloseAndPersonalComplete);
+                                                    });
                                             };
+
                                             if (activated === 1) {
                                                 activated++;
                                                 modal.AskQuestion('Close and Personal: was your target defeated?',
-                                                    function () { resolve() },
+                                                    function() { resolve() },
                                                     function() {
                                                         hero.attack(null, null, false, function(weapon) { return weapon.ranged; });
                                                     });
@@ -760,17 +768,86 @@
                 fisting: [d.BLUE],
                 eye: [d.BLUE, d.GREEN],
                 spanner: [d.BLUE, d.GREEN, d.YELLOW],
+                tokenStash: _.times(8, function() { return new tokens.Device(); }),
                 coreAbilities: {
                     'Battle Technician': new hf.Ability({
-                    
+                            onAdd: function() {
+                                var hero = this;
+                                hero.tokens.subscribe(function(changes) {
+                                        _(changes)
+                                            .forEach(function(change) {
+                                                if (change.status === 'deleted' && change.value instanceof tokens.Device) {
+                                                    hero.tokenStash.push(change.value);
+                                                }
+                                            });
+                                    },
+                                    null,
+                                    'arrayChange');
+                            },
+                            operations: [
+                                new hf.Operation(C$.Saska.BattleTechnician,
+                                    function(hero, conflict, card) {
+                                        var token = hero.tokenStash.pop();
+                                        modal.ConfirmOperation('Are you claiming the device token?',
+                                            function() {
+                                                hero.tokens.push(token);
+                                            });
+                                        hero.abilitiesUsedDuringActivation.push(card.name);
+                                    },
+                                    function(hero, conflict, card) {
+                                        return hero.activated() &&
+                                            _.indexOf(hero.abilitiesUsedDuringActivation(), card.name) === -1 &&
+                                            hero.tokenStash().length > 0;
+                                    },
+                                    [cost.strain()]),
+                                new hf.Operation('Recover Discarded Token',
+                                    function(hero) {
+                                        hero.tokenStash.push(new tokens.Device());
+                                    },
+                                    function(hero) {
+                                        return !hero.activated() &&
+                                            (hero.tokenStash().length +
+                                                _.sumBy(hero.tokens(), function(token) { return token instanceof tokens.Device ? 1 : 0 })) <
+                                            8;
+                                    })
+                            ]
                         },
                         true),
-                    'Practical Solutions (attack)': new hf.Ability({
-                    
+                    'Practical Solutions': new hf.Ability({
+                            operations: [
+                                new hf.Operation(C$.Saska.PracticalSolutionsAttack,
+                                    function(hero, conflict, card) {
+                                        conflict.ExtraSurges(conflict.ExtraSurges() + 1);
+                                        conflict.UsedAbilities.push(card.name);
+                                    },
+                                    function(hero, conflict, card) {
+                                        return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                                    },
+                                    [cost.deviceToken()],
+                                    C$.ATTACKDICE)
+                            ]
                         },
                         true),
-                    'Practical Solutions (attribute)': new hf.Ability({
-                    
+                    'Practical Solutions (reroll 1)': new hf.Ability({
+                            eventOperations: [
+                                {
+                                    operation: new hf.Operation(C$.Saska.PracticalSolutionsTest,
+                                        function(hero, conflict, card) {
+                                            var lastTest = hero.lastAttributeTest();
+                                            if (lastTest != null && lastTest.attribute != null) {
+                                                lastTest.usedAbilities.push(card.name);
+                                                hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                            }
+                                        },
+                                        function(hero, conflict, card) {
+                                            return hero.lastAttributeTest() == null ||
+                                                _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
+                                        },
+                                        [cost.deviceToken()]),
+                                    event: C$.ATTRIBUTE_TEST_FAIL,
+                                    completeEvent: true
+                                }
+                            ]
                         },
                         true)
                 },
@@ -780,7 +857,7 @@
 
                     hero.endurance--;
                     hero.speed--;
-                    hero.cards.remove(hero.coreAbilities['Practical Solutions (attribute)']);
+                    hero.cards.remove(hero.coreAbilities['Practical Solutions (reroll 1)']);
                     hero.fisting([d.RED]);
                     hero.eye([d.BLUE, d.RED]);
                     hero.spanner([d.BLUE, d.RED, d.GREEN]);

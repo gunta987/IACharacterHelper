@@ -183,6 +183,9 @@
                 extraDamage(additional.damage);
                 extraAccuracy(additional.accuracy);
                 hero.event(C$.ATTACK_START);
+                if (hero.weakened()) {
+                    extraSurges(extraSurges() - 1);
+                }
                 showModal();
 
                 if (ranged) {
@@ -208,7 +211,10 @@
                 myDice(hero.defence());
                 weapon({});
                 hero.publishEventWithFollowOn(C$.DEFENCE_START,
-                    function() {
+                    function () {
+                        if (hero.weakened()) {
+                            extraEvade(extraEvade() - 1);
+                        }
                         showModal();
                         if (ranged) {
                             conflictStage(C$.DEFENCERANGE);

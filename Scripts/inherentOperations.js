@@ -29,6 +29,7 @@
                     function() {
                         hero.movement(0);
                         hero.strainMoves(0);
+                        hero.weakened(false);
                         hero.activated(false);
                         hero.abilitiesUsedDuringActivation([]);
                         hero.hasActivated(true);
@@ -54,9 +55,9 @@
                 return hero.activated();
             },
             [$.action()]),
-        new hf.Operation('Gain Movement',
+        new hf.Operation(C$.Inherent.GainMovement,
             function(hero) {
-                hero.gainMovement(hero.endurance + hero.extraEndurance());
+                hero.gainMovement(hero.speed + hero.extraSpeed());
             },
             function(hero) {
                 return !hero.stunned();

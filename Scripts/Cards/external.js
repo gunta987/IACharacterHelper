@@ -19,17 +19,18 @@
                     eventOperations: [
                         {
                             operation: new hf.Operation('Force Adept (reroll 1)',
-                                function(hero, conflict, card) {
-                                    hero.abilitiesUsedDuringActivation.push('Force Adept');
+                                function (hero, conflict, card) {
                                     var lastTest = hero.lastAttributeTest();
                                     if (lastTest != null && lastTest.attribute != null) {
+                                        lastTest.usedAbilities.push(card.name);
                                         hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
                                     }
                                 },
-                                function(hero, conflict, card) {
-                                    return _.indexOf(hero.abilitiesUsedDuringActivation(), 'Force Adept') === -1;
+                                function (hero, conflict, card) {
+                                    return hero.lastAttributeTest() == null || _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
                                 }),
-                            event: C$.ATTRIBUTE_TEST_FAIL
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
                         }
                     ]
                 },
@@ -66,6 +67,12 @@
                                 hero.attack();
                             },
                             function(hero) {
+                                return !hero.activated();
+                            }),
+                        new hf.Operation(C$.External.CommandMove,
+                            function (hero) {
+                            },
+                            function (hero) {
                                 return !hero.activated();
                             })
                     ]

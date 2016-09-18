@@ -24,13 +24,16 @@
             <div class="modifier" style="left: 76%" data-bind="visible: hero.extraSpeed() > 0">
                 <span class="black-text" data-bind="text: hero.extraSpeed"></span>
             </div>
-            <div class="token-tray" style="top: 22%;">
+            <div class="token-tray" style="top: 29%; overflow-x: auto; white-space: nowrap" data-bind="foreach: hero.tokens()">
+                <img data-bind="attr: {src: image}" style="height: 92%"/>
+            </div>
+            <div class="token-tray" style="top: 16%;">
                 <img src="Tokens/focus.png" data-bind="style: {opacity: hero.focused() ? 1 : 0.4}, click: function() { hero.focused(!hero.focused()); }" />
                 <img src="Tokens/bleed.png" data-bind="style: {opacity: hero.bleeding() ? 1 : 0.4}, click: function() { hero.bleeding(!hero.bleeding()); }" />
                 <img src="Tokens/stun.png" data-bind="style: {opacity: hero.stunned() ? 1 : 0.4}, click: function() { hero.stunned(!hero.stunned()); }" />
                 <img src="Tokens/weaken.png" data-bind="style: {opacity: hero.weakened() ? 1 : 0.4}, click: function() { hero.weakened(!hero.weakened()); }" />
             </div>
-            <div class="token-tray" style="top: 9%;">
+            <div class="token-tray" style="top: 3%;">
                 <div style="float:right; height: 100%">
                     <!-- ko foreach: new Array(hero.actions()) -->
                     <div class="well">
@@ -278,6 +281,9 @@
                 </div>
             </div>
             <!-- /ko -->
+            <div data-bind="foreach: hero.tokenStash">
+                <img data-bind="attr: {src: image}" style="width: 50%; float:left"/>
+            </div>
         </div>
     </div>
 

@@ -6,6 +6,9 @@
     REST: 'rest', SUPPLY: 'supply',
     BEFORE_ATTRIBUTE_TEST: 'beforeattributetest', ATTRIBUTE_TEST: 'attributetest', ATTRIBUTE_TEST_FAIL: 'attributetestfail',
     END_ROUND: 'endround', END_ACTIVATION: 'endactivation',
+    Inherent: {
+        GainMovement: 'Gain Movement'
+    },
     Biv: {
         CloseAndPersonal: 'Close and Personal',
         CloseAndPersonalResolved: 'Close and Personal Resolved',
@@ -19,5 +22,22 @@
         FinalStand: 'Final Stand',
         StayDown: 'Stay Down',
         HuntThemDown: 'Hunt Them Down'
+    },
+    Saska: {
+        BattleTechnician: 'Battle Technician',
+        PracticalSolutionsAttack: 'Practical Solutions',
+        PracticalSolutionsTest: 'Practical Solutions (reroll 1)',
+        ToolKit: 'Tool Kit',
+        UnstableDevice: 'Unstable Device',
+        EnergyShield: 'Energy Shield',
+        StructuralWeakness: 'Structural Weakness', 
+        Gadgeteer: 'Gadgeteer',
+        PowerConverter: 'Power Converter',
+        AdrenalineInjector: 'Adrenaline Injector',
+        RemoteDistribution: 'Remote Distribution',
+        TechGoggles: 'Tech Goggles'
+    },
+    External: {
+        CommandMove: 'Command (Move)'
     }
 });
