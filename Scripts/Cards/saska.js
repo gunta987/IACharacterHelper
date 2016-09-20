@@ -19,8 +19,35 @@
                 },
                 'Cards/Saska/Modified Blaster.png'),
             new hf.Ability({
-                name: C$.Saska.ToolKit
-                //TODO: all the things
+                name: C$.Saska.ToolKit,
+                eventOperations: [
+                    {
+                        operation: function() {
+                            var op = new hf.Operation(C$.Saska.ToolKit,
+                                function (hero, conflict, card) {
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        card.exhausted(true);
+                                        lastTest.usedAbilities.push(card.name);
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                    }
+                                },
+                                function(hero, conflict, card) {
+                                    return !card.exhausted() &&
+                                        hero.lastAttributeTest() != null &&
+                                        (_.indexOf(hero.lastAttributeTest().usedAbilities, C$.Saska.PracticalSolutionsTest) !== -1 ||
+                                            hero.lastAttributeTest().attribute === hero.spanner);
+                                },
+                                [],
+                                null,
+                                '(exhaust) +1');
+                            op.operationImages.push('Other/Surge.png');
+                            return op;
+                        }(),
+                        event: C$.ATTRIBUTE_TEST_FAIL,
+                        completeEvent: true
+                    }
+                ]
                 },
                 false,
                 'Cards/Saska/Tool Kit.png'),
@@ -102,8 +129,8 @@
                                     hero.abilitiesUsedDuringActivation.push(card.name);
                                 }
                             })
-                    ]
-                    //TODO: extra slot during setup
+                    ],
+                    weaponSlotModification: 1
                 },
                 false,
                 'Cards/Saska/Gadgeteer.png'),

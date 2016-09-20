@@ -122,6 +122,13 @@ require(['jquery', 'ko', 'lodash', 'heroes', 'cards', 'herofunctions'],
                         hero().AddCard(card);
                         close();
                     },
+                    AttachmentSlotsAvailable: function(weapon) {
+                        return ko.pureComputed(function() {
+                            return weapon.slots() +
+                                _(hero().cards()).sumBy(function(card) { return card.weaponSlotModification || 0 }) >
+                                weapon.attachments().length;
+                        });
+                    },
                     AddAttachment: function(card) {
                         attachmentsForWeapon().attachments.push(card);
                         close();

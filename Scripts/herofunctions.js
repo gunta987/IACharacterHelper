@@ -33,7 +33,8 @@
         self.operations = _.map(properties.operations, function (operation) {
             operation.card = self;
             return operation;
-        }); 
+        });
+        self.weaponSlotModification = properties.weaponSlotModification;
         self.exhausted = ko.observable(false);
     };
     var ability = function (properties, isCore, image) {
@@ -61,9 +62,6 @@
         self.type = properties.type || [];
         self.dice = function () { return _.map(properties.dice, function (die) { return die(); }); };
         self.attachments = ko.observableArray([]);
-        self.SlotsAvailable = ko.pureComputed(function() {
-            return self.slots() > self.attachments().length;
-        });
         var zeroFunction = function () { return 0; };
         self.pierce = ko.pureComputed(function () {
             return (properties.pierce || 0) + _.reduce(self.attachments(), function (sum, attachment) {

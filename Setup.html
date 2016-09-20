@@ -82,7 +82,7 @@
                         <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }"/>
                     </div>
                     <!-- /ko -->
-                    <div class="plus-text blue" data-bind="visible: $data[0] != null && $data[0].SlotsAvailable(), click: function() { $root.ShowAttachments($data[0]); }">
+                    <div class="plus-text blue" data-bind="visible: $data[0] != null && $root.AttachmentSlotsAvailable($data[0]), click: function() { $root.ShowAttachments($data[0]); }">
                         +
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                         <img data-bind="attr: { src: image }, style: { opacity: exhausted() ? 0.4 : 1 }"/>
                     </div>
                     <!-- /ko -->
-                    <div class="plus-text blue" data-bind="visible: $data[1] != null && $data[1].SlotsAvailable(), click: function() { $root.ShowAttachments($data[1]); }">
+                    <div class="plus-text blue" data-bind="visible: $data[1] != null && $root.AttachmentSlotsAvailable($data[1]), click: function() { $root.ShowAttachments($data[1]); }">
                         +
                     </div>
                 </div>

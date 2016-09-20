@@ -146,14 +146,14 @@
                     isExternal: true,
                     owner: 'Sass',
                     operations: [
-                                    new hf.Operation(C$.Saska.BattleTechnician,
-                                        function(hero) {
-                                                    hero.tokens.push(new tokens.Device());
-                                        },
-                                        function(hero) {
-                                            return !hero.activated();
-                                        })
-                                        ]
+                        new hf.Operation(C$.Saska.BattleTechnician,
+                            function(hero) {
+                                hero.tokens.push(new tokens.Device());
+                            },
+                            function(hero) {
+                                return !hero.activated();
+                            })
+                    ]
                 },
                 false,
                 'Cards/External/BattleTechnician.png'),
@@ -161,39 +161,39 @@
                     name: 'Practical Solutions',
                     isExternal: true,
                     owner: 'Sass',
-                operations: [
-                                new hf.Operation(C$.Saska.PracticalSolutionsAttack,
-                                    function(hero, conflict, card) {
-                                        conflict.ExtraSurges(conflict.ExtraSurges() + 1);
-                                        conflict.UsedAbilities.push(card.name);
-                                    },
-                                    function(hero, conflict, card) {
-                                        return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
-                                    },
-                                    [$.deviceToken()],
-                                    C$.ATTACKDICE)
-                ],
-                eventOperations: [
-                                {
-                                    operation: new hf.Operation(C$.Saska.PracticalSolutionsTest,
-                                        function (hero, conflict, card) {
-                                            var lastTest = hero.lastAttributeTest();
-                                            if (lastTest != null && lastTest.attribute != null) {
-                                                lastTest.usedAbilities.push(card.name);
-                                                hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
-                                            }
-                                        },
-                                        function (hero, conflict, card) {
-                                            return hero.lastAttributeTest() == null ||
-                                                _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
-                                        },
-                                        [$.deviceToken()],
-                                        null,
-                                        'Not if Saska is wounded'),
-                                    event: C$.ATTRIBUTE_TEST_FAIL,
-                                    completeEvent: true
-                                }
-                ]
+                    operations: [
+                        new hf.Operation(C$.Saska.PracticalSolutionsAttack,
+                            function(hero, conflict, card) {
+                                conflict.ExtraSurges(conflict.ExtraSurges() + 1);
+                                conflict.UsedAbilities.push(card.name);
+                            },
+                            function(hero, conflict, card) {
+                                return _.indexOf(conflict.UsedAbilities(), card.name) === -1;
+                            },
+                            [$.deviceToken()],
+                            C$.ATTACKDICE)
+                    ],
+                    eventOperations: [
+                        {
+                            operation: new hf.Operation(C$.Saska.PracticalSolutionsTest,
+                                function(hero, conflict, card) {
+                                    var lastTest = hero.lastAttributeTest();
+                                    if (lastTest != null && lastTest.attribute != null) {
+                                        lastTest.usedAbilities.push(card.name);
+                                        hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                    }
+                                },
+                                function(hero, conflict, card) {
+                                    return hero.lastAttributeTest() == null ||
+                                        _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
+                                },
+                                [$.deviceToken()],
+                                null,
+                                'Not if Saska is wounded'),
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
+                        }
+                    ]
                 },
                 false,
                 'Cards/External/PracticalSolutions.png'),
@@ -202,22 +202,31 @@
                     isExternal: true,
                     owner: 'Sass',
                     eventOperations: [
-                    {
-                        //TODO: this doesn't work
-                        operation: function() {
-                            var op = new hf.Operation(C$.Saska.ToolKit,
-                                function() {},
-                                function() { return true; },
-                                [],
-                                null,
-                                '(exhaust)');
-                            op.operationImages.push('Other/Surge.png');
-                            return op;
-                        }(),
-                        event: C$.Saska.PracticalSolutionsTest,
-                        completeEvent: true
-                    }
-            ]
+                        {
+                            operation: function() {
+                                var op = new hf.Operation(C$.Saska.ToolKit,
+                                    function(hero, conflict, card) {
+                                        var lastTest = hero.lastAttributeTest();
+                                        if (lastTest != null && lastTest.attribute != null) {
+                                            lastTest.usedAbilities.push(card.name);
+                                            hero.testAttribute(lastTest.attribute, lastTest.onSuccess, lastTest.dice, true);
+                                        }
+                                    },
+                                    function(hero, conflict, card) {
+                                        return hero.lastAttributeTest() != null &&
+                                            _.indexOf(hero.lastAttributeTest().usedAbilities, 'Practical Solutions') !== -1 &&
+                                            _.indexOf(hero.lastAttributeTest().usedAbilities, card.name) === -1;
+                                    },
+                                    [],
+                                    null,
+                                    '(exhaust) +1');
+                                op.operationImages.push('Other/Surge.png');
+                                return op;
+                            }(),
+                            event: C$.ATTRIBUTE_TEST_FAIL,
+                            completeEvent: true
+                        }
+                    ]
                 },
                 false,
                 'Cards/External/ToolKit.png'),
@@ -225,7 +234,7 @@
                     name: C$.Saska.UnstableDevice,
                     isExternal: true,
                     owner: 'Sass',
-                    operations: _(saska).filter(function (ability) { return ability.name === C$.Saska.UnstableDevice }).first().operations
+                    operations: _(saska).filter(function(ability) { return ability.name === C$.Saska.UnstableDevice }).first().operations
                 },
                 false,
                 'Cards/External/UnstableDevice.png'),
@@ -233,7 +242,7 @@
                     name: C$.Saska.EnergyShield,
                     isExternal: true,
                     owner: 'Sass',
-                    operations: _(saska).filter(function (ability) { return ability.name === C$.Saska.EnergyShield }).first().operations
+                    operations: _(saska).filter(function(ability) { return ability.name === C$.Saska.EnergyShield }).first().operations
                 },
                 false,
                 'Cards/External/EnergyShield.png'),
@@ -241,7 +250,7 @@
                     name: C$.Saska.PowerConverter,
                     isExternal: true,
                     owner: 'Sass',
-                    operations: _(saska).filter(function (ability) { return ability.name === C$.Saska.PowerConverter }).first().operations
+                    operations: _(saska).filter(function(ability) { return ability.name === C$.Saska.PowerConverter }).first().operations
                 },
                 false,
                 'Cards/External/PowerConverter.png'),
@@ -249,7 +258,10 @@
                     name: C$.Saska.AdrenalineInjector,
                     isExternal: true,
                     owner: 'Sass',
-                    eventOperations: _(saska).filter(function (ability) { return ability.name === C$.Saska.AdrenalineInjector }).first().eventOperations
+                    eventOperations: _(saska)
+                        .filter(function(ability) { return ability.name === C$.Saska.AdrenalineInjector })
+                        .first()
+                        .eventOperations
                 },
                 false,
                 'Cards/External/AdrenalineInjector.png'),

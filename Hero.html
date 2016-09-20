@@ -253,8 +253,11 @@
             <!-- /ko -->
             <div>
                 <div class="fixed-card-slot">
-                    <img data-bind="attr: { src: _.get(hero.armour(), 'image', '') }, visible: hero.armour() != null, style: { opacity: _.invoke(_.invoke(hero, 'armour'), 'exhausted') ? 0.4 : 1 }" />
-                    <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null" />
+                    <img data-bind="attr: { src: _.get(hero.armour(), 'image', '') }, visible: hero.armour() != null, style: { opacity: _.invoke(_.invoke(hero, 'armour'), 'exhausted') ? 0.4 : 1 }"/>
+                    <img src="Cards/Wearables/Armour_Placeholder.png" data-bind="visible: hero.armour() == null"/>
+                </div>
+                <div data-bind="foreach: hero.tokenStash">
+                    <img data-bind="attr: {src: image}" style="width: 50%; float:left" />
                 </div>
             </div>
             <!-- ko with: hero.weapons() -->
@@ -281,9 +284,6 @@
                 </div>
             </div>
             <!-- /ko -->
-            <div data-bind="foreach: hero.tokenStash">
-                <img data-bind="attr: {src: image}" style="width: 50%; float:left"/>
-            </div>
         </div>
     </div>
 
