@@ -26,11 +26,11 @@
                     name: 'Disruption Cell',
                     ranged: true,
                     trait: ['Energy'],
-                    accuracy: function () { return 2 },
+                    accuracy: function() { return 2 },
                     modifyDicePool: function(dicePool) {
                         var result = [];
                         _(dicePool)
-                            .forEach(function (pool) {
+                            .forEach(function(pool) {
                                 _(pool)
                                     .forEach(function(die, index) {
                                         var newPool = pool.slice();
@@ -183,6 +183,14 @@
                             [$.action(2, true)])
                     ]
                 },
-                'Cards/WeaponAttachments/Telescoping Sights.png')
+                'Cards/WeaponAttachments/Telescoping Sights.png'),
+            new hf.Attachment({
+                    name: 'Plasma Cell',
+                    ranged: true,
+                    trait: ['Energy'],
+                    pierce: function() { return 1; },
+                    surges: [[s.damage()]]
+                },
+                'Cards/WeaponAttachments/Plasma Cell.png')
         ];
     });

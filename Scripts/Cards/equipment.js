@@ -33,7 +33,7 @@
                             },
                             [$.strain()],
                             null,
-                            "(exhaust)")
+                            '(exhaust)')
                     ]
                 },
                 'Cards/Wearables/Combat Knife.png'),
@@ -207,6 +207,30 @@
                         }
                     ]
                 },
-                'Cards/Wearables/Survival Gear.png')
+                'Cards/Wearables/Survival Gear.png'),
+            new hf.Equipment({
+                    name: 'Hidden Blade',
+                    operations: [
+                        new hf.Operation('<i>Hidden Blade</i>',
+                            function() {},
+                            function(hero) { return hero.actions() === 2; },
+                            [$.deplete()],
+                            null,
+                            '(deplete)')
+                    ]
+                },
+                'Cards/Wearables/Hidden Blade.png'),
+            new hf.Equipment({
+                    name: 'Quickdraw Holster',
+                    operations: [
+                        new hf.Operation('Quickdraw Holster',
+                            function(hero) { hero.attack(); },
+                            function(hero) { return !hero.activated(); },
+                            [$.strain(), $.deplete()],
+                            null,
+                            '(deplete)')
+                    ]
+                },
+                'Cards/Wearables/Quickdraw Holster.png')
         ];
     });

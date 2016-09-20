@@ -95,7 +95,29 @@
                         ]
                     },
                     false,
-                    'Cards/Supply/Shock Grenade.png')
+                    'Cards/Supply/Shock Grenade.png'),
+                new hf.Ability({
+                        name: 'Macrobinoculars',
+                        operations: [
+                            new hf.Operation('Macrobinoculars',
+                                function(hero, conflict, card) {
+                                    conflict.ExtraSurges(conflict.ExtraSurges() + 1);
+                                    conflict.ExtraAccuracy(conflict.ExtraAccuracy() + 3);
+                                },
+                                function(hero) { return true; },
+                                [cost.deplete()],
+                                C$.ATTACKROLL,
+                                '(discard)'),
+                            new hf.Operation('Macrobinoculars',
+                                function() {},
+                                function(hero) { return !hero.activated(); },
+                                [cost.deplete()],
+                                null,
+                                '(discard)')
+                        ]
+                    },
+                    false,
+                    'Cards/Supply/Macrobinoculars.png')
             ]
         };
     });

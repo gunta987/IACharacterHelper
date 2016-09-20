@@ -7,14 +7,7 @@
                     type: ['blaster', 'pistol'],
                     slots: 1,
                     dice: [d.BLUE, d.RED],
-                    events: [
-                        new hf.Event(C$.ATTACK_START,
-                            function(hero, conflict, card) {
-                                if (conflict.AttackWeapon() === card) {
-                                    conflict.ExtraDamage(conflict.ExtraDamage() + 1);
-                                }
-                            })
-                    ],
+                    damage: 1,
                     surges: [[s.accuracy(2)], [s.damage()]]
                 },
                 'Cards/Weapons/434 Deathhammer.png'),
@@ -24,14 +17,7 @@
                     type: ['blaster', 'rifle'],
                     slots: 2,
                     dice: [d.BLUE, d.GREEN],
-                    events: [
-                        new hf.Event(C$.ATTACK_START,
-                            function(hero, conflict, card) {
-                                if (conflict.AttackWeapon() === card) {
-                                    conflict.ExtraAccuracy(conflict.ExtraAccuracy() + 1);
-                                }
-                            })
-                    ],
+                    accuracy: 1,
                     surges: [[s.damage(2)], [s.pierce(2)]]
                 },
                 'Cards/Weapons/A280.png'),
@@ -79,14 +65,7 @@
                     type: ['blaster', 'rifle'],
                     slots: 0,
                     dice: [d.RED, d.RED],
-                    events: [
-                        new hf.Event(C$.ATTACK_START,
-                            function(hero, conflict, card) {
-                                if (conflict.AttackWeapon() === card) {
-                                    conflict.ExtraAccuracy(conflict.ExtraAccuracy() + 6);
-                                }
-                            })
-                    ],
+                    accuracy: 6,
                     surges: [[s.damage(2)], [s.pierce(2)]]
                 },
                 'Cards/Weapons/DXR-6.png'),
@@ -155,6 +134,45 @@
                     reach: false,
                     surges: [[s.bleed()], [s.damage()], [s.cleave(2)]]
                 },
-                'Cards/Weapons/Vibroblade.png')
+                'Cards/Weapons/Vibroblade.png'),
+            new hf.Weapon({
+                    name: 'DLT-19',
+                    ranged: true,
+                    type: ['blaster', 'heavy'],
+                    slots: 1,
+                    dice: [d.BLUE, d.BLUE, d.GREEN],
+                    surges: [[s.damage()], [s.damage()], { items: [s.focus()], cost: 2 }]
+                },
+                'Cards/Weapons/DLT-19.png'),
+            new hf.Weapon({
+                    name: 'EE-3 Carbine',
+                    ranged: true,
+                    type: ['blaster', 'rifle'],
+                    slots: 2,
+                    dice: [d.GREEN, d.GREEN],
+                    accuracy: 2,
+                    surges: [[s.damage(2)], [s.pierce()]]
+                },
+                'Cards/Weapons/EE-3 Carbine.png'),
+            new hf.Weapon({
+                    name: 'Gaffi Stick',
+                    ranged: false,
+                    type: ['club'],
+                    slots: 1,
+                    dice: [d.RED, d.YELLOW],
+                    pierce: 1,
+                    reach: false,
+                    surges: [[s.weaken()]]
+                },
+                'Cards/Weapons/Gaffi Stick.png'),
+            new hf.Weapon({
+                    name: 'Tatooine Hunting Rifle',
+                    ranged: true,
+                    type: ['projectile', 'rifle'],
+                    slots: 1,
+                    dice: [d.BLUE, d.BLUE],
+                    surges: [[s.damage()], [s.weaken()], { items: [s.focus()], cost: 2 }]
+                },
+                'Cards/Weapons/Tatooine Hunting Rifle.png')
         ];
     });

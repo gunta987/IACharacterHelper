@@ -44,16 +44,14 @@
                 return _.reduce(defenceDice(), function(sum, die) { return sum + ((die.selectedFace() || {}).evade || 0); }, 0) + extraEvade();
             }),
             surges = ko.computed(function() {
-                if (_.some(defenceDice(), function(die) { return (die.selectedFace() || {}).dodge; })) {
-                    return 0;
-                }
                 var surge = _.reduce(attackDice(), function(sum, die) { return sum + ((die.selectedFace() || {}).surge || 0); }, 0) + extraSurges();
                 var surgeCount = Math.max(surge - evade(), 0);
-                while (selectedSurges().length > surgeCount) {
+                var usedSurges = function () { return _.sumBy(selectedSurges(), function (s) { return s.cost; }); }
+                while (usedSurges() > surgeCount) {
                     var selectedSurge = selectedSurges.pop();
                     selectedSurge.deselect.performOperation(hero, self);
                 }
-                return surgeCount - selectedSurges().length;
+                return surgeCount - usedSurges();
             }),
 
             bleed = ko.observable(0),
@@ -61,6 +59,7 @@
             weaken = ko.observable(0),
             strain = ko.observable(0),
             regainStrain = ko.observable(false),
+            gainFocus = ko.observable(false),
 
             caption = ko.observable(''),
             conflictStage = ko.observable(C$.ATTACKRANGE),
@@ -103,6 +102,9 @@
                     weapon().attachments.pop();
                     if (regainStrain()) {
                         hero.gainStrain(-1);
+                    }
+                    if (damage() > 0 && gainFocus()) {
+                        hero.focused(true);
                     }
                     hero.publishEventWithFollowOn(C$.ATTACK_RESOLVED);
                 } else {
@@ -164,6 +166,7 @@
                 strain(0);
                 usedAbilities([]);
                 regainStrain(false);
+                gainFocus(false);
                 opponentDice([]);
                 requiredAccuracy(0);
 
@@ -255,7 +258,8 @@
                 bleed: ko.pureComputed(function() { return bleed() > 0;}),
                 stun: ko.pureComputed(function() { return stun() > 0;}),
                 weaken: ko.pureComputed(function() { return weaken() > 0;}),
-                strain: regainStrain
+                strain: regainStrain,
+                focus: gainFocus
             },
             SelectedSurges: selectedSurges,
             Bleed: bleed,
@@ -263,6 +267,7 @@
             Weaken: weaken,
             Strain: strain,
             RegainStrain: regainStrain,
+            GainFocus: gainFocus,
             OpponentDice: opponentDice,
             Block: block,
             ExtraBlock: extraBlock,

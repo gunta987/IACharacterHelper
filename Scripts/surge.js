@@ -84,6 +84,16 @@
                     },
                     ['Tokens/strain.png'],
                     'Gain 1');
+            },
+            focus: function() {
+                return new Surge(function(conflict) {
+                        conflict.GainFocus(true);
+                    },
+                    function(conflict) {
+                        conflict.GainFocus(false);
+                    },
+                    ['Tokens/focus.png'],
+                    'Gain');
             }
         }
     });

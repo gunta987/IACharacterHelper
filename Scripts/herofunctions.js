@@ -82,21 +82,24 @@
             return _.concat([[s.regainStrain()]], (properties.surges || []), _.flatMap(self.attachments(), 'surges'));
         });
         self.surgeOperations = ko.pureComputed(function () {
-            return _.flatMap(self.surges(), function (arr) {
+            return _.flatMap(self.surges(), function (surge) {
+                var arr = surge.items || surge;
+                var cost = surge.cost || 1;
                 var selectSurge = new Operation('Select Surge',
                         function (hero, conflict) {
                             selectSurge.selected(true);
                             conflict.SelectedSurges.push(selectSurge);
-                            _(arr).forEach(function (surge) {
-                                surge.Apply(conflict);
+                            _(arr).forEach(function (item) {
+                                item.Apply(conflict);
                             });
                         },
                         function (hero, conflict) {
-                            return !selectSurge.selected() && conflict.MyAttack.surges() > 0;
+                            return !selectSurge.selected() && conflict.MyAttack.surges() >= cost;
                         },
                         [],
                         $C.ATTACKROLL, _.compact(_.map(arr, 'text')).join(' '));
                 selectSurge.operationImages(_.flatMap(arr, 'images'));
+                selectSurge.cost = cost;
                 var deselectSurge = new Operation('Deselect Surge',
                         function (hero, conflict) {
                             selectSurge.selected(false);
