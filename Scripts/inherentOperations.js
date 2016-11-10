@@ -93,7 +93,7 @@
                 hero.bleeding(false);
             },
             function(hero) {
-                return hero.activated() && !hero.stunned() && hero.bleeding();
+                return hero.activated() && hero.bleeding();
             },
             [$.action()]),
         new hf.Operation('Defend',
@@ -136,7 +136,7 @@
                 hero.setSpecialOperations(operations);
             },
             function(hero) {
-                return hero.activated() && !hero.stunned();
+                return hero.activated();
             },
             [$.action()]),
         new hf.Operation('End Round',

@@ -46,7 +46,7 @@
                                 supply.Show();
                             },
                             function(hero, conflict, card) {
-                                return !hero.stunned();
+                                return true;
                             },
                             [$.action(), $.deplete()],
                             null,
