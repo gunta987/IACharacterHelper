@@ -128,6 +128,8 @@
 
             rollDice = function(stage) {
                 conflictStage(stage);
+                _(myDice()).forEach(function(die) { die.showSelection(true); });
+                _(opponentDice()).forEach(function (die) { die.showSelection(true); });
                 caption('Roll all dice and record the results below');
                 button1Text('Finish');
                 button1 = function() {
