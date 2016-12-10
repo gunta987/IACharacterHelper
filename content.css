@@ -385,12 +385,15 @@ only screen and (        min-device-pixel-ratio: 2) {
 }
 
 .conflict #conflictSection {
-    height: 49%;
-    /*display: block;*/
+    height: 70%;
+    display: block;
+    position: fixed;
+    width: 66%;
+    z-index: 999
 }
 
 .conflict .above-modal {
-    height: 50%;
+    /*height: 29%;*/
 }
 
 .conflict-content span + div {
@@ -452,4 +455,8 @@ only screen and (        min-device-pixel-ratio: 2) {
 
 .plus-text.red {
     text-shadow: 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 0px 1px 10px rgba(188, 39, 44, 0.25), 0px -1px 10px rgba(188, 39, 44, 0.25), -1px 0px 10px rgba(188, 39, 44, 0.25), 1px 0px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 0px 1px 10px rgba(188, 39, 44, 0.25), 0px -1px 10px rgba(188, 39, 44, 0.25), -1px 0px 10px rgba(188, 39, 44, 0.25), 1px 0px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25);
+}
+
+#rollDice > div, #dieSelect > div, .conflict-summary > * {
+    font-size: 2em
 }
