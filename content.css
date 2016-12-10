@@ -457,6 +457,6 @@ only screen and (        min-device-pixel-ratio: 2) {
     text-shadow: 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 0px 1px 10px rgba(188, 39, 44, 0.25), 0px -1px 10px rgba(188, 39, 44, 0.25), -1px 0px 10px rgba(188, 39, 44, 0.25), 1px 0px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 0px 1px 10px rgba(188, 39, 44, 0.25), 0px -1px 10px rgba(188, 39, 44, 0.25), -1px 0px 10px rgba(188, 39, 44, 0.25), 1px 0px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25), 1px 1px 10px rgba(188, 39, 44, 0.25), -1px 1px 10px rgba(188, 39, 44, 0.25), 1px -1px 10px rgba(188, 39, 44, 0.25), -1px -1px 10px rgba(188, 39, 44, 0.25);
 }
 
-#rollDice > div, #dieSelect > div, .conflict-summary > * {
+#rollDice > div, #dieSelect > div, #rangeSelect > div,.conflict-summary > * {
     font-size: 2em
 }
